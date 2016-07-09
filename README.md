@@ -11,6 +11,7 @@ This repository holds the c/c++ compatible API, encoding and decoding libraries.
 git clone git@github.com:rcsb/mmtf-c.git
 cd mmtf-c
 mkdir build 
+cd build
 cmake ../
 make
 ```
