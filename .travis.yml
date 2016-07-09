@@ -100,4 +100,5 @@ matrix:
       env: ACTION="ci/build_cmake.sh"     VERSION="cpp03" ARCH="32" LIBPATH="/usr/local/lib32" BOOST="boost" BOOST_INC="/usr/local/boost" SHARED="OFF" CHAR_SIGN="signed"   API_VERSION="2"
 
 script:
-  - git clone git@github.com:msgpack/msgpack-c.git && cd msgpack-c && git clean -xdf && CMAKE_LIBRARY_PATH=${LIBPATH} ${ACTION} ${VERSION} ${ARCH} ${BOOST} ${BOOST_INC} ${CHAR_SIGN} && cd ../ && mkdir build && cd build && cmake ../ && make && ./helloDemo
+  - git clone https://github.com/msgpack/msgpack-c && cd msgpack-c && git clean -xdf && CMAKE_LIBRARY_PATH=${LIBPATH} ${ACTION} ${VERSION} ${ARCH} ${BOOST} ${BOOST_INC} ${CHAR_SIGN} && cd ../ && mkdir build && cd build && cmake ../ && make && ./helloDemo
+
