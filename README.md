@@ -5,3 +5,12 @@
 The **m**acro**m**olecular **t**ransmission **f**ormat (MMTF) is a binary encoding of biological structures.
 
 This repository holds the c/c++ compatible API, encoding and decoding libraries. 
+
+# Build
+```bash
+git clone git@github.com:rcsb/mmtf-c.git
+cd mmtf-c
+mkdir build 
+cmake ../
+make
+```
