@@ -1,5 +1,22 @@
+#include <glib.h>
 #include <msgpack.h>
 #include <stdlib.h>
+#include <wchar.h>
+
+// Custom types for the MMTF parser
+
+typedef uint32_t MMTF_INT;
+typedef wchar_t* MMTF_STRING;
+typedef float MMTF_FLOAT;
+
+typedef struct MMTF_BINARY MMTF_BINARY;
+
+struct MMTF_BINARY {
+	MMTF_BINARY* previous;
+	uint8_t content;
+	MMTF_BINARY* next;
+};
+
 
 static const int BUFFERSIZE = 2048;
 
