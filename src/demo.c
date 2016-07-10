@@ -2,8 +2,6 @@
 #include <msgpack.h>
 #include "decoders.c"
 
-
-
 msgpack_object object_by_key( msgpack_object *o, const char *name )
 {
   msgpack_object_kv* p = o->via.map.ptr;
@@ -17,13 +15,13 @@ msgpack_object object_by_key( msgpack_object *o, const char *name )
   }
 }
 
-
 void decode_struct(msgpack_object *object) {
     msgpack_object t_object = object_by_key(object,"bFactorList");
     const char * bytes = t_object.via.bin.ptr;
     printf("Param: %d\n",get_param(bytes));
     printf("Strategy: %d\n",get_strategy(bytes));
     printf("Len: %d\n",get_len(bytes));
+    //convert_to_int_32(bytes);
 }
 
 void parse_msgpack(char *buffer,int msgsize){
