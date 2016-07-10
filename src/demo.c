@@ -2,11 +2,12 @@
 #include <msgpack.h>
 #include "decoders.c"
 
+
+
 msgpack_object object_by_key( msgpack_object *o, const char *name )
 {
   msgpack_object_kv* p = o->via.map.ptr;
   msgpack_object_kv* const pend = o->via.map.ptr + o->via.map.size;
-
   int l = strlen(name);
   for(; p < pend; ++p) {
     if (p->key.type == MSGPACK_OBJECT_STR) {   
@@ -18,9 +19,11 @@ msgpack_object object_by_key( msgpack_object *o, const char *name )
 
 
 void decode_struct(msgpack_object *object) {
-    /* print the deserialized object. */
-    msgpack_object_print(stdout, object_by_key(object,"structureCode"));
-    puts("");
+    msgpack_object t_object = object_by_key(object,"bFactorList");
+    const char * bytes = t_object.via.bin.ptr;
+    printf("Param: %d\n",get_param(bytes));
+    printf("Strategy: %d\n",get_strategy(bytes));
+    printf("Len: %d\n",get_len(bytes));
 }
 
 void parse_msgpack(char *buffer,int msgsize){
