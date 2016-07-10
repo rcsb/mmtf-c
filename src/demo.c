@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <msgpack.h>
+
+#include "array_decoders.c"
 #include "decoders.c"
 
 msgpack_object object_by_key( msgpack_object *o, const char *name )
@@ -30,7 +32,12 @@ void parse_msgpack(char *buffer,int msgsize){
     msgpack_object *deserialized;
     msgpack_unpack(buffer, msgsize, NULL, &mempool, deserialized);
     decode_struct(deserialized);
+
+printf("test 1\n");
+
     msgpack_zone_destroy(&mempool);
+
+printf("test 2\n");
 }
 
 void read_file(char *name)
@@ -49,6 +56,9 @@ void read_file(char *name)
 	fseek(file, 0, SEEK_END);
 	fileLen=ftell(file);
 	fseek(file, 0, SEEK_SET);
+
+	fprintf(stdout, "file length = %lu\n", fileLen);
+
 	//Allocate memory
 	buffer=(char *)malloc(fileLen+1);
 	if (!buffer)
@@ -61,11 +71,27 @@ void read_file(char *name)
 	fread(buffer, fileLen, 1, file);
 	fclose(file);
 	parse_msgpack(buffer, fileLen);
+
+printf("test 3\n");
+
 	free(buffer);
+
+printf("test 4\n");
 }
 
 
 int main(void)
 {
-	read_file("../data/4HHB.mmtf");
+//	read_file("../data/4HHB.mmtf");
+
+	int32_t input[] = { 100, 100, 100, 100, 50, 50 };
+
+	unsigned long output_length;
+	float* output = integer_decode( input, 6, 100, &output_length );
+	int i;
+	for(i = 0; i < 6; ++i ) {
+		printf( "%f\n", output[i] );
+	}
+	free( output );
 }
+
