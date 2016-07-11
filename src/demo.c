@@ -32,12 +32,7 @@ void parse_msgpack(char *buffer,int msgsize){
     msgpack_object *deserialized;
     msgpack_unpack(buffer, msgsize, NULL, &mempool, deserialized);
     decode_struct(deserialized);
-
-printf("test 1\n");
-
     msgpack_zone_destroy(&mempool);
-
-printf("test 2\n");
 }
 
 void read_file(char *name)
@@ -71,12 +66,7 @@ void read_file(char *name)
 	fread(buffer, fileLen, 1, file);
 	fclose(file);
 	parse_msgpack(buffer, fileLen);
-
-printf("test 3\n");
-
 	free(buffer);
-
-printf("test 4\n");
 }
 
 
@@ -84,13 +74,13 @@ int main(void)
 {
 //	read_file("../data/4HHB.mmtf");
 
-	int32_t input[] = { 100, 100, 100, 100, 50, 50 };
+	char input[] = { 'E', '_', 'a', '4', 'G', '(' };
 
 	unsigned long output_length;
-	float* output = integer_decode( input, 6, 100, &output_length );
+	char** output = strings_from_bytes( input, 5, 2, &output_length );
 	int i;
-	for(i = 0; i < 6; ++i ) {
-		printf( "%f\n", output[i] );
+	for(i = 0; i < output_length; ++i ) {
+		printf( "%s\n", output[i] );
 	}
 	free( output );
 }
