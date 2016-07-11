@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <msgpack.h>
-
 #include "array_decoders.c"
 #include "decoders.c"
 
@@ -22,8 +21,16 @@ void decode_struct(msgpack_object *object) {
     const char * bytes = t_object.via.bin.ptr;
     printf("Param: %d\n",get_param(bytes));
     printf("Strategy: %d\n",get_strategy(bytes));
-    printf("Len: %d\n",get_len(bytes));
-    //convert_to_int_32(bytes);
+    int my_len = get_len(bytes);
+    printf("This\n");
+    printf("Len: %d\n",my_len);
+    printf("This\n");
+    int32_t* data = convert_to_int_16(bytes);
+    printf("Converted");
+    unsigned long out_len = (unsigned long) my_len;
+    printf("Got Len");
+    run_length_decode(data, sizeof(data)/4, &out_len);
+    printf("Structure decoded");
 }
 
 void parse_msgpack(char *buffer,int msgsize){
@@ -32,12 +39,7 @@ void parse_msgpack(char *buffer,int msgsize){
     msgpack_object *deserialized;
     msgpack_unpack(buffer, msgsize, NULL, &mempool, deserialized);
     decode_struct(deserialized);
-
-printf("test 1\n");
-
     msgpack_zone_destroy(&mempool);
-
-printf("test 2\n");
 }
 
 void read_file(char *name)
@@ -71,27 +73,13 @@ void read_file(char *name)
 	fread(buffer, fileLen, 1, file);
 	fclose(file);
 	parse_msgpack(buffer, fileLen);
-
-printf("test 3\n");
-
 	free(buffer);
-
-printf("test 4\n");
 }
 
 
 int main(void)
 {
-//	read_file("../data/4HHB.mmtf");
+	read_file("../data/4HHB.mmtf");
 
-	int32_t input[] = { 100, 100, 100, 100, 50, 50 };
-
-	unsigned long output_length;
-	float* output = integer_decode( input, 6, 100, &output_length );
-	int i;
-	for(i = 0; i < 6; ++i ) {
-		printf( "%f\n", output[i] );
-	}
-	free( output );
 }
 
