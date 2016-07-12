@@ -13,7 +13,7 @@ typedef struct {
 
 MMTF_int16_t_array* malloc_MMTF_int16_t_array( unsigned long size ) {
 	MMTF_int16_t_array* output = malloc( sizeof( MMTF_int16_t_array ) );
-	output.array = malloc( sizeof( int32_t ) * size );
+	output.array = malloc( sizeof( int16_t ) * size );
 	return output;
 }
 
