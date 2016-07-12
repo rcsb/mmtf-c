@@ -151,7 +151,20 @@ int32_t* recursive_indexing_decode_from_8( int8_t* input, unsigned long input_le
 
 // Integer decoding
 
-float* integer_decode( int32_t* input, unsigned long input_length, int32_t parameter, unsigned long* output_length ) {
+float* integer_decode_from_16( int16_t* input, unsigned long input_length, int32_t parameter, unsigned long* output_length ) {
+	(*output_length) = input_length;
+	float* output = malloc( sizeof(float) * (*output_length) );
+
+	float parameter_float = (float) parameter;
+	int i;
+	for(i = 0; i < input_length; ++i ) {
+		output[i] = ((float) input[i])/parameter_float;
+	}
+
+	return output;
+}
+
+float* integer_decode_from_32( int32_t* input, unsigned long input_length, int32_t parameter, unsigned long* output_length ) {
 	(*output_length) = input_length;
 	float* output = malloc( sizeof(float) * (*output_length) );
 
