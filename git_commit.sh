@@ -1,5 +1,5 @@
 #!/bin/bash
 
-git add *
+git push
 git commit
 git push fork master
