@@ -77,7 +77,7 @@ int main(void)
 	char input[] = { 'E', '_', 'a', '4', 'G', '(' };
 
 	unsigned long output_length;
-	char** output = strings_from_bytes( input, 5, 2, &output_length );
+	char** output = strings_from_bytes( input, 6, 2, &output_length );
 	int i;
 	for(i = 0; i < output_length; ++i ) {
 		printf( "%s\n", output[i] );
