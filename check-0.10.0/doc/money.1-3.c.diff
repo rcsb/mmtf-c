@@ -1,0 +1,25 @@
+--- src/money.1.c	2015-08-02 12:31:25.000000000 -0700
++++ src/money.3.c	2015-08-02 12:31:25.000000000 -0700
+@@ -0,0 +1,22 @@
++#include <stdlib.h>
++#include "money.h"
++
++Money *money_create(int amount, char *currency)
++{
++    return NULL;
++}
++
++int money_amount(Money * m)
++{
++    return 0;
++}
++
++char *money_currency(Money * m)
++{
++    return NULL;
++}
++
++void money_free(Money * m)
++{
++    return;
++}
