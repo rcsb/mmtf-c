@@ -1,6 +1,7 @@
-language: cpp
+language: c
 os:
   - osx
+  - linux
 cache:
   - apt
 compiler:
@@ -62,5 +63,5 @@ matrix:
     - os: osx
       env: ACTION="ci/build_cmake.sh"     VERSION="cpp03" ARCH="32" LIBPATH="/usr/local/lib32" BOOST="boost" BOOST_INC="/usr/local/boost" SHARED="OFF" CHAR_SIGN="signed"   API_VERSION="2"
 script:
-  - git clone https://github.com/msgpack/msgpack-c && cd msgpack-c && git clean -xdf && CMAKE_LIBRARY_PATH=${LIBPATH} ${ACTION} ${VERSION} ${ARCH} ${BOOST} ${BOOST_INC} ${CHAR_SIGN} && cmake . && make && make install && cd ../ && mkdir build && cd build && cmake ../ && make && ./helloDemo
+  -cd msgpack-c && CMAKE_LIBRARY_PATH=${LIBPATH} ${ACTION} ${VERSION} ${ARCH} ${BOOST} ${BOOST_INC} ${CHAR_SIGN} && cmake . && make && make install && cd ../check-0.10.0 && ./configure && make && make check && make install && cd ../ && mkdir build && cd build && cmake ../ && make && ./helloDemo
 
