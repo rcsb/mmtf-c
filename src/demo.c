@@ -81,5 +81,14 @@ int main(void)
 {
 	read_file("../data/4HHB.mmtf");
 
+	char input[] = { 'E', '_', 'a', '4', 'G', '(' };
+
+	unsigned long output_length;
+	char** output = strings_from_bytes( input, 5, 2, &output_length );
+	int i;
+	for(i = 0; i < output_length; ++i ) {
+		printf( "%s\n", output[i] );
+	}
+	free( output );
 }
 

@@ -6,7 +6,7 @@ int32_t* run_length_decode( int32_t* input, unsigned long input_length, unsigned
 	(*output_length) = 0;
 
 	if( input_length % 2 != 0 ) {
-		fprintf( stderr, "Error in calling run-length decode: you are calling run-length decode with a odd number of values\n" );
+		fprintf( stderr, "Error in calling run-length decode: your input length %lu is not an even number.\n", input_length );
 		return NULL;
 	}
 
@@ -61,7 +61,7 @@ struct list_int32_t {
 	list_int32_t* next;
 };
 
-int32_t* recursive_indexing_decode( int16_t* input, unsigned long input_length, unsigned long* output_length ) {
+int32_t* recursive_indexing_decode_from_16( int16_t* input, unsigned long input_length, unsigned long* output_length ) {
 	list_int32_t* start = malloc( sizeof(list_int32_t) );
 
 	list_int32_t* current = start;
@@ -105,9 +105,53 @@ int32_t* recursive_indexing_decode( int16_t* input, unsigned long input_length, 
 	return output;
 }
 
+int32_t* recursive_indexing_decode_from_8( int8_t* input, unsigned long input_length, unsigned long* output_length ) {
+	list_int32_t* start = malloc( sizeof(list_int32_t) );
+
+	list_int32_t* current = start;
+	(*current).previous = NULL;
+	(*current).value = 0;
+	(*current).next = NULL;
+
+	(*output_length) = 1;
+
+	int i;
+	bool adding_next = true;
+	for(i = 0; i < input_length; ++i) {
+		if( ! adding_next ) {
+			list_int32_t* next = malloc( sizeof(list_int32_t) );
+			(*current).next = next;
+			(*next).previous = current;
+			(*next).value = 0;
+			(*next).next = NULL;
+			current = next;
+			++(*output_length);
+		}
+
+		(*current).value += input[i];
+
+		adding_next = ( input[i] == INT8_MAX || input[i] == INT8_MIN );
+	}
+
+	int32_t* output = malloc(sizeof(int32_t)*(*output_length)); // The output needs to be freed by the calling process
+
+	int j = 0;
+
+	current = start;
+	while( current != NULL ) {
+		output[j] = (*current).value;
+		list_int32_t* next = (*current).next;
+		free(current);
+		current = next;
+		++j;
+	}
+
+	return output;
+}
+
 // Integer decoding
 
-float* integer_decode( int32_t* input, unsigned long input_length, int32_t parameter, unsigned long* output_length ) {
+float* integer_decode_from_16( int16_t* input, unsigned long input_length, int32_t parameter, unsigned long* output_length ) {
 	(*output_length) = input_length;
 	float* output = malloc( sizeof(float) * (*output_length) );
 
@@ -119,4 +163,18 @@ float* integer_decode( int32_t* input, unsigned long input_length, int32_t param
 
 	return output;
 }
+
+float* integer_decode_from_32( int32_t* input, unsigned long input_length, int32_t parameter, unsigned long* output_length ) {
+	(*output_length) = input_length;
+	float* output = malloc( sizeof(float) * (*output_length) );
+
+	float parameter_float = (float) parameter;
+	int i;
+	for(i = 0; i < input_length; ++i ) {
+		output[i] = ((float) input[i])/parameter_float;
+	}
+
+	return output;
+}
+
 

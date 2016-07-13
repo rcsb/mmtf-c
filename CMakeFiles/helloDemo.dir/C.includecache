@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/array_converters.c
+
+/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/array_decoders.c
+stdint.h
+-
+
+/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/decoders.c
+num_converters.c
+/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/num_converters.c
+array_converters.c
+/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/array_converters.c
+
+/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/demo.c
+stdlib.h
+-
+msgpack.h
+-
+array_decoders.c
+/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/array_decoders.c
+decoders.c
+/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/decoders.c
+
+/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/num_converters.c
+
