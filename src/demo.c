@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <msgpack.h>
-
 #include "array_decoders.c"
 #include "decoders.c"
 
@@ -22,8 +21,16 @@ void decode_struct(msgpack_object *object) {
     const char * bytes = t_object.via.bin.ptr;
     printf("Param: %d\n",get_param(bytes));
     printf("Strategy: %d\n",get_strategy(bytes));
-    printf("Len: %d\n",get_len(bytes));
-    //convert_to_int_32(bytes);
+    int my_len = get_len(bytes);
+    printf("This\n");
+    printf("Len: %d\n",my_len);
+    printf("This\n");
+    int32_t* data = convert_to_int_16(bytes);
+    printf("Converted");
+    unsigned long out_len = (unsigned long) my_len;
+    printf("Got Len");
+    run_length_decode(data, sizeof(data)/4, &out_len);
+    printf("Structure decoded");
 }
 
 void parse_msgpack(char *buffer,int msgsize){
@@ -72,7 +79,7 @@ void read_file(char *name)
 
 int main(void)
 {
-//	read_file("../data/4HHB.mmtf");
+	read_file("../data/4HHB.mmtf");
 
 	char input[] = { 'E', '_', 'a', '4', 'G', '(' };
 

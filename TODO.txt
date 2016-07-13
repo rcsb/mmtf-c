@@ -1,0 +1,33 @@
+1) Check that in strategy 10 "unpack" means "recursive indexing decode".
+
+2) Implement the MMTF struct.
+
+3) Connect the stuff retrieved from msgpack, with an instanciation of the MMTF struct.
+
+4) Instead of splitting arrays and length as two arguments, create a struct for each 5 data types, each one with its allocator and with its deallocator. Example:
+
+typedef struct {
+	int16_t* array;
+	unsigned long length;
+} MMTF_int16_t_array;
+
+MMTF_int16_t_array* malloc_MMTF_int16_t_array( unsigned long size ) {
+	MMTF_int16_t_array* output = malloc( sizeof( MMTF_int16_t_array ) );
+	output.array = malloc( sizeof( int16_t ) * size );
+	return output;
+}
+
+void free_MMTF_int16_t_array( MMTF_int16_t_array* element ) {
+	free( element.array );
+	free( element );
+}
+
+5) In order to properly organize the code, make the MMTF_something_array* output by a decoder/converter passed by argument to the decoding/converting function. That will make the memory allocation and freeing at the same level: at the calling process.
+
+6) Test whether running the input twice (as in the function run_length_decode) is faster/slower than running the input once but having to deal with allocating/freeing a double-linked list (as in the function recursive_indexing_decode). Implement recursive_indexing_decode as running the input twice and test its execution time 1,000,000 times on an entry and compare the time needed to return. Testing on one entry containing several boundary values will be enough since the mechanism of recursive_indexing_decode is not complicated.
+
+7) Clean the c and h files. One header file. How many c files? Since the library is meant to be included by including the h and c files, one c file will make things easier for the users. The content of the c file will be split between big chunks of comment lines.
+
+8) Compile the library and test it. Unit testing by Zebulun?
+
+
