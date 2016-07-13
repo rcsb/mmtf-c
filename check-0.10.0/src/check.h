@@ -807,7 +807,7 @@ enum print_output
                                      either "silent", "minimal", "normal",
                                      or "verbose". If the environment variable
                                      is not set, then CK_NORMAL will be used.*/
-#if 0
+#if 1
     CK_SUBUNIT,                 /**< Run as a subunit child process */
 #endif
     CK_LAST                     /**< Not a valid option */
