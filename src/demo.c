@@ -27,7 +27,7 @@ void decode_struct(msgpack_object *object) {
     printf("This\n");
     unsigned long out_len;
     float* data = decode_apply_strategy_into_float(bytes, 4522, &out_len, 10, 100);
-    printf("Structure decoded");
+    printf("Structure decoded\n");
 }
 
 void parse_msgpack(char *buffer,int msgsize){
