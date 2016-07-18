@@ -1,6 +1,6 @@
 1) Check that in strategy 10 "unpack" means "recursive indexing decode".
 
-2) Implement the MMTF struct.
+DONE 2) Implement the MMTF struct.
 
 3) Connect the stuff retrieved from msgpack, with an instanciation of the MMTF struct.
 

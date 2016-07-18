@@ -290,48 +290,48 @@ int32_t* decode_apply_strategy_into_int32( char* input, unsigned long input_leng
 char** decode_apply_strategy_into_string_array( char* input, unsigned long input_length, unsigned long* output_length, int strategy, int32_t parameter ) {
 	switch( strategy ) {
 		case 1:
-			fprintf( stderr, "Error in the function decode_apply_strategy_into_int32: the demanded strategy is %i and the demanded output is an int32 array.\n", strategy );
+			fprintf( stderr, "Error in the function decode_apply_strategy_into_int32: the demanded strategy is %i and the demanded output is a string array.\n", strategy );
 			return NULL;
 		case 2:
-			fprintf( stderr, "Error in the function decode_apply_strategy_into_int32: the demanded strategy is %i and the demanded output is an int32 array.\n", strategy );
+			fprintf( stderr, "Error in the function decode_apply_strategy_into_int32: the demanded strategy is %i and the demanded output is a string array.\n", strategy );
 			return NULL;
 		case 3:
-			fprintf( stderr, "Error in the function decode_apply_strategy_into_int32: the demanded strategy is %i and the demanded output is an int32 array.\n", strategy );
+			fprintf( stderr, "Error in the function decode_apply_strategy_into_int32: the demanded strategy is %i and the demanded output is a string array.\n", strategy );
 			return NULL;
 		case 4:
 			return strings_from_bytes( input, input_length, parameter, output_length );
 		case 5:
-			fprintf( stderr, "Error in the function decode_apply_strategy_into_int32: the demanded strategy is %i and the demanded output is an int32 array.\n", strategy );
+			fprintf( stderr, "Error in the function decode_apply_strategy_into_int32: the demanded strategy is %i and the demanded output is a string array.\n", strategy );
 			return NULL;
 		case 6:
-			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is an int16 array.\n", strategy );
+			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is a string array.\n", strategy );
 			return NULL;
 		case 7:
-			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is an int16 array.\n", strategy );
+			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is a string array.\n", strategy );
 			return NULL;
 		case 8:
-			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is an int16 array.\n", strategy );
+			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is a string array.\n", strategy );
 			return NULL;
 		case 9:
-			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is an int16 array.\n", strategy );
+			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is a string array.\n", strategy );
 			return NULL;
 		case 10:
-			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is an int16 array.\n", strategy );
+			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is a string array.\n", strategy );
 			return NULL;
 		case 11:
-			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is an int16 array.\n", strategy );
+			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is a string array.\n", strategy );
 			return NULL;
 		case 12:
-			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is an int16 array.\n", strategy );
+			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is a string array.\n", strategy );
 			return NULL;
 		case 13:
-			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is an int16 array.\n", strategy );
+			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is a string array.\n", strategy );
 			return NULL;
 		case 14:
-			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is an int16 array.\n", strategy );
+			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is a string array.\n", strategy );
 			return NULL;
 		case 15:
-			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is an int16 array.\n", strategy );
+			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is a string array.\n", strategy );
 			return NULL;
 	}
 }
