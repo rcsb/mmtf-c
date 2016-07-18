@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/array_decoders.c
+stdint.h
+-
+stdbool.h
+-
+stdio.h
+-
+stdlib.h
+-
+

@@ -25,11 +25,8 @@ void decode_struct(msgpack_object *object) {
     printf("This\n");
     printf("Len: %d\n",my_len);
     printf("This\n");
-    int32_t* data = convert_to_int_16(bytes);
-    printf("Converted");
-    unsigned long out_len = (unsigned long) my_len;
-    printf("Got Len");
-    run_length_decode(data, sizeof(data)/4, &out_len);
+    unsigned long out_len;
+    float* data = decode_apply_strategy_into_float(bytes, 4522, &out_len, 10, 100);
     printf("Structure decoded");
 }
 
@@ -51,7 +48,7 @@ void read_file(char *name)
 	file = fopen(name, "rb");
 	if (!file)
 	{
-		fprintf(stderr, "Unable to open file %s", name);
+		fprintf(stderr, "Unable to open file %s.\n", name);
 		return;
 	}
 	//Get file length
@@ -81,14 +78,6 @@ int main(void)
 {
 	read_file("../data/4HHB.mmtf");
 
-	char input[] = { 'E', '_', 'a', '4', 'G', '(' };
-
-	unsigned long output_length;
-	char** output = strings_from_bytes( input, 6, 2, &output_length );
-	int i;
-	for(i = 0; i < output_length; ++i ) {
-		printf( "%s\n", output[i] );
-	}
-	free( output );
+	
 }
 

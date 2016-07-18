@@ -1,0 +1,1 @@
+/usr/bin/cc      CMakeFiles/test_num_converters.dir/test_num_converters.c.o  -o test_num_converters -rdynamic -lcheck_pic -lrt -lm ../src/libnum_converters.a 

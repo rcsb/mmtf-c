@@ -29,7 +29,6 @@ int main(void)
     }
 
     FILE *fp = fopen("../data/4HHB.mmtf", "rb");
-
     size_t off = 0;
     size_t read = 0;
     msgpack_unpacked unpacked;

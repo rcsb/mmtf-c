@@ -7,7 +7,7 @@ typedef union {
 	float f;
 } four_bytes_as_float;
 
-float* float_from_bytes( char* input, unsigned long input_length, unsigned long* output_length ) {
+float* float_from_bytes( const char* input, unsigned long input_length, unsigned long* output_length ) {
 	if( input_length % 4 != 0 ) {
 		fprintf( stderr, "Error in the function float_from_bytes : the input length %lu is not a multiple of 4.\n", input_length );
 		return NULL;
@@ -36,7 +36,7 @@ typedef union {
 	int8_t i;
 } one_byte_as_int8;
 
-int8_t* int8_from_bytes( char* input, unsigned long input_length, unsigned long* output_length ) {
+int8_t* int8_from_bytes( const char* input, unsigned long input_length, unsigned long* output_length ) {
 	(*output_length) = input_length;
 
 	int8_t* output = malloc( sizeof(int8_t)*(*output_length) );
@@ -57,7 +57,7 @@ typedef union {
 	int16_t i;
 } two_bytes_as_int16;
 
-int16_t* int16_from_bytes( char* input, unsigned long input_length, unsigned long* output_length ) {
+int16_t* int16_from_bytes( const char* input, unsigned long input_length, unsigned long* output_length ) {
 	if( input_length % 2 != 0 ) {
 		fprintf( stderr, "Error in the function int16_from_bytes : the input length %lu is not a multiple of 2.\n", input_length );
 		return NULL;
@@ -84,9 +84,9 @@ typedef union {
 	int32_t i;
 } four_bytes_as_int32;
 
-int32_t* int32_from_bytes( char* input, unsigned long input_length, unsigned long* output_length ) {
+int32_t* int32_from_bytes( const char* input, const unsigned long input_length, unsigned long* output_length ) {
 	if( input_length % 4 != 0 ) {
-		fprintf( stderr, "Error in the function float_from_bytes : the input length %lu is not a multiple of 4.\n", input_length );
+		fprintf( stderr, "Error in the function int32_from_bytes : the input length %lu is not a multiple of 4.\n", input_length );
 		return NULL;
 	}
 
@@ -108,7 +108,7 @@ int32_t* int32_from_bytes( char* input, unsigned long input_length, unsigned lon
 	return output;
 }
 
-char** strings_from_bytes( char* input, unsigned long input_length, unsigned long parameter, unsigned long* output_length ) {
+char** strings_from_bytes( const char* input, unsigned long input_length, unsigned long parameter, unsigned long* output_length ) {
 	if( input_length % parameter != 0 ) {
 		fprintf( stderr, "Error in the function float_from_bytes : the input length %lu is not a multiple of your parameter %lu.\n", input_length, parameter );
 		return NULL;
@@ -140,7 +140,8 @@ printf("gotlen");
 int32_t* output = malloc(sizeof(int32_t)*(tot_len)); // The output needs to be freed by the calling process
 printf("alloc");
 int ind = 0;
-for(int i=12; i<sizeof(bytes); i+=4){
+int i;
+for(i=12; i<sizeof(bytes); i+=4){
 	output[ind] = get_int(bytes,i);
 	ind++;
 }
@@ -154,7 +155,8 @@ printf("in funct");
 long tot_len = (sizeof(bytes)-12)/2;
 int ind = 0;
 int32_t* output = malloc(sizeof(int32_t)*(tot_len)); // The output needs to be freed by the calling process
-for(int i=12; i<sizeof(bytes); i+=2){
+int i;
+for(i=12; i<sizeof(bytes); i+=2){
          output[ind] = get_short(bytes,i);
 	ind++;
 }
@@ -171,7 +173,8 @@ long tot_len = (sizeof(bytes)-12);
 int32_t* output = malloc(sizeof(int32_t)*(tot_len)); // The output needs to be freed by the calling process
 
 int ind = 0;
-for(int i=12; i<sizeof(bytes); i+=1){
+int i;
+for(i=12; i<sizeof(bytes); i+=1){
          output[ind] = get_byte(bytes,i);
 	ind++;
 }
