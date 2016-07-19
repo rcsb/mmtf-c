@@ -35,6 +35,10 @@ array_decoders.c
 /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/array_decoders.c
 decoders.c
 /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/decoders.c
+mmtf_structure.c
+/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/mmtf_structure.c
+
+/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/mmtf_structure.c
 
 /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/num_converters.c
 

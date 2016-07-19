@@ -66,12 +66,6 @@ float* decode_apply_strategy_into_float( const char* input, unsigned long input_
 			float* output = integer_decode_from_32( step3, step3_length, parameter, output_length );
 			free(step3);
 
-
-int i;
-for( i = 0; i < *output_length; ++i ) {
-	printf( "%i : %f\n", i, output[i] );
-}
-
 			return output;
 		}
 		case 11: {

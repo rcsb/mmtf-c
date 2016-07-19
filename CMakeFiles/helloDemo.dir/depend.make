@@ -5,5 +5,6 @@ CMakeFiles/helloDemo.dir/src/demo.c.o: src/array_converters.c
 CMakeFiles/helloDemo.dir/src/demo.c.o: src/array_decoders.c
 CMakeFiles/helloDemo.dir/src/demo.c.o: src/decoders.c
 CMakeFiles/helloDemo.dir/src/demo.c.o: src/demo.c
+CMakeFiles/helloDemo.dir/src/demo.c.o: src/mmtf_structure.c
 CMakeFiles/helloDemo.dir/src/demo.c.o: src/num_converters.c
 

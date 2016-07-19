@@ -20,10 +20,10 @@ float* float_from_bytes( const char* input, unsigned long input_length, unsigned
 	four_bytes_as_float u;
 	int i;
 	for( i = 0; i < input_length; i = i + 4 ) {
-		u.c[0] = input[i];
-		u.c[1] = input[i+1];
-		u.c[2] = input[i+2];
-		u.c[3] = input[i+3];
+		u.c[0] = input[i+3];
+		u.c[1] = input[i+2];
+		u.c[2] = input[i+1];
+		u.c[3] = input[i];
 
 		output[i/4] = u.f;
 	}
@@ -70,8 +70,8 @@ int16_t* int16_from_bytes( const char* input, unsigned long input_length, unsign
 	two_bytes_as_int16 u;
 	int i;
 	for( i = 0; i < input_length; i = i + 2 ) {
-		u.c[0] = input[i];
-		u.c[1] = input[i+1];
+		u.c[0] = input[i+1];
+		u.c[1] = input[i];
 
 		output[i/2] = u.i;
 	}
@@ -97,10 +97,11 @@ int32_t* int32_from_bytes( const char* input, const unsigned long input_length, 
 	four_bytes_as_int32 u;
 	int i;
 	for( i = 0; i < input_length; i = i + 4 ) {
-		u.c[0] = input[i];
-		u.c[1] = input[i+1];
-		u.c[2] = input[i+2];
-		u.c[3] = input[i+3];
+		u.c[0] = input[i+3];
+		u.c[1] = input[i+2];
+		u.c[2] = input[i+1];
+		u.c[3] = input[i];
+
 
 		output[i/4] = u.i;
 	}
