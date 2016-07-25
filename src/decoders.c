@@ -1,19 +1,7 @@
 #include "num_converters.c"
 #include "array_converters.c"
 
-int get_strategy(const char * bytes) {
-	return get_int(bytes,0);
-}
-
-int get_len(const char * bytes){
-	return get_int(bytes,4);
-}
-
-int  get_param(const char * bytes) {
-	return get_int(bytes,8);
-}
-
-float* decode_apply_strategy_into_float( const char* input, unsigned long input_length, unsigned long* output_length, int strategy, int32_t parameter ) {
+float* decode_apply_strategy_into_float( const char* input, uint32_t input_length, uint32_t* output_length, int strategy, int32_t parameter ) {
 	switch( strategy ) {
 		case 1:
 			return float_from_bytes( input, input_length, output_length );
@@ -39,10 +27,10 @@ float* decode_apply_strategy_into_float( const char* input, unsigned long input_
 			fprintf( stderr, "Error in the function decode_apply_strategy_into_float: the demanded strategy is %i and the demanded output is a float array.\n", strategy );
 			return NULL;
 		case 9: {
-			unsigned long step1_length;
+			uint32_t step1_length;
 			int32_t* step1 = int32_from_bytes( input, input_length, &step1_length );
 
-			unsigned long step2_length;
+			uint32_t step2_length;
 			int32_t* step2 = run_length_decode( step1, step1_length, &step2_length );
 			free(step1);
 
@@ -52,14 +40,14 @@ float* decode_apply_strategy_into_float( const char* input, unsigned long input_
 			return output;
 		}
 		case 10: {
-			unsigned long step1_length;
+			uint32_t step1_length;
 			int16_t* step1 = int16_from_bytes( input, input_length, &step1_length );
 
-			unsigned long step2_length;
+			uint32_t step2_length;
 			int32_t* step2 = recursive_indexing_decode_from_16( step1, step1_length, &step2_length );
 			free(step1);
 
-			unsigned long step3_length;
+			uint32_t step3_length;
 			int32_t* step3 = delta_decode( step2, step2_length, &step3_length );
 			free(step2);
 
@@ -69,7 +57,7 @@ float* decode_apply_strategy_into_float( const char* input, unsigned long input_
 			return output;
 		}
 		case 11: {
-			unsigned long step1_length;
+			uint32_t step1_length;
 			int16_t* step1 = int16_from_bytes( input, input_length, &step1_length );
 
 			float* output = integer_decode_from_16( step1, step1_length, parameter, output_length );
@@ -78,10 +66,10 @@ float* decode_apply_strategy_into_float( const char* input, unsigned long input_
 			return output;
 		}
 		case 12: {
-			unsigned long step1_length;
+			uint32_t step1_length;
 			int16_t* step1 = int16_from_bytes( input, input_length, &step1_length );
 
-			unsigned long step2_length;
+			uint32_t step2_length;
 			int32_t* step2 = recursive_indexing_decode_from_16( step1, step1_length, &step2_length );
 			free(step1);
 
@@ -91,10 +79,10 @@ float* decode_apply_strategy_into_float( const char* input, unsigned long input_
 			return output;
 		}
 		case 13: {
-			unsigned long step1_length;
+			uint32_t step1_length;
 			int8_t* step1 = int8_from_bytes( input, input_length, &step1_length );
 
-			unsigned long step2_length;
+			uint32_t step2_length;
 			int32_t* step2 = recursive_indexing_decode_from_8( step1, step1_length, &step2_length );
 			free(step1);
 
@@ -112,7 +100,7 @@ float* decode_apply_strategy_into_float( const char* input, unsigned long input_
 	}
 }
 
-int8_t* decode_apply_strategy_into_int8( const char* input, unsigned long input_length, unsigned long* output_length, int strategy ) {
+int8_t* decode_apply_strategy_into_int8( const char* input, uint32_t input_length, uint32_t* output_length, int strategy ) {
 	switch( strategy ) {
 		case 1:
 			fprintf( stderr, "Error in the function decode_apply_strategy_into_int8: the demanded strategy is %i and the demanded output is an int8 array.\n", strategy );
@@ -161,7 +149,7 @@ int8_t* decode_apply_strategy_into_int8( const char* input, unsigned long input_
 	}
 }
 
-int16_t* decode_apply_strategy_into_int16( const char* input, unsigned long input_length, unsigned long* output_length, int strategy ) {
+int16_t* decode_apply_strategy_into_int16( const char* input, uint32_t input_length, uint32_t* output_length, int strategy ) {
 	switch( strategy ) {
 		case 1:
 			fprintf( stderr, "Error in the function decode_apply_strategy_into_int16: the demanded strategy is %i and the demanded output is an int16 array.\n", strategy );
@@ -210,7 +198,7 @@ int16_t* decode_apply_strategy_into_int16( const char* input, unsigned long inpu
 	}
 }
 
-int32_t* decode_apply_strategy_into_int32( const char* input, unsigned long input_length, unsigned long* output_length, int strategy ) {
+int32_t* decode_apply_strategy_into_int32( const char* input, uint32_t input_length, uint32_t* output_length, int strategy ) {
 	switch( strategy ) {
 		case 1:
 			fprintf( stderr, "Error in the function decode_apply_strategy_into_int32: the demanded strategy is %i and the demanded output is an int32 array.\n", strategy );
@@ -230,7 +218,7 @@ int32_t* decode_apply_strategy_into_int32( const char* input, unsigned long inpu
 			fprintf( stderr, "Error in the function decode_apply_strategy_into_int32: the demanded strategy is %i and the demanded output is an int32 array.\n", strategy );
 			return NULL;
 		case 7: {
-			unsigned long step1_length;
+			uint32_t step1_length;
 			int32_t* step1 = int32_from_bytes( input, input_length, &step1_length );
 
 			int32_t* output = run_length_decode( step1, step1_length, output_length );
@@ -239,10 +227,10 @@ int32_t* decode_apply_strategy_into_int32( const char* input, unsigned long inpu
 			return output;
 		}
 		case 8: {
-			unsigned long step1_length;
+			uint32_t step1_length;
 			int32_t* step1 = int32_from_bytes( input, input_length, &step1_length );
 
-			unsigned long step2_length;
+			uint32_t step2_length;
 			int32_t* step2 = run_length_decode( step1, step1_length, &step2_length );
 			free(step1);
 
@@ -267,7 +255,7 @@ int32_t* decode_apply_strategy_into_int32( const char* input, unsigned long inpu
 			fprintf( stderr, "Error in the function decode_apply_strategy_into_int32: the demanded strategy is %i and the demanded output is an int32 array.\n", strategy );
 			return NULL;
 		case 14: {
-			unsigned long step1_length;
+			uint32_t step1_length;
 			int16_t* step1 = int16_from_bytes( input, input_length, &step1_length );
 
 			int32_t* output = recursive_indexing_decode_from_16( step1, step1_length, output_length );
@@ -276,7 +264,7 @@ int32_t* decode_apply_strategy_into_int32( const char* input, unsigned long inpu
 			return output;
 		}
 		case 15: {
-			unsigned long step1_length;
+			uint32_t step1_length;
 			int8_t* step1 = int8_from_bytes( input, input_length, &step1_length );
 
 			int32_t* output = recursive_indexing_decode_from_8( step1, step1_length, output_length );
@@ -287,7 +275,7 @@ int32_t* decode_apply_strategy_into_int32( const char* input, unsigned long inpu
 	}
 }
 
-char** decode_apply_strategy_into_string_array( const char* input, unsigned long input_length, unsigned long* output_length, int strategy, int32_t parameter ) {
+char** decode_apply_strategy_into_string_array( const char* input, uint32_t input_length, uint32_t* output_length, int strategy, int32_t parameter ) {
 	switch( strategy ) {
 		case 1:
 			fprintf( stderr, "Error in the function decode_apply_strategy_into_int32: the demanded strategy is %i and the demanded output is a string array.\n", strategy );

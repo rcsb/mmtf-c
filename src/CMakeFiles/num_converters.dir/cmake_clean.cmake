@@ -1,5 +1,5 @@
 FILE(REMOVE_RECURSE
-  "CMakeFiles/num_converters.dir/num_converters.c.o"
+  "CMakeFiles/num_converters.dir/num_converters.o"
   "libnum_converters.pdb"
   "libnum_converters.a"
 )

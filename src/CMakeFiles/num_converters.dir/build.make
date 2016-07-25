@@ -35,69 +35,69 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c
+CMAKE_SOURCE_DIR = /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c
+CMAKE_BINARY_DIR = /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src
 
 # Include any dependencies generated for this target.
-include src/CMakeFiles/num_converters.dir/depend.make
+include CMakeFiles/num_converters.dir/depend.make
 
 # Include the progress variables for this target.
-include src/CMakeFiles/num_converters.dir/progress.make
+include CMakeFiles/num_converters.dir/progress.make
 
 # Include the compile flags for this target's objects.
-include src/CMakeFiles/num_converters.dir/flags.make
+include CMakeFiles/num_converters.dir/flags.make
 
-src/CMakeFiles/num_converters.dir/num_converters.c.o: src/CMakeFiles/num_converters.dir/flags.make
-src/CMakeFiles/num_converters.dir/num_converters.c.o: src/num_converters.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/CMakeFiles $(CMAKE_PROGRESS_1)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object src/CMakeFiles/num_converters.dir/num_converters.c.o"
-	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/num_converters.dir/num_converters.c.o   -c /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/num_converters.c
+CMakeFiles/num_converters.dir/num_converters.o: CMakeFiles/num_converters.dir/flags.make
+CMakeFiles/num_converters.dir/num_converters.o: num_converters.c
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/num_converters.dir/num_converters.o"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/num_converters.dir/num_converters.o   -c /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/num_converters.c
 
-src/CMakeFiles/num_converters.dir/num_converters.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/num_converters.dir/num_converters.c.i"
-	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/num_converters.c > CMakeFiles/num_converters.dir/num_converters.c.i
+CMakeFiles/num_converters.dir/num_converters.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/num_converters.dir/num_converters.i"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/num_converters.c > CMakeFiles/num_converters.dir/num_converters.i
 
-src/CMakeFiles/num_converters.dir/num_converters.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/num_converters.dir/num_converters.c.s"
-	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/num_converters.c -o CMakeFiles/num_converters.dir/num_converters.c.s
+CMakeFiles/num_converters.dir/num_converters.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/num_converters.dir/num_converters.s"
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/num_converters.c -o CMakeFiles/num_converters.dir/num_converters.s
 
-src/CMakeFiles/num_converters.dir/num_converters.c.o.requires:
-.PHONY : src/CMakeFiles/num_converters.dir/num_converters.c.o.requires
+CMakeFiles/num_converters.dir/num_converters.o.requires:
+.PHONY : CMakeFiles/num_converters.dir/num_converters.o.requires
 
-src/CMakeFiles/num_converters.dir/num_converters.c.o.provides: src/CMakeFiles/num_converters.dir/num_converters.c.o.requires
-	$(MAKE) -f src/CMakeFiles/num_converters.dir/build.make src/CMakeFiles/num_converters.dir/num_converters.c.o.provides.build
-.PHONY : src/CMakeFiles/num_converters.dir/num_converters.c.o.provides
+CMakeFiles/num_converters.dir/num_converters.o.provides: CMakeFiles/num_converters.dir/num_converters.o.requires
+	$(MAKE) -f CMakeFiles/num_converters.dir/build.make CMakeFiles/num_converters.dir/num_converters.o.provides.build
+.PHONY : CMakeFiles/num_converters.dir/num_converters.o.provides
 
-src/CMakeFiles/num_converters.dir/num_converters.c.o.provides.build: src/CMakeFiles/num_converters.dir/num_converters.c.o
+CMakeFiles/num_converters.dir/num_converters.o.provides.build: CMakeFiles/num_converters.dir/num_converters.o
 
 # Object files for target num_converters
 num_converters_OBJECTS = \
-"CMakeFiles/num_converters.dir/num_converters.c.o"
+"CMakeFiles/num_converters.dir/num_converters.o"
 
 # External object files for target num_converters
 num_converters_EXTERNAL_OBJECTS =
 
-src/libnum_converters.a: src/CMakeFiles/num_converters.dir/num_converters.c.o
-src/libnum_converters.a: src/CMakeFiles/num_converters.dir/build.make
-src/libnum_converters.a: src/CMakeFiles/num_converters.dir/link.txt
+libnum_converters.a: CMakeFiles/num_converters.dir/num_converters.o
+libnum_converters.a: CMakeFiles/num_converters.dir/build.make
+libnum_converters.a: CMakeFiles/num_converters.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking C static library libnum_converters.a"
-	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src && $(CMAKE_COMMAND) -P CMakeFiles/num_converters.dir/cmake_clean_target.cmake
-	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/num_converters.dir/link.txt --verbose=$(VERBOSE)
+	$(CMAKE_COMMAND) -P CMakeFiles/num_converters.dir/cmake_clean_target.cmake
+	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/num_converters.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-src/CMakeFiles/num_converters.dir/build: src/libnum_converters.a
-.PHONY : src/CMakeFiles/num_converters.dir/build
+CMakeFiles/num_converters.dir/build: libnum_converters.a
+.PHONY : CMakeFiles/num_converters.dir/build
 
-src/CMakeFiles/num_converters.dir/requires: src/CMakeFiles/num_converters.dir/num_converters.c.o.requires
-.PHONY : src/CMakeFiles/num_converters.dir/requires
+CMakeFiles/num_converters.dir/requires: CMakeFiles/num_converters.dir/num_converters.o.requires
+.PHONY : CMakeFiles/num_converters.dir/requires
 
-src/CMakeFiles/num_converters.dir/clean:
-	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src && $(CMAKE_COMMAND) -P CMakeFiles/num_converters.dir/cmake_clean.cmake
-.PHONY : src/CMakeFiles/num_converters.dir/clean
+CMakeFiles/num_converters.dir/clean:
+	$(CMAKE_COMMAND) -P CMakeFiles/num_converters.dir/cmake_clean.cmake
+.PHONY : CMakeFiles/num_converters.dir/clean
 
-src/CMakeFiles/num_converters.dir/depend:
-	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/CMakeFiles/num_converters.dir/DependInfo.cmake --color=$(COLOR)
-.PHONY : src/CMakeFiles/num_converters.dir/depend
+CMakeFiles/num_converters.dir/depend:
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/CMakeFiles/num_converters.dir/DependInfo.cmake --color=$(COLOR)
+.PHONY : CMakeFiles/num_converters.dir/depend
 

@@ -4,7 +4,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_C
-  "/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/num_converters.c" "/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/CMakeFiles/num_converters.dir/num_converters.c.o"
+  "/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/num_converters.c" "/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/CMakeFiles/num_converters.dir/num_converters.o"
   )
 SET(CMAKE_C_COMPILER_ID "GNU")
 
@@ -14,7 +14,7 @@ SET(CMAKE_TARGET_LINKED_INFO_FILES
 
 # The include file search paths:
 SET(CMAKE_C_TARGET_INCLUDE_PATH
-  "src/."
+  "."
   )
 SET(CMAKE_CXX_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
 SET(CMAKE_Fortran_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})

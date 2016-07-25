@@ -5,15 +5,15 @@
 
 // Run length decode
 
-int32_t* run_length_decode( int32_t* input, unsigned long input_length, unsigned long* output_length ) {
+int32_t* run_length_decode( int32_t* input, uint32_t input_length, uint32_t* output_length ) {
 	(*output_length) = 0;
 
 	if( input_length % 2 != 0 ) {
-		fprintf( stderr, "Error in calling run-length decode: your input length %lu is not an even number.\n", input_length );
+		fprintf( stderr, "Error in calling run-length decode: your input length %u is not an even number.\n", input_length );
 		return NULL;
 	}
 
-	int i;
+	uint32_t i;
 	int32_t value, number;
 	for(i = 0; i < input_length; i += 2) {
 		value = input[i];
@@ -41,12 +41,12 @@ int32_t* run_length_decode( int32_t* input, unsigned long input_length, unsigned
 
 // Delta decode
 
-int32_t* delta_decode( int32_t* input, unsigned long input_length, unsigned long* output_length ) {
+int32_t* delta_decode( int32_t* input, uint32_t input_length, uint32_t* output_length ) {
 	(*output_length) = input_length;
 	int32_t* output = malloc(sizeof(int32_t)*(*output_length)); // The output needs to be freed by the calling process
 
 	output[0] = input[0];
-	int i;
+	uint32_t i;
 	for(i = 1; i < input_length; ++i) {
 		output[i] = output[i-1] + input[i];
 	}
@@ -64,9 +64,9 @@ struct list_int32_t {
 	list_int32_t* next;
 };
 
-int32_t* recursive_indexing_decode_from_16( int16_t* input, unsigned long input_length, unsigned long* output_length ) {
+int32_t* recursive_indexing_decode_from_16( int16_t* input, uint32_t input_length, uint32_t* output_length ) {
 
-printf( "%lu\n", input_length );
+printf( "%u\n", input_length );
 
 	list_int32_t* start = (list_int32_t*) malloc( sizeof(list_int32_t) );
 
@@ -116,10 +116,11 @@ printf( "%i.\n" , input[i] );
 }
 */
 
-int32_t* recursive_indexing_decode_from_16( int16_t* input, unsigned long input_length, unsigned long* output_length ) {
+int32_t* recursive_indexing_decode_from_16( int16_t* input, uint32_t input_length, uint32_t* output_length ) {
 	(*output_length) = 0;
-	int i;
+	uint32_t i;
 	for( i = 0; i < input_length; ++i ) {
+
 		if( input[i] != INT16_MAX && input[i] != INT16_MIN ) {
 			++(*output_length);
 		}
@@ -142,9 +143,9 @@ int32_t* recursive_indexing_decode_from_16( int16_t* input, unsigned long input_
 	return output;
 }
 
-int32_t* recursive_indexing_decode_from_8( int8_t* input, unsigned long input_length, unsigned long* output_length ) {
+int32_t* recursive_indexing_decode_from_8( int8_t* input, uint32_t input_length, uint32_t* output_length ) {
 	(*output_length) = 0;
-	int i;
+	uint32_t i;
 	for( i = 0; i < input_length; ++i ) {
 		if( input[i] != INT8_MAX && input[i] != INT8_MIN ) {
 			++(*output_length);
@@ -169,7 +170,7 @@ int32_t* recursive_indexing_decode_from_8( int8_t* input, unsigned long input_le
 }
 
 /*
-int32_t* recursive_indexing_decode_from_8( int8_t* input, unsigned long input_length, unsigned long* output_length ) {
+int32_t* recursive_indexing_decode_from_8( int8_t* input, uint32_t input_length, uint32_t* output_length ) {
 	list_int32_t* start = malloc( sizeof(list_int32_t) );
 
 	list_int32_t* current = start;
@@ -216,12 +217,12 @@ int32_t* recursive_indexing_decode_from_8( int8_t* input, unsigned long input_le
 
 // Integer decoding
 
-float* integer_decode_from_16( int16_t* input, unsigned long input_length, int32_t parameter, unsigned long* output_length ) {
+float* integer_decode_from_16( int16_t* input, uint32_t input_length, int32_t parameter, uint32_t* output_length ) {
 	(*output_length) = input_length;
 	float* output = (float*) malloc( sizeof(float) * (*output_length) );
 
 	float parameter_float = (float) parameter;
-	int i;
+	uint32_t i;
 	for(i = 0; i < input_length; ++i ) {
 		output[i] = ((float) input[i])/parameter_float;
 	}
@@ -229,12 +230,12 @@ float* integer_decode_from_16( int16_t* input, unsigned long input_length, int32
 	return output;
 }
 
-float* integer_decode_from_32( int32_t* input, unsigned long input_length, int32_t parameter, unsigned long* output_length ) {
+float* integer_decode_from_32( int32_t* input, uint32_t input_length, int32_t parameter, uint32_t* output_length ) {
 	(*output_length) = input_length;
 	float* output = (float*) malloc( sizeof(float) * (*output_length) );
 
 	float parameter_float = (float) parameter;
-	int i;
+	uint32_t i;
 	for(i = 0; i < input_length; ++i ) {
 		output[i] = ((float) input[i])/parameter_float;
 	}
