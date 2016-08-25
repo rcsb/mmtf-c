@@ -1,2 +1,2 @@
-/usr/bin/ar cr libnum_converters.a  CMakeFiles/num_converters.dir/num_converters.o
+/usr/bin/ar cr libnum_converters.a  CMakeFiles/num_converters.dir/num_converters.c.o
 /usr/bin/ranlib libnum_converters.a

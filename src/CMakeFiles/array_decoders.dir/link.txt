@@ -1,2 +1,2 @@
-/usr/bin/ar cr libarray_decoders.a  CMakeFiles/array_decoders.dir/array_decoders.o
+/usr/bin/ar cr libarray_decoders.a  CMakeFiles/array_decoders.dir/array_decoders.c.o
 /usr/bin/ranlib libarray_decoders.a

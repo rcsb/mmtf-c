@@ -1,13 +1,6 @@
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdio.h>
+#include "c_headers.h"
 
 // From bytes[] to float32[], int8[], int16[], int32[] and string
-
-typedef union {
-	char c[4];
-	float f;
-} four_bytes_as_float;
 
 float* float_from_bytes( const char* input, uint32_t input_length, uint32_t* output_length ) {
 	if( input_length % 4 != 0 ) {
@@ -33,11 +26,6 @@ float* float_from_bytes( const char* input, uint32_t input_length, uint32_t* out
 	return output;
 }
 
-typedef union {
-	char c;
-	int8_t i;
-} one_byte_as_int8;
-
 int8_t* int8_from_bytes( const char* input, uint32_t input_length, uint32_t* output_length ) {
 	(*output_length) = input_length;
 
@@ -53,11 +41,6 @@ int8_t* int8_from_bytes( const char* input, uint32_t input_length, uint32_t* out
 
 	return output;
 }
-
-typedef union {
-	char c[2];
-	int16_t i;
-} two_bytes_as_int16;
 
 int16_t* int16_from_bytes( const char* input, uint32_t input_length, uint32_t* output_length ) {
 	if( input_length % 2 != 0 ) {
@@ -80,25 +63,6 @@ int16_t* int16_from_bytes( const char* input, uint32_t input_length, uint32_t* o
 
 	return output;
 }
-
-typedef union {
-	char c[4];
-	int32_t i;
-} four_bytes_as_int32;
-
-/*
-int get_strategy(const char * bytes) {
-	return get_int(bytes,0);
-}
-
-int get_len(const char * bytes){
-	return get_int(bytes,4);
-}
-
-int  get_param(const char * bytes) {
-	return get_int(bytes,8);
-}
-*/
 
 int get_strategy(const char * bytes) {
 	four_bytes_as_int32 ct;
@@ -141,7 +105,7 @@ int32_t* int32_from_bytes( const char* input, const uint32_t input_length, uint3
 
 	(*output_length) = input_length/4;
 
-	int32_t* output = malloc( (*output_length)*sizeof(int32_t) );
+	int32_t* output = malloc( sizeof(int32_t) * (*output_length) );
 
 	four_bytes_as_int32 u;
 	uint32_t i;
@@ -152,6 +116,25 @@ int32_t* int32_from_bytes( const char* input, const uint32_t input_length, uint3
 		u.c[3] = input[i];
 
 		output[i/4] = u.i;
+	}
+
+	return output;
+}
+
+char* string_from_int32( const int32_t* input, const uint32_t input_length, uint32_t* output_length ) {
+	(*output_length) = input_length * 4;
+
+	char* output = malloc( sizeof( char ) * (*output_length) );
+
+	four_bytes_as_int32 u;
+	uint32_t i;
+	for( i = 0; i < input_length; ++i ) {
+		u.i = input[i];
+
+		output[4*i+0] = u.c[0];
+		output[4*i+1] = u.c[1];
+		output[4*i+2] = u.c[2];
+		output[4*i+3] = u.c[3];
 	}
 
 	return output;
@@ -180,53 +163,3 @@ char** strings_from_bytes( const char* input, uint32_t input_length, uint32_t pa
 	return output;
 }
 
-
-// int 32
-int32_t* convert_to_int_32(const char* bytes){
-printf("in funct");
-long tot_len = (sizeof(bytes)-12)/4;
-printf("gotlen");
-int32_t* output = malloc(sizeof(int32_t)*(tot_len)); // The output needs to be freed by the calling process
-printf("alloc");
-int ind = 0;
-int i;
-for(i=12; i<sizeof(bytes); i+=4){
-	output[ind] = get_int(bytes,i);
-	ind++;
-}
-return output;
-}
-
-
-// int 16
-int32_t* convert_to_int_16(const char* bytes){
-printf("in funct");
-long tot_len = (sizeof(bytes)-12)/2;
-int ind = 0;
-int32_t* output = malloc(sizeof(int32_t)*(tot_len)); // The output needs to be freed by the calling process
-int i;
-for(i=12; i<sizeof(bytes); i+=2){
-         output[ind] = get_short(bytes,i);
-	ind++;
-}
-
-return output;
-}
-
-
-// int 8
-int32_t* convert_to_int_8(const char* bytes){
-
-long tot_len = (sizeof(bytes)-12);
-
-int32_t* output = malloc(sizeof(int32_t)*(tot_len)); // The output needs to be freed by the calling process
-
-int ind = 0;
-int i;
-for(i=12; i<sizeof(bytes); i+=1){
-         output[ind] = get_byte(bytes,i);
-	ind++;
-}
-
-return output;
-}

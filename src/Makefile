@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src
+CMAKE_SOURCE_DIR = /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src
+CMAKE_BINARY_DIR = /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -67,16 +67,26 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 .PHONY : rebuild_cache/fast
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+.PHONY : test/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/CMakeFiles /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/CMakeFiles/progress.marks
-	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/CMakeFiles 0
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(CMAKE_COMMAND) -E cmake_progress_start /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/CMakeFiles /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/CMakeFiles/progress.marks
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(MAKE) -f CMakeFiles/Makefile2 src/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	$(MAKE) -f CMakeFiles/Makefile2 clean
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(MAKE) -f CMakeFiles/Makefile2 src/clean
 .PHONY : clean
 
 # The main clean target
@@ -85,74 +95,94 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
-#=============================================================================
-# Target rules for targets named array_decoders
+# Convenience name for target.
+src/CMakeFiles/array_decoders.dir/rule:
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/array_decoders.dir/rule
+.PHONY : src/CMakeFiles/array_decoders.dir/rule
 
-# Build rule for target.
-array_decoders: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 array_decoders
+# Convenience name for target.
+array_decoders: src/CMakeFiles/array_decoders.dir/rule
 .PHONY : array_decoders
 
 # fast build rule for target.
 array_decoders/fast:
-	$(MAKE) -f CMakeFiles/array_decoders.dir/build.make CMakeFiles/array_decoders.dir/build
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(MAKE) -f src/CMakeFiles/array_decoders.dir/build.make src/CMakeFiles/array_decoders.dir/build
 .PHONY : array_decoders/fast
 
-#=============================================================================
-# Target rules for targets named num_converters
+# Convenience name for target.
+src/CMakeFiles/num_converters.dir/rule:
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/num_converters.dir/rule
+.PHONY : src/CMakeFiles/num_converters.dir/rule
 
-# Build rule for target.
-num_converters: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 num_converters
+# Convenience name for target.
+num_converters: src/CMakeFiles/num_converters.dir/rule
 .PHONY : num_converters
 
 # fast build rule for target.
 num_converters/fast:
-	$(MAKE) -f CMakeFiles/num_converters.dir/build.make CMakeFiles/num_converters.dir/build
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(MAKE) -f src/CMakeFiles/num_converters.dir/build.make src/CMakeFiles/num_converters.dir/build
 .PHONY : num_converters/fast
 
-# target to build an object file
-array_decoders.o:
-	$(MAKE) -f CMakeFiles/array_decoders.dir/build.make CMakeFiles/array_decoders.dir/array_decoders.o
+array_decoders.o: array_decoders.c.o
 .PHONY : array_decoders.o
 
-# target to preprocess a source file
-array_decoders.i:
-	$(MAKE) -f CMakeFiles/array_decoders.dir/build.make CMakeFiles/array_decoders.dir/array_decoders.i
+# target to build an object file
+array_decoders.c.o:
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(MAKE) -f src/CMakeFiles/array_decoders.dir/build.make src/CMakeFiles/array_decoders.dir/array_decoders.c.o
+.PHONY : array_decoders.c.o
+
+array_decoders.i: array_decoders.c.i
 .PHONY : array_decoders.i
 
-# target to generate assembly for a file
-array_decoders.s:
-	$(MAKE) -f CMakeFiles/array_decoders.dir/build.make CMakeFiles/array_decoders.dir/array_decoders.s
+# target to preprocess a source file
+array_decoders.c.i:
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(MAKE) -f src/CMakeFiles/array_decoders.dir/build.make src/CMakeFiles/array_decoders.dir/array_decoders.c.i
+.PHONY : array_decoders.c.i
+
+array_decoders.s: array_decoders.c.s
 .PHONY : array_decoders.s
 
-# target to build an object file
-num_converters.o:
-	$(MAKE) -f CMakeFiles/num_converters.dir/build.make CMakeFiles/num_converters.dir/num_converters.o
+# target to generate assembly for a file
+array_decoders.c.s:
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(MAKE) -f src/CMakeFiles/array_decoders.dir/build.make src/CMakeFiles/array_decoders.dir/array_decoders.c.s
+.PHONY : array_decoders.c.s
+
+num_converters.o: num_converters.c.o
 .PHONY : num_converters.o
 
-# target to preprocess a source file
-num_converters.i:
-	$(MAKE) -f CMakeFiles/num_converters.dir/build.make CMakeFiles/num_converters.dir/num_converters.i
+# target to build an object file
+num_converters.c.o:
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(MAKE) -f src/CMakeFiles/num_converters.dir/build.make src/CMakeFiles/num_converters.dir/num_converters.c.o
+.PHONY : num_converters.c.o
+
+num_converters.i: num_converters.c.i
 .PHONY : num_converters.i
 
-# target to generate assembly for a file
-num_converters.s:
-	$(MAKE) -f CMakeFiles/num_converters.dir/build.make CMakeFiles/num_converters.dir/num_converters.s
+# target to preprocess a source file
+num_converters.c.i:
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(MAKE) -f src/CMakeFiles/num_converters.dir/build.make src/CMakeFiles/num_converters.dir/num_converters.c.i
+.PHONY : num_converters.c.i
+
+num_converters.s: num_converters.c.s
 .PHONY : num_converters.s
+
+# target to generate assembly for a file
+num_converters.c.s:
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(MAKE) -f src/CMakeFiles/num_converters.dir/build.make src/CMakeFiles/num_converters.dir/num_converters.c.s
+.PHONY : num_converters.c.s
 
 # Help Target
 help:
@@ -164,6 +194,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... num_converters"
 	@echo "... rebuild_cache"
+	@echo "... test"
 	@echo "... array_decoders.o"
 	@echo "... array_decoders.i"
 	@echo "... array_decoders.s"
@@ -181,6 +212,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/julien/Desktop/MutaFrame/Hackathon/mmtf-c && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
