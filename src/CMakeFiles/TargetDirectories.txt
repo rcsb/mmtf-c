@@ -1,0 +1,2 @@
+/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/CMakeFiles/array_decoders.dir
+/home/julien/Desktop/MutaFrame/Hackathon/mmtf-c/src/CMakeFiles/num_converters.dir
