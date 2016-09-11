@@ -1,8 +1,0 @@
-cmake_minimum_required (VERSION 2.8.11)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/")
-project (MMTF)
-add_executable (helloDemo src/demo.c)
-enable_testing()
-add_subdirectory(src)
-add_subdirectory(tests)
-target_link_libraries (helloDemo LINK_PUBLIC msgpackc)
