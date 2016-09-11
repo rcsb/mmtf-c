@@ -79,6 +79,7 @@ for(int i=0;  i<example->numModels; i++){
    modelIndex++;
    }
 int numBonds = sizeof(example->bondAtomList)/sizeof(example->bondAtomList[0]);
+printf("Number of inter group bonds: %d",numBonds);
 for (int i=0; i<numBonds;i++){
 //*** Issue here - seems too few (two entries for 4HHB).
 //    printf("Atom One: %d\n",example->bondAtomList[i*2]);
