@@ -33,34 +33,36 @@
 
 //*** The MMTF structure
 typedef struct {
-    int *		formalChargeList;    // List of formal charges as Integers
-	uint64_t	atomNameListCount;
-    char **		atomNameList;        // List of atom names, 0 to 5 character Strings
-	uint64_t	elementListCount;
-    char **		elementList;         // List of elements, 0 to 3 character Strings
-    int *		bondAtomList;        // List of bonded atom indices, Integers
-    char *		bondOrderList;       // List of bond orders as Integers between 1 and 4
-    char *		groupName;           // The name of the group, 0 to 5 characters
-    char		singleLetterCode;    // The single letter code, 1 character
-    char *		chemCompType;         // The chemical component type
+    int *				formalChargeList;    // List of formal charges as Integers
+	uint64_t			atomNameListCount;
+    char **				atomNameList;        // List of atom names, 0 to 5 character Strings
+	uint64_t			elementListCount;
+    char **				elementList;         // List of elements, 0 to 3 character Strings
+	uint64_t			bondAtomListCount;
+    int *				bondAtomList;        // List of bonded atom indices, Integers
+	uint64_t			bondOrderListCount;
+    char *				bondOrderList;       // List of bond orders as Integers between 1 and 4
+    char *				groupName;           // The name of the group, 0 to 5 characters
+    char				singleLetterCode;    // The single letter code, 1 character
+    char *				chemCompType;         // The chemical component type
 } MMTF_GroupType;
 
 typedef struct {
-    size_t * chainIndexList;   // Indices of fields in chainIdList and chainNameList fields
-    char *   description;      // Description of the entity
-    char *   type;             // Name of the entity type
-    char *   sequence;          // Sequence of the full construct in one-letter-code
+    size_t *			chainIndexList;   // Indices of fields in chainIdList and chainNameList fields
+    char *				description;      // Description of the entity
+    char *				type;             // Name of the entity type
+    char *				sequence;          // Sequence of the full construct in one-letter-code
 } MMTF_Entity;
 
 typedef struct {
-	size_t*	chainIndexList;
-	float	matrix[16];
+	size_t*				chainIndexList;
+	float				matrix[16];
 } MMTF_Transform;
 
 typedef struct {
-	uint64_t	transformListCount;
-	MMTF_Transform*	transformList;
-	char*		name;
+	uint64_t			transformListCount;
+	MMTF_Transform*		transformList;
+	char*				name;
 } MMTF_BioAssembly;
 
 typedef struct {
@@ -106,7 +108,9 @@ typedef struct {
     int32_t				numModels;
 	uint64_t			groupListCount;
     MMTF_GroupType *	groupList;
+	uint64_t			bondAtomListCount;
     int32_t *			bondAtomList;
+	uint64_t			bondOrderListCount;
     int8_t *			bondOrderList; // 8 bit signed interger
     float *				xCoordList;
     float *				yCoordList;
@@ -129,10 +133,21 @@ typedef struct {
 } MMTF_container;
 
 
-//*** Initiate a MMTF_container
+//*** Create a struct
 MMTF_container* MMTF_container_new( void );
+MMTF_BioAssembly* MMTF_BioAssembly_new( void );
+MMTF_Transform* MMTF_Transform_new( void );
+MMTF_Entity* MMTF_Entity_new( void );
+MMTF_GroupType* MMTF_GroupType_new( void );
 
-//*** Destroy a MMTF_container
+//*** Empty a struct
+MMTF_container* MMTF_container_empty( MMTF_container* );
+MMTF_BioAssembly* MMTF_BioAssembly_empty( MMTF_BioAssembly* );
+MMTF_Transform* MMTF_Transform_empty( MMTF_Transform* );
+MMTF_Entity* MMTF_Entity_empty( MMTF_Entity* );
+MMTF_GroupType* MMTF_GroupType_empty( MMTF_GroupType* );
+
+//*** Destroy a struct
 void MMTF_container_destroy( MMTF_container* );
 void MMTF_BioAssembly_destroy( MMTF_BioAssembly* );
 void MMTF_Transform_destroy( MMTF_Transform* );
@@ -207,6 +222,8 @@ int32_t* MMTF_parser_fetch_clear_int32_array( msgpack_object*, uint64_t* );
 char* MMTF_parser_fetch_clear_int8_array( msgpack_object*, uint64_t* );
 float* MMTF_parser_fetch_clear_float_array( msgpack_object*, uint64_t* );
 char** MMTF_parser_fetch_clear_string_array( msgpack_object*, uint64_t* );
+
+bool MMTF_parser_compare_msgpack_string_char_array( const msgpack_object_str*, const char* );
 
 MMTF_Entity* MMTF_parser_fetch_entityList( msgpack_object*, uint64_t* );
 void MMTF_parser_put_entity( msgpack_object*, MMTF_Entity* );
