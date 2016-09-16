@@ -134,25 +134,39 @@ typedef struct {
 
 
 //*** Create a struct
-MMTF_container* MMTF_container_new( void );
-MMTF_BioAssembly* MMTF_BioAssembly_new( void );
-MMTF_Transform* MMTF_Transform_new( void );
-MMTF_Entity* MMTF_Entity_new( void );
-MMTF_GroupType* MMTF_GroupType_new( void );
+MMTF_container* MMTF_parser_MMTF_container_new( void );
+MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_new( void );
+MMTF_Transform* MMTF_parser_MMTF_Transform_new( void );
+MMTF_Entity* MMTF_parser_MMTF_Entity_new( void );
+MMTF_GroupType* MMTF_parser_MMTF_GroupType_new( void );
+
+//*** Initialize a struct
+MMTF_container* MMTF_parser_MMTF_container_initialize( MMTF_container* );
+MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_initialize( MMTF_BioAssembly* );
+MMTF_Transform* MMTF_parser_MMTF_Transform_initialize( MMTF_Transform* );
+MMTF_Entity* MMTF_parser_MMTF_Entity_initialize( MMTF_Entity* );
+MMTF_GroupType* MMTF_parser_MMTF_GroupType_initialize( MMTF_GroupType* );
 
 //*** Empty a struct
-MMTF_container* MMTF_container_empty( MMTF_container* );
-MMTF_BioAssembly* MMTF_BioAssembly_empty( MMTF_BioAssembly* );
-MMTF_Transform* MMTF_Transform_empty( MMTF_Transform* );
-MMTF_Entity* MMTF_Entity_empty( MMTF_Entity* );
-MMTF_GroupType* MMTF_GroupType_empty( MMTF_GroupType* );
+MMTF_container* MMTF_parser_MMTF_container_empty( MMTF_container* );
+MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_empty( MMTF_BioAssembly* );
+MMTF_Transform* MMTF_parser_MMTF_Transform_empty( MMTF_Transform* );
+MMTF_Entity* MMTF_parser_MMTF_Entity_empty( MMTF_Entity* );
+MMTF_GroupType* MMTF_parser_MMTF_GroupType_empty( MMTF_GroupType* );
+
+//*** Destroy the innner of a struct
+MMTF_container* MMTF_parser_MMTF_container_destroy_inside( MMTF_container* );
+MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_destroy_inside( MMTF_BioAssembly* );
+MMTF_Transform* MMTF_parser_MMTF_Transform_destroy_inside( MMTF_Transform* );
+MMTF_Entity* MMTF_parser_MMTF_Entity_destroy_inside( MMTF_Entity* );
+MMTF_GroupType* MMTF_parser_MMTF_GroupType_destroy_inside( MMTF_GroupType* );
 
 //*** Destroy a struct
-void MMTF_container_destroy( MMTF_container* );
-void MMTF_BioAssembly_destroy( MMTF_BioAssembly* );
-void MMTF_Transform_destroy( MMTF_Transform* );
-void MMTF_Entity_destroy( MMTF_Entity* );
-void MMTF_GroupType_destroy( MMTF_GroupType* );
+void MMTF_parser_MMTF_container_destroy( MMTF_container* );
+void MMTF_parser_MMTF_BioAssembly_destroy( MMTF_BioAssembly* );
+void MMTF_parser_MMTF_Transform_destroy( MMTF_Transform* );
+void MMTF_parser_MMTF_Entity_destroy( MMTF_Entity* );
+void MMTF_parser_MMTF_GroupType_destroy( MMTF_GroupType* );
 
 
 //*** Array converters
