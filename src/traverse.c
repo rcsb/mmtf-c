@@ -18,8 +18,16 @@
 
 int main(int argc, char** argv)
 {
-	MMTF_container* example = MMTF_container_new();
+	MMTF_container* example = MMTF_parser_MMTF_container_new();
 	MMTF_parser_MMTF_container_from_file(argv[1], example);
+
+
+//*** The following two lines are an example of re-using a MMTF_container and can be removed.
+	MMTF_parser_MMTF_container_empty( example );
+	MMTF_parser_MMTF_container_from_file(argv[1], example);
+
+
+
 	// Now iterate over this data structure
 //	# initialize index counters
 int modelIndex = 0;
@@ -27,17 +35,20 @@ int chainIndex = 0;
 int groupIndex = 0;
 int atomIndex = 0;
 //# traverse models
-for(int i=0;  i<example->numModels; i++){
+int i;
+for(i=0;  i<example->numModels; i++){
     int modelChainCount = example->chainsPerModel[i];
     printf("modelIndex: %d",modelIndex);
 //    # traverse chains
-    for(int j=0; j< modelChainCount; j++){
+	int j;
+    for(j=0; j< modelChainCount; j++){
         printf("chainIndex : %d\n",chainIndex);
         printf("Chain id: %s\n",example->chainIdList[chainIndex]);
         printf("Chain name: %s\n",example->chainNameList[chainIndex]);
         int chainGroupCount = example->groupsPerChain[ chainIndex ];
 //        # traverse groups
-        for(int k=0; k<chainGroupCount;k++){
+		int k;
+        for(k=0; k<chainGroupCount;k++){
 //            printf("groupIndex: %d\n",groupIndex);
 //            printf("groupId: %d\n", example->groupIdList[ groupIndex ]);
 //            printf("insCodeList: %c\n",example->insCodeList[ groupIndex ]);
@@ -51,14 +62,15 @@ for(int i=0;  i<example->numModels; i++){
             int atomOffset = atomIndex;
             int groupBondCount = (sizeof(group.bondAtomList)/sizeof(group.bondAtomList[0])) / 2;
 
-            for(int l=0; l<groupBondCount;l++){
+			int l;
+            for(l=0; l<groupBondCount;l++){
             // ****** Issue here - > I get print outs of the same each time
 //                printf("Atom id One: %d\n",(atomOffset + group.bondAtomList[ l * 2 ])); //  # atomIndex1
 //                printf("Atom id Two: %d\n",(atomOffset + group.bondAtomList[ l * 2 + 1 ])); //  # atomIndex2
 //                printf("Bond order: %d\n", group.bondOrderList[ l ]);
             }
            int groupAtomCount = sizeof(group.atomNameList)/sizeof(group.atomNameList[0]);
-           for(int l=0; l<groupAtomCount;l++){
+           for(l=0; l<groupAtomCount;l++){
 //                printf("atomIndex: %d\n", atomIndex);
 //                printf("x coord: %f\n", example->xCoordList[ atomIndex ]);
 //                printf("y coord: %f\n", example->yCoordList[ atomIndex ]);
@@ -79,14 +91,14 @@ for(int i=0;  i<example->numModels; i++){
    modelIndex++;
    }
 int numBonds = sizeof(example->bondAtomList)/sizeof(example->bondAtomList[0]);
-printf("Number of inter group bonds: %d",numBonds);
-for (int i=0; i<numBonds;i++){
+printf("Number of inter group bonds: %d\n",numBonds);
+for (i=0; i<numBonds;i++){
 //*** Issue here - seems too few (two entries for 4HHB).
 //    printf("Atom One: %d\n",example->bondAtomList[i*2]);
 //    printf("Atom Two: %d\n",example->bondAtomList[i*2+1]);
 //    printf("Bond order: %d\n",example->bondOrderList[i]);
 }
 	
-	MMTF_container_destroy( example );
+	MMTF_parser_MMTF_container_destroy( example );
 }
 

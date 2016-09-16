@@ -17,22 +17,91 @@
 #include "mmtf_parser.h"
 
 
-//*** Initiate a MMTF_container
-MMTF_container* MMTF_container_new( void ) {
+//*** Initiate a struct
+MMTF_container* MMTF_parser_MMTF_container_new( void ) {
 	MMTF_container* result = malloc( sizeof( MMTF_container ) );
 
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory.\n", __FUNCTION__ );
+		return NULL;
+	}
+
+	return MMTF_parser_MMTF_container_initialize( result );
+}
+MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_new( void ) {
+	MMTF_BioAssembly* result = malloc( sizeof( MMTF_BioAssembly ) );
+
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory.\n", __FUNCTION__ );
+		return NULL;
+	}
+
+	return MMTF_parser_MMTF_BioAssembly_initialize( result );
+}
+MMTF_Transform* MMTF_parser_MMTF_Transform_new( void ) {
+	MMTF_Transform* result = malloc( sizeof( MMTF_Transform ) );
+
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory.\n", __FUNCTION__ );
+		return NULL;
+	}
+
+	return MMTF_parser_MMTF_Transform_initialize( result );
+}
+MMTF_Entity* MMTF_parser_MMTF_Entity_new( void ) {
+	MMTF_Entity* result = malloc( sizeof( MMTF_Entity ) );
+
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory.\n", __FUNCTION__ );
+		return NULL;
+	}
+
+	return MMTF_parser_MMTF_Entity_initialize( result );
+}
+MMTF_GroupType* MMTF_parser_MMTF_GroupType_new( void ) {
+	MMTF_GroupType* result = malloc( sizeof( MMTF_GroupType ) );
+
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory.\n", __FUNCTION__ );
+		return NULL;
+	}
+
+	return MMTF_parser_MMTF_GroupType_initialize( result );
+}
+
+//*** Initialize a struct
+MMTF_container* MMTF_parser_MMTF_container_initialize( MMTF_container* result ) {
 	result->mmtfVersion = NULL;
 	result->mmtfProducer = NULL;
+	int i;
+	for( i = 0; i < 6; ++i ) {
+		result->unitCell[i] = 0.f;
+	}
 	result->spaceGroup = NULL;
 	result->structureId = NULL;
 	result->title = NULL;
 	result->depositionDate = NULL;
 	result->releaseDate = NULL;
+	result->bioAssemblyListCount = 0;
 	result->bioAssemblyList = NULL;
+	result->entityListCount = 0;
 	result->entityList = NULL;
+	result->experimentalMethodsCount = 0;
 	result->experimentalMethods = NULL;
+	result->numberOfExperimentalMethods = 0;
+    result->resolution = 0.f;
+    result->rFree = 0.f;
+    result->rWork = 0.f;
+    result->numBonds = 0;
+    result->numAtoms = 0;
+    result->numGroups = 0;
+    result->numChains = 0;
+    result->numModels = 0;
+	result->groupListCount = 0;
 	result->groupList = NULL;
+	result->bondAtomListCount = 0;
 	result->bondAtomList = NULL;
+	result->bondOrderListCount = 0;
 	result->bondOrderList = NULL;
 	result->xCoordList = NULL;
 	result->yCoordList = NULL;
@@ -46,124 +115,345 @@ MMTF_container* MMTF_container_new( void ) {
 	result->secStructList = NULL;
 	result->insCodeList = NULL;
 	result->sequenceIndexList = NULL;
+	result->chainIdListCount = 0;
 	result->chainIdList = NULL;
+	result->chainNameListCount = 0;
 	result->chainNameList = NULL;
 	result->groupsPerChain = NULL;
 	result->chainsPerModel = NULL;
 
 	return result;
 }
+MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_initialize( MMTF_BioAssembly* result ) {
+	result->transformListCount = 0;
+	result->transformList = NULL;
+	result->name = NULL;
 
-
-//*** Destroy a MMTF_container
-void MMTF_container_destroy( MMTF_container* thing ) {
-	uint64_t i;
-
-	free( thing->mmtfVersion );
-	free( thing->mmtfProducer );
-	free( thing->spaceGroup );
-	free( thing->structureId );
-	free( thing->title );
-	free( thing->depositionDate );
-	free( thing->releaseDate );
-
-	for( i = 0; i < thing->bioAssemblyListCount; ++i ) {
-		MMTF_BioAssembly_destroy( &(thing->bioAssemblyList[i]) );
+	return result;
+}
+MMTF_Transform* MMTF_parser_MMTF_Transform_initialize( MMTF_Transform* result ) {
+	result->chainIndexList= NULL;
+	int i;
+	for( i = 0; i < 16; ++i ) {
+		result->matrix[i] = 0.;
 	}
-	free( thing->bioAssemblyList );
 
-	for( i = 0; i < thing->entityListCount; ++i ) {
-		MMTF_Entity_destroy( &(thing->entityList[i]) );
+	return result;
+}
+MMTF_Entity* MMTF_parser_MMTF_Entity_initialize( MMTF_Entity* result ) {
+	result->chainIndexList = NULL;
+	result->description = NULL;
+	result->type = NULL;
+	result->sequence = NULL;
+
+	return result;
+}
+MMTF_GroupType* MMTF_parser_MMTF_GroupType_initialize( MMTF_GroupType* result ) {
+	result->formalChargeList = NULL;
+	result->atomNameListCount = 0;
+    result->atomNameList = NULL;
+	result->elementListCount = 0;
+    result->elementList = NULL;
+	result->bondAtomListCount = 0;
+    result->bondAtomList = NULL;
+	result->bondOrderListCount = 0;
+    result->bondOrderList = NULL;
+    result->groupName = NULL;
+    result->singleLetterCode = '\0';
+    result->chemCompType = NULL;
+
+	return result;
+}
+
+//*** Empty a struct
+MMTF_container* MMTF_parser_MMTF_container_empty( MMTF_container* result ) {
+	if( result != NULL ) {
+//*** Destroy what is inside
+		MMTF_parser_MMTF_container_destroy_inside( result );
+//*** Initialize with the default values
+		MMTF_parser_MMTF_container_initialize( result );
 	}
-	free( thing->entityList );
-
-	for( i = 0; i < thing->experimentalMethodsCount; ++i ) {
-		free( thing->experimentalMethods[i] );
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
 	}
-	free( thing->experimentalMethods );
 
-	for( i = 0; i < thing->groupListCount; ++i ) {
-		MMTF_GroupType_destroy( &(thing->groupList[i]) );
+	return result;
+}
+MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_empty( MMTF_BioAssembly* result ) {
+	if( result != NULL ) {
+//*** Destroy what is inside
+		MMTF_parser_MMTF_BioAssembly_destroy_inside( result );
+//*** Initialize with the default values
+		MMTF_parser_MMTF_BioAssembly_initialize( result );
 	}
-	free( thing->groupList );
-
-	free( thing->bondAtomList );
-	free( thing->bondOrderList );
-	free( thing->xCoordList );
-	free( thing->yCoordList );
-	free( thing->zCoordList );
-	free( thing->bFactorList );
-	free( thing->atomIdList );
-	free( thing->altLocList );
-	free( thing->occupancyList );
-	free( thing->groupIdList );
-	free( thing->groupTypeList );
-	free( thing->secStructList );
-	free( thing->insCodeList );
-	free( thing->sequenceIndexList );
-
-	for( i = 0; i < thing->chainIdListCount; ++i ) {
-		free( thing->chainIdList[i] );
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
 	}
-	free( thing->chainIdList );
 
-	for( i = 0; i < thing->chainNameListCount; ++i ) {
-		free( thing->chainNameList[i] );
+	return result;
+}
+MMTF_Transform* MMTF_parser_MMTF_Transform_empty( MMTF_Transform* result ) {
+	if( result != NULL ) {
+//*** Destroy what is inside
+		MMTF_parser_MMTF_Transform_destroy_inside( result );
+//*** Initialize with the default values
+		MMTF_parser_MMTF_Transform_initialize( result );
 	}
-	free( thing->chainNameList );
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
+	}
 
-	free( thing->groupsPerChain );
-	free( thing->chainsPerModel );
+	return result;
+}
+MMTF_Entity* MMTF_parser_MMTF_Entity_empty( MMTF_Entity* result ) {
+	if( result != NULL ) {
+//*** Destroy what is inside
+		MMTF_parser_MMTF_Entity_destroy_inside( result );
+//*** Initialize with the default values
+		MMTF_parser_MMTF_Entity_initialize( result );
+	}
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
+	}
 
-	free( thing );
+	return result;
+}
+MMTF_GroupType* MMTF_parser_MMTF_GroupType_empty( MMTF_GroupType* result ) {
+	if( result != NULL ) {
+//*** Destroy what is inside
+		MMTF_parser_MMTF_GroupType_destroy_inside( result );
+//*** Initialize with the default values
+		MMTF_parser_MMTF_GroupType_initialize( result );
+	}
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
+	}
+
+	return result;
+}
+
+//*** Destroy the innner of a struct
+MMTF_container* MMTF_parser_MMTF_container_destroy_inside( MMTF_container* thing ) {
+	if( thing != NULL ) {
+		uint64_t i;
+
+		if( thing->mmtfVersion != NULL )
+			free( thing->mmtfVersion );
+		if( thing->mmtfProducer != NULL )
+			free( thing->mmtfProducer );
+		if( thing->spaceGroup != NULL )
+			free( thing->spaceGroup );
+		if( thing->structureId != NULL )
+			free( thing->structureId );
+		if( thing->title != NULL )
+			free( thing->title );
+		if( thing->depositionDate != NULL )
+			free( thing->depositionDate );
+		if( thing->releaseDate != NULL )
+			free( thing->releaseDate );
+
+		if( thing->bioAssemblyList != NULL ) {
+			for( i = 0; i < thing->bioAssemblyListCount; ++i ) {
+				MMTF_parser_MMTF_BioAssembly_destroy_inside( &(thing->bioAssemblyList[i]) );
+			}
+			free( thing->bioAssemblyList );
+		}
+
+		if( thing->entityList != NULL ) {
+			for( i = 0; i < thing->entityListCount; ++i ) {
+				MMTF_parser_MMTF_Entity_destroy_inside( &(thing->entityList[i]) );
+			}
+			free( thing->entityList );
+		}
+
+		if( thing->experimentalMethods != NULL ) {
+			for( i = 0; i < thing->experimentalMethodsCount; ++i ) {
+				free( thing->experimentalMethods[i] );
+			}
+			free( thing->experimentalMethods );
+		}
+
+		if( thing->groupList != NULL ) {
+			for( i = 0; i < thing->groupListCount; ++i ) {
+				MMTF_parser_MMTF_GroupType_destroy_inside( &(thing->groupList[i]) );
+			}
+			free( thing->groupList );
+		}
+
+		if( thing->bondAtomList != NULL )
+			free( thing->bondAtomList );
+		if( thing->bondOrderList != NULL )
+			free( thing->bondOrderList );
+		if( thing->xCoordList != NULL )
+			free( thing->xCoordList );
+		if( thing->yCoordList != NULL )
+			free( thing->yCoordList );
+		if( thing->zCoordList != NULL )
+			free( thing->zCoordList );
+		if( thing->bFactorList != NULL )
+			free( thing->bFactorList );
+		if( thing->atomIdList != NULL )
+			free( thing->atomIdList );
+		if( thing->altLocList != NULL )
+			free( thing->altLocList );
+		if( thing->occupancyList != NULL )
+			free( thing->occupancyList );
+		if( thing->groupIdList != NULL )
+			free( thing->groupIdList );
+		if( thing->groupTypeList != NULL )
+			free( thing->groupTypeList );
+		if( thing->secStructList != NULL )
+			free( thing->secStructList );
+		if( thing->insCodeList != NULL )
+			free( thing->insCodeList );
+		if( thing->sequenceIndexList != NULL )
+			free( thing->sequenceIndexList );
+
+		if( thing->chainIdList != NULL ) {
+			for( i = 0; i < thing->chainIdListCount; ++i ) {
+				free( thing->chainIdList[i] );
+			}
+			free( thing->chainIdList );
+		}
+
+		if( thing->chainNameList != NULL ) {
+			for( i = 0; i < thing->chainNameListCount; ++i ) {
+				free( thing->chainNameList[i] );
+			}
+			free( thing->chainNameList );
+		}
+
+		if( thing->groupsPerChain != NULL )
+			free( thing->groupsPerChain );
+		if( thing->chainsPerModel != NULL )
+			free( thing->chainsPerModel );
+	}
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
+	}
+}
+MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_destroy_inside( MMTF_BioAssembly* bio_assembly ) {
+	if( bio_assembly != NULL ) {
+		if( bio_assembly->name != NULL )
+			free( bio_assembly->name );
+
+		uint64_t i;
+		if( bio_assembly->transformList != NULL ) {
+			for( i = 0; i < bio_assembly->transformListCount; ++i ) {
+				MMTF_parser_MMTF_Transform_destroy_inside( &(bio_assembly->transformList[i]) );
+			}
+			free( bio_assembly->transformList );
+		}
+	}
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
+	}
+}
+MMTF_Transform* MMTF_parser_MMTF_Transform_destroy_inside( MMTF_Transform* transform ) {
+	if( transform != NULL ) {
+		if( transform->chainIndexList != NULL )
+			free( transform->chainIndexList );
+	}
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
+	}
+}
+MMTF_Entity* MMTF_parser_MMTF_Entity_destroy_inside( MMTF_Entity* entity ) {
+	if( entity != NULL ) {
+		if( entity->chainIndexList != NULL )
+			free( entity->chainIndexList );
+		if( entity->description != NULL )
+			free( entity->description );
+		if( entity->type != NULL )
+			free( entity->type );
+		if( entity->sequence != NULL )
+			free( entity->sequence );
+	}
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
+	}
+}
+MMTF_GroupType* MMTF_parser_MMTF_GroupType_destroy_inside( MMTF_GroupType* group_type ) {
+	if( group_type != NULL ) {
+		uint64_t i;
+
+		if( group_type->formalChargeList != NULL )
+			free( group_type->formalChargeList );
+
+		if( group_type->atomNameList != NULL ) {
+			for( i = 0; i < group_type->atomNameListCount; ++i ) {
+				free( group_type->atomNameList[i] );
+			}
+			free( group_type->atomNameList );
+		}
+
+		if( group_type->elementList != NULL ) {
+			for( i = 0; i < group_type->elementListCount; ++i ) {
+				free( group_type->elementList[i] );
+			}
+			free( group_type->elementList );
+		}
+
+		if( group_type->bondAtomList != NULL )
+			free( group_type->bondAtomList );
+		if( group_type->bondOrderList != NULL )
+			free( group_type->bondOrderList );
+		if( group_type->groupName != NULL )
+			free( group_type->groupName );
+		if( group_type->chemCompType != NULL )
+			free( group_type->chemCompType );
+	}
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
+	}
 }
 
 
-void MMTF_BioAssembly_destroy( MMTF_BioAssembly* bio_assembly ) {
-	free( bio_assembly->name );
-
-	uint64_t i;
-	for( i = 0; i < bio_assembly->transformListCount; ++i ) {
-		MMTF_Transform_destroy( &(bio_assembly->transformList[i]) );
+//*** Destroy a struct
+void MMTF_parser_MMTF_container_destroy( MMTF_container* thing ) {
+	if( thing != NULL ) {
+		MMTF_parser_MMTF_container_destroy_inside( thing );
+		free( thing );
 	}
-	free( bio_assembly->transformList );
-
-	free( bio_assembly );
-}
-void MMTF_Transform_destroy( MMTF_Transform* transform ) {
-	free( transform->chainIndexList );
-
-	free( transform );
-}
-void MMTF_Entity_destroy( MMTF_Entity* entity ) {
-	free( entity->chainIndexList );
-	free( entity->description );
-	free( entity->type );
-	free( entity->sequence );
-
-	free( entity );
-}
-void MMTF_GroupType_destroy( MMTF_GroupType* group_type ) {
-	uint64_t i;
-
-	free( group_type->formalChargeList );
-
-	for( i = 0; i < group_type->atomNameListCount; ++i ) {
-		free( group_type->atomNameList[i] );
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
 	}
-	free( group_type->atomNameList );
-
-	for( i = 0; i < group_type->elementListCount; ++i ) {
-		free( group_type->elementList[i] );
+}
+void MMTF_parser_MMTF_BioAssembly_destroy( MMTF_BioAssembly* bio_assembly ) {
+	if( bio_assembly != NULL ) {
+		MMTF_parser_MMTF_BioAssembly_destroy_inside( bio_assembly );
+		free( bio_assembly );
 	}
-	free( group_type->elementList );
-
-	free( group_type->bondAtomList );
-	free( group_type->bondOrderList );
-	free( group_type->groupName );
-	free( group_type->chemCompType );
-
-	free( group_type );
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
+	}
+}
+void MMTF_parser_MMTF_Transform_destroy( MMTF_Transform* transform ) {
+	if( transform != NULL ) {
+		MMTF_parser_MMTF_Transform_destroy_inside( transform );
+		free( transform );
+	}
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
+	}
+}
+void MMTF_parser_MMTF_Entity_destroy( MMTF_Entity* entity ) {
+	if( entity != NULL ) {
+		MMTF_parser_MMTF_Entity_destroy_inside( entity );
+		free( entity );
+	}
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
+	}
+}
+void MMTF_parser_MMTF_GroupType_destroy( MMTF_GroupType* group_type ) {
+	if( group_type != NULL ) {
+		MMTF_parser_MMTF_GroupType_destroy_inside( group_type );
+		free( group_type );
+	}
+	else {
+		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
+	}
 }
 
 //*** Array converters
@@ -171,13 +461,18 @@ void MMTF_GroupType_destroy( MMTF_GroupType* group_type ) {
 
 float* MMTF_parser_float_from_bytes( const char* input, uint32_t input_length, uint32_t* output_length ) {
 	if( input_length % 4 != 0 ) {
-		fprintf( stderr, "Error in the function float_from_bytes : the input length %u is not a multiple of 4.\n", input_length );
+		fprintf( stderr, "Error in %s : the input length %u is not a multiple of 4.\n", __FUNCTION__, input_length );
 		return NULL;
 	}
 
 	(*output_length) = input_length/4;
 
 	float* output = malloc( sizeof(float)*(*output_length) );
+
+	if( output == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	MMTF_parser_four_bytes_as_float u;
 	uint32_t i;
@@ -198,6 +493,11 @@ int8_t* MMTF_parser_int8_from_bytes( const char* input, uint32_t input_length, u
 
 	int8_t* output = malloc( sizeof(int8_t)*(*output_length) );
 
+	if( output == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
+
 	MMTF_parser_one_byte_as_int8 u;
 	uint32_t i;
 	for( i = 0; i < input_length; ++i ) {
@@ -211,13 +511,18 @@ int8_t* MMTF_parser_int8_from_bytes( const char* input, uint32_t input_length, u
 
 int16_t* MMTF_parser_int16_from_bytes( const char* input, uint32_t input_length, uint32_t* output_length ) {
 	if( input_length % 2 != 0 ) {
-		fprintf( stderr, "Error in the function int16_from_bytes : the input length %u is not a multiple of 2.\n", input_length );
+		fprintf( stderr, "Error in %s: the input length %u is not a multiple of 2.\n", __FUNCTION__, input_length );
 		return NULL;
 	}
 
 	(*output_length) = input_length/2;
 
 	int16_t* output = malloc( sizeof(int16_t)*(*output_length) );
+
+	if( output == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	MMTF_parser_two_bytes_as_int16 u;
 	uint32_t i;
@@ -266,13 +571,18 @@ int  MMTF_parser_get_param(const char * bytes) {
 
 int32_t* MMTF_parser_int32_from_bytes( const char* input, const uint32_t input_length, uint32_t* output_length ) {
 	if( input_length % 4 != 0 ) {
-		fprintf( stderr, "Error in the function int32_from_bytes : the input length %u is not a multiple of 4.\n", input_length );
+		fprintf( stderr, "Error in %s: the input length %u is not a multiple of 4.\n", __FUNCTION__, input_length );
 		return NULL;
 	}
 
 	(*output_length) = input_length/4;
 
 	int32_t* output = malloc( sizeof(int32_t) * (*output_length) );
+
+	if( output == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	MMTF_parser_four_bytes_as_int32 u;
 	uint32_t i;
@@ -293,6 +603,11 @@ char* MMTF_parser_string_from_int32( const int32_t* input, const uint32_t input_
 
 	char* output = malloc( sizeof( char ) * (*output_length) );
 
+	if( output == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
+
 	MMTF_parser_four_bytes_as_int32 u;
 	uint32_t i;
 	for( i = 0; i < input_length; ++i ) {
@@ -309,16 +624,27 @@ char* MMTF_parser_string_from_int32( const int32_t* input, const uint32_t input_
 
 char** MMTF_parser_strings_from_bytes( const char* input, uint32_t input_length, uint32_t parameter, uint32_t* output_length ) {
 	if( input_length % parameter != 0 ) {
-		fprintf( stderr, "Error in the function float_from_bytes : the input length %u is not a multiple of your parameter %u.\n", input_length, parameter );
+		fprintf( stderr, "Error in %s: the input length %u is not a multiple of your parameter %u.\n", __FUNCTION__, input_length, parameter );
 		return NULL;
 	}
 
 	(*output_length) = input_length / parameter;
 
 	char** output = malloc( sizeof(char*)*(*output_length) );
+
+	if( output == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
+
 	uint32_t i,j;
 	for( i = 0; i < *output_length; ++i ) {
 		output[i] = malloc( sizeof(char)*parameter );
+
+		if( output[i] == NULL ) {
+			fprintf( stderr, "Error in %s: couldn't allocate memory for one of the strings.\n", __FUNCTION__ );
+			return NULL;
+		}
 	}
 
 	for( i = 0; i < *output_length; ++i ) {
@@ -337,7 +663,7 @@ int32_t* MMTF_parser_run_length_decode( int32_t* input, uint32_t input_length, u
 	(*output_length) = 0;
 
 	if( input_length % 2 != 0 ) {
-		fprintf( stderr, "Error in calling run-length decode: your input length %u is not an even number.\n", input_length );
+		fprintf( stderr, "Error in %s: your input length %u is not an even number.\n", __FUNCTION__, input_length );
 		return NULL;
 	}
 
@@ -351,6 +677,11 @@ int32_t* MMTF_parser_run_length_decode( int32_t* input, uint32_t input_length, u
 	}
 
 	int32_t* output = malloc(sizeof(int32_t)*(*output_length)); // The output needs to be freed by the calling process
+
+	if( output == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	int j = 0;
 	int k;
@@ -371,6 +702,11 @@ int32_t* MMTF_parser_run_length_decode( int32_t* input, uint32_t input_length, u
 int32_t* MMTF_parser_delta_decode( int32_t* input, uint32_t input_length, uint32_t* output_length ) {
 	(*output_length) = input_length;
 	int32_t* output = malloc(sizeof(int32_t)*(*output_length)); // The output needs to be freed by the calling process
+
+	if( output == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	output[0] = input[0];
 	uint32_t i;
@@ -393,6 +729,11 @@ int32_t* MMTF_parser_recursive_indexing_decode_from_16( int16_t* input, uint32_t
 	}
 
 	int32_t* output = (int32_t*) malloc(sizeof(int32_t)*(*output_length)); // The output needs to be freed by the calling process
+
+	if( output == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	int j = 0;
 	output[j] = 0;
@@ -420,6 +761,11 @@ int32_t* MMTF_parser_recursive_indexing_decode_from_8( int8_t* input, uint32_t i
 
 	int32_t* output = malloc(sizeof(int32_t)*(*output_length)); // The output needs to be freed by the calling process
 
+	if( output == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
+
 	int j = 0;
 	output[j] = 0;
 
@@ -440,6 +786,11 @@ float* MMTF_parser_integer_decode_from_16( int16_t* input, uint32_t input_length
 	(*output_length) = input_length;
 	float* output = (float*) malloc( sizeof(float) * (*output_length) );
 
+	if( output == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
+
 	float parameter_float = (float) parameter;
 	uint32_t i;
 	for(i = 0; i < input_length; ++i ) {
@@ -452,6 +803,11 @@ float* MMTF_parser_integer_decode_from_16( int16_t* input, uint32_t input_length
 float* MMTF_parser_integer_decode_from_32( int32_t* input, uint32_t input_length, int32_t parameter, uint32_t* output_length ) {
 	(*output_length) = input_length;
 	float* output = (float*) malloc( sizeof(float) * (*output_length) );
+
+	if( output == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	float parameter_float = (float) parameter;
 	uint32_t i;
@@ -479,6 +835,12 @@ void* MMTF_parser_decode_apply_strategy( const char* input, uint32_t input_lengt
 		case 6: {
 			*output_length = input_length;
 			char* result = malloc( sizeof( char ) * ( (*output_length) + 1 ) );
+
+			if( result == NULL ) {
+				fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+				return NULL;
+			}
+
 			strcpy( result, input );
 			result[*output_length] = '\0';
 			return result;
@@ -589,7 +951,7 @@ void* MMTF_parser_decode_apply_strategy( const char* input, uint32_t input_lengt
 			return output;
 		}
 		default: {
-			fprintf( stderr, "Error in decode_apply_strategy: %i does not refer to any strategy.\n", strategy );
+			fprintf( stderr, "Error in %s: %i does not refer to any strategy.\n", __FUNCTION__, strategy );
 			return NULL;
 		}
 	}
@@ -599,13 +961,19 @@ void* MMTF_parser_decode_apply_strategy( const char* input, uint32_t input_lengt
 //*** Unpacking from MsgPack and applying strategy
 char* MMTF_parser_fetch_string( msgpack_object* object ) {
 	if( object->type != MSGPACK_OBJECT_STR ) {
-		fprintf( stderr, "Error in fetch_string: the entry encoded in the MMTF is not a string.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not a string.\n", __FUNCTION__ );
 		return NULL;
 	}
 
 	msgpack_object_str* value_string = &(object->via.str);
 
 	char* result = malloc( sizeof( char ) * ( value_string->size + 1 ) );
+
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
+
 	strncpy( result, value_string->ptr, value_string->size );
 	result[value_string->size] = '\0';
 
@@ -614,7 +982,7 @@ char* MMTF_parser_fetch_string( msgpack_object* object ) {
 
 char MMTF_parser_fetch_char( msgpack_object* object ) {
 	if( object->type != MSGPACK_OBJECT_STR) {
-		fprintf( stderr, "Error in fetch_string: the entry encoded in the MMTF is not a string.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not a string.\n", __FUNCTION__ );
 		return '\0';
 	}
 
@@ -631,7 +999,7 @@ uint64_t MMTF_parser_fetch_int( msgpack_object* object ) {
         result = object->via.i64;
 	}
 	else {
-		fprintf( stderr, "Error in fetch_int: the entry encoded in the MMTF is not an integer.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not an integer.\n", __FUNCTION__ );
 		return NAN;
 	}
 
@@ -640,7 +1008,7 @@ uint64_t MMTF_parser_fetch_int( msgpack_object* object ) {
 
 float MMTF_parser_fetch_float( msgpack_object* object ) {
 	if( object->type != MSGPACK_OBJECT_FLOAT ) {
-		fprintf( stderr, "Error in fetch_float: the entry encoded in the MMTF is not a float.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not a float.\n", __FUNCTION__ );
 		return NAN;
 	}
 	
@@ -649,7 +1017,7 @@ float MMTF_parser_fetch_float( msgpack_object* object ) {
 
 void* MMTF_parser_fetch_array( msgpack_object* object, uint64_t* length ) {
 	if( object->type != MSGPACK_OBJECT_BIN ) {
-		fprintf( stderr, "Error in fetch_array: the entry encoded in the MMTF is not binary data.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not binary data.\n", __FUNCTION__ );
 		return NULL;
 	}
 
@@ -667,17 +1035,22 @@ void* MMTF_parser_fetch_array( msgpack_object* object, uint64_t* length ) {
 
 size_t* MMTF_parser_fetch_clear_lu_array( msgpack_object* object, uint64_t* length ) {
 	if( object->type != MSGPACK_OBJECT_ARRAY ) {
-		fprintf( stderr, "Error in fetch_clear_array: the entry encoded in the MMTF is not an array.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not an array.\n", __FUNCTION__ );
 		return NULL;
 	}
 
 	msgpack_object* current_value = object->via.array.ptr;
-	(*length) = object->via.array.size;
+	(*length) = (uint64_t) object->via.array.size;
 	msgpack_object* last_value = current_value + (*length);
 
 //printf( "Unpacking an unsigned long int array of length %lu.\n", *length );
 
 	size_t* result = malloc( sizeof( size_t ) * (*length) );
+
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	int i = 0;
 	for( ; current_value < last_value; ++current_value ) {
@@ -690,17 +1063,22 @@ size_t* MMTF_parser_fetch_clear_lu_array( msgpack_object* object, uint64_t* leng
 
 int* MMTF_parser_fetch_clear_int_array( msgpack_object* object, uint64_t* length ) {
 	if( object->type != MSGPACK_OBJECT_ARRAY ) {
-		fprintf( stderr, "Error in fetch_clear_array: the entry encoded in the MMTF is not an array.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not an array.\n", __FUNCTION__ );
 		return NULL;
 	}
 
 	msgpack_object* current_value = object->via.array.ptr;
-	(*length) = object->via.array.size;
+	(*length) = (uint64_t) object->via.array.size;
 	msgpack_object* last_value = current_value + (*length);
 
 //printf( "Unpacking an int array of length %lu.\n", *length );
 
 	int* result = malloc( sizeof( int ) * (*length) );
+
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	int i = 0;
 	for( ; current_value < last_value; ++current_value ) {
@@ -713,17 +1091,22 @@ int* MMTF_parser_fetch_clear_int_array( msgpack_object* object, uint64_t* length
 
 int32_t* MMTF_parser_fetch_clear_int32_array( msgpack_object* object, uint64_t* length ) {
 	if( object->type != MSGPACK_OBJECT_ARRAY ) {
-		fprintf( stderr, "Error in fetch_clear_array: the entry encoded in the MMTF is not an array.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not an array.\n", __FUNCTION__ );
 		return NULL;
 	}
 
 	msgpack_object* current_value = object->via.array.ptr;
-	(*length) = object->via.array.size;
+	(*length) = (uint64_t) object->via.array.size;
 	msgpack_object* last_value = current_value + (*length);
 
 //printf( "Unpacking an int32 array of length %lu.\n", *length );
 
 	int32_t* result = malloc( sizeof( int32_t ) * (*length) );
+
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	int i = 0;
 	for( ; current_value < last_value; ++current_value ) {
@@ -736,17 +1119,22 @@ int32_t* MMTF_parser_fetch_clear_int32_array( msgpack_object* object, uint64_t* 
 
 char* MMTF_parser_fetch_clear_int8_array( msgpack_object* object, uint64_t* length ) {
 	if( object->type != MSGPACK_OBJECT_ARRAY ) {
-		fprintf( stderr, "Error in fetch_clear_array: the entry encoded in the MMTF is not an array.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not an array.\n", __FUNCTION__ );
 		return NULL;
 	}
 
 	msgpack_object* current_value = object->via.array.ptr;
-	(*length) = object->via.array.size;
+	(*length) = (uint64_t) object->via.array.size;
 	msgpack_object* last_value = current_value + (*length);
 
 //printf( "Unpacking an int8 array of length %lu.\n", *length );
 
 	char* result = malloc( sizeof( char ) * (*length) );
+
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	int i = 0;
 	for( ; current_value < last_value; ++current_value ) {
@@ -759,17 +1147,22 @@ char* MMTF_parser_fetch_clear_int8_array( msgpack_object* object, uint64_t* leng
 
 float* MMTF_parser_fetch_clear_float_array( msgpack_object* object, uint64_t* length ) {
 	if( object->type != MSGPACK_OBJECT_ARRAY ) {
-		fprintf( stderr, "Error in fetch_clear_array: the entry encoded in the MMTF is not an array.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not an array.\n", __FUNCTION__ );
 		return NULL;
 	}
 
 	msgpack_object* current_value = object->via.array.ptr;
-	(*length) = object->via.array.size;
+	(*length) = (uint64_t) object->via.array.size;
 	msgpack_object* last_value = current_value + (*length);
 
 //printf( "Unpacking a float array of length %lu.\n", *length );
 
 	float* result = malloc( sizeof( float ) * (*length) );
+
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	int i = 0;
 	for( ; current_value < last_value; ++current_value ) {
@@ -782,23 +1175,34 @@ float* MMTF_parser_fetch_clear_float_array( msgpack_object* object, uint64_t* le
 
 char** MMTF_parser_fetch_clear_string_array( msgpack_object* object, uint64_t* length ) {
 	if( object->type != MSGPACK_OBJECT_ARRAY ) {
-		fprintf( stderr, "Error in fetch_clear_array: the entry encoded in the MMTF is not an array.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not an array.\n", __FUNCTION__ );
 		return NULL;
 	}
 
 	msgpack_object* current_value = object->via.array.ptr;
-	(*length) = object->via.array.size;
+	(*length) = (uint64_t) object->via.array.size;
 	msgpack_object* last_value = current_value + (*length);
 
 //printf( "Unpacking a string array of length %lu.\n", *length );
 
 	char** result = malloc( sizeof( char* ) * (*length) );
 
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for its output.\n", __FUNCTION__ );
+		return NULL;
+	}
+
 	int i = 0;
 	uint32_t string_size;
 	for( ; current_value < last_value; ++current_value ) {
 		string_size = current_value->via.str.size;
 		result[i] = malloc( sizeof( char ) * ( string_size + 1 ) );
+
+		if( result[i] == NULL ) {
+			fprintf( stderr, "Error in %s: couldn't allocate memory for one of its strings.\n", __FUNCTION__ );
+			return NULL;
+		}
+
 		strncpy( result[i], current_value->via.str.ptr, string_size );
 		result[i][string_size] = '\0';
 		++i;
@@ -807,19 +1211,29 @@ char** MMTF_parser_fetch_clear_string_array( msgpack_object* object, uint64_t* l
     return result;
 }
 
+bool MMTF_parser_compare_msgpack_string_char_array( const msgpack_object_str* m_string, const char* string ) {
+	return (m_string->size == strlen( string ) && strncmp( m_string->ptr, string, m_string->size ) == 0);
+}
+
 MMTF_Entity* MMTF_parser_fetch_entityList( msgpack_object* object, uint64_t* length ) {
 	if( object->type != MSGPACK_OBJECT_ARRAY ) {
-		fprintf( stderr, "Error in fetch_entityList: the entry encoded in the MMTF is not an array.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not an array.\n", __FUNCTION__ );
 		return NULL;
 	}
 
 	msgpack_object* current_entity = object->via.array.ptr;
 	uint32_t entityList_count = object->via.array.size;
+	*length = (uint64_t) entityList_count;
 	msgpack_object* stop_entity = object->via.array.ptr + entityList_count;
 
 //printf( "Decoding an array of %u Entity.\n", entityList_count );
 
 	MMTF_Entity* result = malloc( sizeof( MMTF_Entity ) * entityList_count );
+
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for the EntityList.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	int i = 0;
 	for( ; current_entity < stop_entity; ++current_entity ) {
@@ -832,7 +1246,7 @@ MMTF_Entity* MMTF_parser_fetch_entityList( msgpack_object* object, uint64_t* len
 
 void MMTF_parser_put_entity( msgpack_object* object, MMTF_Entity* entity ) {
 	if( object->type != MSGPACK_OBJECT_MAP ) {
-		fprintf( stderr, "Error in put_entity: the entry encoded in the MMTF is not a map.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not a map.\n", __FUNCTION__ );
 		return;
 	}
 
@@ -847,27 +1261,27 @@ void MMTF_parser_put_entity( msgpack_object* object, MMTF_Entity* entity ) {
 
 //printf( "Key %.*s:\n", key->via.str.size, key->via.str.ptr );
 
-			uint32_t key_size = key->via.str.size;
-			const char* key_string = key->via.str.ptr;
+//			uint32_t key_size = key->via.str.size;
+//			const char* key_string = key->via.str.ptr;
 
-			if( key_size == strlen( "description" ) && strncmp( key_string, "description", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "description" ) ) {
 				(*entity).description = MMTF_parser_fetch_string( value );
 
 //printf( "description : %s\n\n", (*entity).description );
 			}
 
-			if( key_size == strlen( "type" ) && strncmp( key_string, "type", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "type" ) ) {
 				(*entity).type = MMTF_parser_fetch_string( value );
 
 //printf( "type : %s\n\n", (*entity).type );
 			}
 
-			if( key_size == strlen( "chainIndexList" ) && strncmp( key_string, "chainIndexList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "chainIndexList" ) ) {
 				uint64_t length;
 				(*entity).chainIndexList = MMTF_parser_fetch_clear_lu_array( value, &length );
 			}
 
-			if( key_size == strlen( "sequence" ) && strncmp( key_string, "sequence", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "sequence" ) ) {
 				(*entity).sequence = MMTF_parser_fetch_string( value );
 
 //printf( "sequence : %s\n\n", (*entity).sequence );
@@ -878,17 +1292,23 @@ void MMTF_parser_put_entity( msgpack_object* object, MMTF_Entity* entity ) {
 
 MMTF_GroupType* MMTF_parser_fetch_groupList( msgpack_object* object, uint64_t* length ) {
 	if( object->type != MSGPACK_OBJECT_ARRAY ) {
-		fprintf( stderr, "Error in fetch_groupList: the entry encoded in the MMTF is not an array.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not an array.\n", __FUNCTION__ );
 		return NULL;
 	}
 
 	msgpack_object* current_groupType = object->via.array.ptr;
 	uint32_t groupList_count = object->via.array.size;
+	*length = (uint64_t) groupList_count;
 	msgpack_object* stop_groupType = object->via.array.ptr + groupList_count;
 
 //printf( "Decoding an array of %u GroupType.\n", groupList_count );
 
 	MMTF_GroupType* result = malloc( sizeof( MMTF_GroupType ) * groupList_count );
+
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for the GroupType.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	int i = 0;
 	for( ; current_groupType < stop_groupType; ++current_groupType ) {
@@ -901,7 +1321,7 @@ MMTF_GroupType* MMTF_parser_fetch_groupList( msgpack_object* object, uint64_t* l
 
 void MMTF_parser_put_groupType( msgpack_object* object, MMTF_GroupType* group_type ) {
 	if( object->type != MSGPACK_OBJECT_MAP ) {
-		fprintf( stderr, "Error in put_groupType: the entry encoded in the MMTF is not a map.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not a map.\n", __FUNCTION__ );
 		return;
 	}
 
@@ -916,45 +1336,43 @@ void MMTF_parser_put_groupType( msgpack_object* object, MMTF_GroupType* group_ty
 
 //printf( "Key %.*s:\n", key->via.str.size, key->via.str.ptr );
 
-			uint32_t key_size = key->via.str.size;
-			const char* key_string = key->via.str.ptr;
+//			uint32_t key_size = key->via.str.size;
+//			const char* key_string = key->via.str.ptr;
 
-			if( key_size == strlen( "formalChargeList" ) && strncmp( key_string, "formalChargeList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "formalChargeList" ) ) {
 				uint64_t length;
 				(*group_type).formalChargeList = MMTF_parser_fetch_clear_int_array( value, &length );
 			}
 
-			if( key_size == strlen( "atomNameList" ) && strncmp( key_string, "atomNameList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "atomNameList" ) ) {
 				(*group_type).atomNameList = MMTF_parser_fetch_clear_string_array( value, &(group_type->atomNameListCount) );
 			}
 
-			if( key_size == strlen( "elementList" ) && strncmp( key_string, "elementList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "elementList" ) ) {
 				(*group_type).elementList = MMTF_parser_fetch_clear_string_array( value, &(group_type->elementListCount) );
 			}
 
-			if( key_size == strlen( "bondAtomList" ) && strncmp( key_string, "bondAtomList", key_size ) == 0 ) {
-				uint64_t length;
-				(*group_type).bondAtomList = MMTF_parser_fetch_clear_int_array( value, &length );
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "bondAtomList" ) ) {
+				(*group_type).bondAtomList = MMTF_parser_fetch_clear_int_array( value, &(group_type->bondAtomListCount) );
 			}
 
-			if( key_size == strlen( "bondOrderList" ) && strncmp( key_string, "bondOrderList", key_size ) == 0 ) {
-				uint64_t length;
-				(*group_type).bondOrderList = MMTF_parser_fetch_clear_int8_array( value, &length );
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "bondOrderList" ) ) {
+				(*group_type).bondOrderList = MMTF_parser_fetch_clear_int8_array( value, &(group_type->bondOrderListCount) );
 			}
 
-			if( key_size == strlen( "groupName" ) && strncmp( key_string, "groupName", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "groupName" ) ) {
 				(*group_type).groupName = MMTF_parser_fetch_string( value );
 
 //printf( "groupName : %s\n\n", (*group_type).groupName );
 			}
 
-			if( key_size == strlen( "singleLetterCode" ) && strncmp( key_string, "singleLetterCode", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "singleLetterCode" ) ) {
 				(*group_type).singleLetterCode = MMTF_parser_fetch_char( value );
 
 //printf( "singleLetterCode : %c\n\n", (*group_type).singleLetterCode );
 			}
 
-			if( key_size == strlen( "chemCompType" ) && strncmp( key_string, "chemCompType", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "chemCompType" ) ) {
 				(*group_type).chemCompType = MMTF_parser_fetch_string( value );
 
 //printf( "chemCompType : %s\n\n", (*group_type).chemCompType );
@@ -965,17 +1383,23 @@ void MMTF_parser_put_groupType( msgpack_object* object, MMTF_GroupType* group_ty
 
 MMTF_BioAssembly* MMTF_parser_fetch_bioAssemblyList( msgpack_object* object, uint64_t* length ) {
 	if( object->type != MSGPACK_OBJECT_ARRAY ) {
-		fprintf( stderr, "Error in fetch_bioAssemblyList: the entry encoded in the MMTF is not an array.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not an array.\n", __FUNCTION__ );
 		return NULL;
 	}
 
 	msgpack_object* current_bioAssembly = object->via.array.ptr;
 	uint32_t bioAssembly_count = object->via.array.size;
+	*length = (uint64_t) bioAssembly_count;
 	msgpack_object* stop_bioAssembly = object->via.array.ptr + bioAssembly_count;
 
 //printf( "Decoding an array of %u BioAssembly.\n", bioAssembly_count );
 
 	MMTF_BioAssembly* result = malloc( sizeof( MMTF_BioAssembly ) * bioAssembly_count );
+
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for the bioAssemblyList.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	int i = 0;
 	for( ; current_bioAssembly < stop_bioAssembly; ++current_bioAssembly ) {
@@ -988,7 +1412,7 @@ MMTF_BioAssembly* MMTF_parser_fetch_bioAssemblyList( msgpack_object* object, uin
 
 void MMTF_parser_put_bioAssembly( msgpack_object* object, MMTF_BioAssembly* bio_assembly ) {
 	if( object->type != MSGPACK_OBJECT_MAP ) {
-		fprintf( stderr, "Error in put_bioAssembly: the entry encoded in the MMTF is not a map.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not a map.\n", __FUNCTION__ );
 		return;
 	}
 
@@ -1003,17 +1427,17 @@ void MMTF_parser_put_bioAssembly( msgpack_object* object, MMTF_BioAssembly* bio_
 
 //printf( "Key %.*s:\n", key->via.str.size, key->via.str.ptr );
 
-			uint32_t key_size = key->via.str.size;
-			const char* key_string = key->via.str.ptr;
+//			uint32_t key_size = key->via.str.size;
+//			const char* key_string = key->via.str.ptr;
 
-			if( key_size == strlen( "name" ) && strncmp( key_string, "name", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "name" ) ) {
 				(*bio_assembly).name = MMTF_parser_fetch_string( value );
 
 //printf( "name : %s\n", (*bio_assembly).name );
 			}
 
-			if( key_size == strlen( "transformList" ) && strncmp( key_string, "transformList", key_size ) == 0 ) {
-				(*bio_assembly).transformList = MMTF_parser_fetch_transformList( value, &((*bio_assembly).transformListCount) );
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "transformList" ) ) {
+				(*bio_assembly).transformList = MMTF_parser_fetch_transformList( value, &(bio_assembly->transformListCount) );
 			}
 		}
 	}
@@ -1021,17 +1445,23 @@ void MMTF_parser_put_bioAssembly( msgpack_object* object, MMTF_BioAssembly* bio_
 
 MMTF_Transform* MMTF_parser_fetch_transformList( msgpack_object* object, uint64_t* length ) {
 	if( object->type != MSGPACK_OBJECT_ARRAY ) {
-		fprintf( stderr, "Error in fetch_transformList: the entry encoded in the MMTF is not an array.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not an array.\n", __FUNCTION__ );
 		return NULL;
 	}
 
 	msgpack_object* current_transform = object->via.array.ptr;
 	uint32_t transform_count = object->via.array.size;
+	*length = (uint64_t) transform_count;
 	msgpack_object* stop_transform = object->via.array.ptr + transform_count;
 
 //printf( "Decoding an array of %u Transform.\n", transform_count );
 
 	MMTF_Transform* result = malloc( sizeof( MMTF_Transform ) * transform_count );
+
+	if( result == NULL ) {
+		fprintf( stderr, "Error in %s: couldn't allocate memory for the transformList.\n", __FUNCTION__ );
+		return NULL;
+	}
 
 	int i = 0;
 	for( ; current_transform < stop_transform; ++current_transform ) {
@@ -1044,7 +1474,7 @@ MMTF_Transform* MMTF_parser_fetch_transformList( msgpack_object* object, uint64_
 
 void MMTF_parser_put_transform( msgpack_object* object, MMTF_Transform* transform ) {
 	if( object->type != MSGPACK_OBJECT_MAP ) {
-		fprintf( stderr, "Error in put_transform: the entry encoded in the MMTF is not a map.\n" );
+		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not a map.\n", __FUNCTION__ );
 		return;
 	}
 
@@ -1059,20 +1489,25 @@ void MMTF_parser_put_transform( msgpack_object* object, MMTF_Transform* transfor
 
 //printf( "Key %.*s:\n", key->via.str.size, key->via.str.ptr );
 
-			uint32_t key_size = key->via.str.size;
-			const char* key_string = key->via.str.ptr;
+//			uint32_t key_size = key->via.str.size;
+//			const char* key_string = key->via.str.ptr;
 
-			if( key_size == strlen( "chainIndexList" ) && strncmp( key_string, "chainIndexList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "chainIndexList" ) ) {
 				uint64_t length;
 				(*transform).chainIndexList = MMTF_parser_fetch_clear_lu_array( value, &length );
 			}
 
-			if( key_size == strlen( "matrix" ) && strncmp( key_string, "matrix", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "matrix" ) ) {
 				uint64_t length;
 				float* matrix = MMTF_parser_fetch_clear_float_array( value, &length );
 
+				if( matrix == NULL ) {
+					fprintf( stderr, "Error in %s: there is no matrix to fetch.\n", __FUNCTION__ );
+					return;
+				}
+
 				if( length != 16 ) {
-					fprintf( stderr, "Error in put_transform: the length of the matrix entry is %lu, it should have a length of 16.\n", length );
+					fprintf( stderr, "Error in %s: the length of the matrix entry is %lu, it should have a length of 16.\n", __FUNCTION__, length );
 					return;
 				}
 
@@ -1083,6 +1518,8 @@ void MMTF_parser_put_transform( msgpack_object* object, MMTF_Transform* transfor
 //printf( "%i = %f\n", i, matrix[i] );
 
 				}
+
+				free( matrix );
 			}
 		}
 	}
@@ -1100,88 +1537,89 @@ void MMTF_parser_msgpack_object_to_MMTF_container(msgpack_object* object, MMTF_c
 
 //printf( "Key %.*s:\n", key->via.str.size, key->via.str.ptr );
 
-			uint32_t key_size = key->via.str.size;
-			const char* key_string = key->via.str.ptr;
+//			uint32_t key_size = key->via.str.size;
+//			const char* key_string = key->via.str.ptr;
 
-			if( key_size == strlen( "mmtfVersion" ) && strncmp( key_string, "mmtfVersion", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "mmtfVersion" ) ) {
+//			if( key_size == strlen( "mmtfVersion" ) && strncmp( key_string, "mmtfVersion", key_size ) == 0 ) {
 				(*thing).mmtfVersion = MMTF_parser_fetch_string( value );
 
 //printf( "mmtfVersion : %s\n\n", (*thing).mmtfVersion );
 			}
 
-			if( key_size == strlen( "mmtfProducer" ) && strncmp( key_string, "mmtfProducer", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "mmtfProducer" ) ) {
 				(*thing).mmtfProducer = MMTF_parser_fetch_string( value );
 
 //printf( "mmtfProducer : %s\n\n", (*thing).mmtfProducer );
 			}
 
-			if( key_size == strlen( "spaceGroup" ) && strncmp( key_string, "spaceGroup", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "spaceGroup" ) ) {
 				(*thing).spaceGroup = MMTF_parser_fetch_string( value );
 
 //printf( "spaceGroup : %s\n\n", (*thing).spaceGroup );
 			}
 
-			if( key_size == strlen( "structureId" ) && strncmp( key_string, "structureId", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "structureId" ) ) {
 				(*thing).structureId = MMTF_parser_fetch_string( value );
 
 //printf( "structureId : %s\n\n", (*thing).structureId );
 			}
 
-			if( key_size == strlen( "title" ) && strncmp( key_string, "title", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "title" ) ) {
 				(*thing).title = MMTF_parser_fetch_string( value );
 
 //printf( "title : %s\n\n", (*thing).title );
 			}
 
-			if( key_size == strlen( "depositionDate" ) && strncmp( key_string, "depositionDate", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "depositionDate" ) ) {
 				(*thing).depositionDate = MMTF_parser_fetch_string( value );
 
 //printf( "depositionDate : %s\n\n", (*thing).depositionDate );
 			}
 
-			if( key_size == strlen( "releaseDate" ) && strncmp( key_string, "releaseDate", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "releaseDate" ) ) {
 				(*thing).releaseDate = MMTF_parser_fetch_string( value );
 
 //printf( "releaseDate : %s\n\n", (*thing).releaseDate );
 			}
 
-			if( key_size == strlen( "numBonds" ) && strncmp( key_string, "numBonds", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "numBonds" ) ) {
 				(*thing).numBonds = (int32_t) MMTF_parser_fetch_int( value );
 
 //printf( "numBonds : %i\n\n", (*thing).numBonds );
 			}
 
-			if( key_size == strlen( "numAtoms" ) && strncmp( key_string, "numAtoms", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "numAtoms" ) ) {
 				(*thing).numAtoms = (int32_t) MMTF_parser_fetch_int( value );
 
 //printf( "numAtoms : %i\n\n", (*thing).numAtoms );
 			}
 
-			if( key_size == strlen( "numGroups" ) && strncmp( key_string, "numGroups", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "numGroups" ) ) {
 				(*thing).numGroups = (int32_t) MMTF_parser_fetch_int( value );
 
 //printf( "numGroups : %i\n\n", (*thing).numGroups );
 			}
 
-			if( key_size == strlen( "numChains" ) && strncmp( key_string, "numChains", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "numChains" ) ) {
 				(*thing).numChains = (int32_t) MMTF_parser_fetch_int( value );
 
 //printf( "numChains : %i\n\n", (*thing).numChains );
 			}
 
-			if( key_size == strlen( "numModels" ) && strncmp( key_string, "numModels", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "numModels" ) ) {
 				(*thing).numModels = (int32_t) MMTF_parser_fetch_int( value );
 
 //printf( "numModels : %i\n\n", (*thing).numModels );
 			}
 
-			if( key_size == strlen( "entityList" ) && strncmp( key_string, "entityList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "entityList" ) ) {
 				(*thing).entityList = MMTF_parser_fetch_entityList( value, &(thing->entityListCount) );
 
 //printf( "entityList : %p\n\n", (*thing).entityList );
 			}
 
-			if( key_size == strlen( "unitCell" ) && strncmp( key_string, "unitCell", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "unitCell" ) ) {
 				uint64_t length;
 				float* unitCell = MMTF_parser_fetch_clear_float_array( value, &length );
 
@@ -1192,32 +1630,34 @@ void MMTF_parser_msgpack_object_to_MMTF_container(msgpack_object* object, MMTF_c
 						(*thing).unitCell[i] = unitCell[i];
 //printf( "%f ", unitCell[i] );
 					}
+
+					free( unitCell );
 				}
 			}
 
-			if( key_size == strlen( "bioAssemblyList" ) && strncmp( key_string, "bioAssemblyList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "bioAssemblyList" ) ) {
 				(*thing).bioAssemblyList = MMTF_parser_fetch_bioAssemblyList( value, &((*thing).bioAssemblyListCount) );
 			}
 
-			if( key_size == strlen( "resolution" ) && strncmp( key_string, "resolution", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "resolution" ) ) {
 				(*thing).resolution = MMTF_parser_fetch_float( value );
 
 //printf( "resolution : %f\n\n", (*thing).resolution );
 			}
 
-			if( key_size == strlen( "rFree" ) && strncmp( key_string, "rFree", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "rFree" ) ) {
 				(*thing).rFree = MMTF_parser_fetch_float( value );
 
 //printf( "rFree : %f\n\n", (*thing).rFree );
 			}
 
-			if( key_size == strlen( "rWork" ) && strncmp( key_string, "rWork", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "rWork" ) ) {
 				(*thing).rWork = MMTF_parser_fetch_float( value );
 
 //printf( "rWork : %f\n\n", (*thing).rWork );
 			}
 
-			if( key_size == strlen( "experimentalMethods" ) && strncmp( key_string, "experimentalMethods", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "experimentalMethods" ) ) {
 				(*thing).experimentalMethods = MMTF_parser_fetch_clear_string_array( value, &(thing->experimentalMethodsCount) );
 
 //int i;
@@ -1227,131 +1667,130 @@ void MMTF_parser_msgpack_object_to_MMTF_container(msgpack_object* object, MMTF_c
 
 			}
 
-			if( key_size == strlen( "bondAtomList" ) && strncmp( key_string, "bondAtomList", key_size ) == 0 ) {
-				uint64_t length;
-				(*thing).bondAtomList = (int32_t*) MMTF_parser_fetch_array( value, &length );
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "bondAtomList" ) ) {
+				(*thing).bondAtomList = (int32_t*) MMTF_parser_fetch_array( value, &(thing->bondAtomListCount) );
 
 //printf( "bondAtomList : %p\n\n", (*thing).bondAtomList );
 			}
 
-			if( key_size == strlen( "chainsPerModel" ) && strncmp( key_string, "chainsPerModel", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "chainsPerModel" ) ) {
 				uint64_t length;
 				(*thing).chainsPerModel = MMTF_parser_fetch_clear_int32_array( value, &length );
 
 //printf( "chainsPerModel : %p\n\n", (*thing).chainsPerModel );
 			}
 
-			if( key_size == strlen( "groupsPerChain" ) && strncmp( key_string, "groupsPerChain", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "groupsPerChain" ) ) {
 				uint64_t length;
 				(*thing).groupsPerChain = MMTF_parser_fetch_clear_int32_array( value, &length );
 
 //printf( "groupsPerChain : %p\n\n", (*thing).groupsPerChain );
 			}
 
-			if( key_size == strlen( "groupList" ) && strncmp( key_string, "groupList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "groupList" ) ) {
 				(*thing).groupList = MMTF_parser_fetch_groupList( value, &(thing->groupListCount) );
 
 //printf( "groupList : %p\n\n", (*thing).groupList );
+//printf( "groupListCount : %lu\n\n", (*thing).groupListCount );
 			}
 
-			if( key_size == strlen( "groupTypeList" ) && strncmp( key_string, "groupTypeList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "groupTypeList" ) ) {
 				uint64_t length;
 				(*thing).groupTypeList = (int32_t*) MMTF_parser_fetch_array( value, &length );
 
 //printf( "groupTypeList : %p\n\n", (*thing).groupTypeList );
 			}
 
-			if( key_size == strlen( "groupIdList" ) && strncmp( key_string, "groupIdList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "groupIdList" ) ) {
 				uint64_t length;
 				(*thing).groupIdList = (int32_t*) MMTF_parser_fetch_array( value, &length );
 
 //printf( "groupIdList : %p\n\n", (*thing).groupIdList );
 			}
 
-			if( key_size == strlen( "sequenceIndexList" ) && strncmp( key_string, "sequenceIndexList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "sequenceIndexList" ) ) {
 				uint64_t length;
 				(*thing).sequenceIndexList = (int32_t*) MMTF_parser_fetch_array( value, &length );
 
 //printf( "sequenceIndexList : %p\n\n", (*thing).sequenceIndexList );
 			}
 
-			if( key_size == strlen( "atomIdList" ) && strncmp( key_string, "atomIdList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "atomIdList" ) ) {
 				uint64_t length;
 				(*thing).atomIdList = (int32_t*) MMTF_parser_fetch_array( value, &length );
 
 //printf( "atomIdList : %p\n\n", (*thing).atomIdList );
 			}
 
-			if( key_size == strlen( "insCodeList" ) && strncmp( key_string, "insCodeList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "insCodeList" ) ) {
 				uint64_t length;
 				(*thing).insCodeList = (char*) MMTF_parser_fetch_array( value, &length );
 
 //printf( "insCodeList : %p\n\n", (*thing).insCodeList );
 			}
 
-			if( key_size == strlen( "altLocList" ) && strncmp( key_string, "altLocList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "altLocList" ) ) {
 				uint64_t length;
 				(*thing).altLocList = (char*) MMTF_parser_fetch_array( value, &length );
 
 //printf( "altLocList : %p\n\n", (*thing).altLocList );
 			}
 
-			if( key_size == strlen( "bondOrderList" ) && strncmp( key_string, "bondOrderList", key_size ) == 0 ) {
-				uint64_t length;
-				(*thing).bondOrderList = (int8_t*) MMTF_parser_fetch_array( value, &length );
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "bondOrderList" ) ) {
+				(*thing).bondOrderList = (int8_t*) MMTF_parser_fetch_array( value, &(thing->bondOrderListCount) );
 
 //printf( "bondOrderList : %p\n\n", (*thing).bondOrderList );
 			}
 
-			if( key_size == strlen( "secStructList" ) && strncmp( key_string, "secStructList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "secStructList" ) ) {
 				uint64_t length;
 				(*thing).secStructList = (int8_t*) MMTF_parser_fetch_array( value, &length );
 
 //printf( "secStructList : %p\n\n", (*thing).secStructList );
 			}
 
-			if( key_size == strlen( "bFactorList" ) && strncmp( key_string, "bFactorList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "bFactorList" ) ) {
 				uint64_t length;
 				(*thing).bFactorList = (float*) MMTF_parser_fetch_array( value, &length );
 
 //printf( "bFactorList : %p\n\n", (*thing).bFactorList );
 			}
 
-			if( key_size == strlen( "xCoordList" ) && strncmp( key_string, "xCoordList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "xCoordList" ) ) {
 				uint64_t length;
 				(*thing).xCoordList = (float*) MMTF_parser_fetch_array( value, &length );
 
 //printf( "xCoordList : %p\n\n", (*thing).xCoordList );
 			}
 
-			if( key_size == strlen( "yCoordList" ) && strncmp( key_string, "yCoordList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "yCoordList" ) ) {
 				uint64_t length;
 				(*thing).yCoordList = (float*) MMTF_parser_fetch_array( value, &length );
 
 //printf( "yCoordList : %p\n\n", (*thing).yCoordList );
 			}
 
-			if( key_size == strlen( "zCoordList" ) && strncmp( key_string, "zCoordList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "zCoordList" ) ) {
 				uint64_t length;
 				(*thing).zCoordList = (float*) MMTF_parser_fetch_array( value, &length );
 
 //printf( "zCoordList : %p\n\n", (*thing).zCoordList );
 			}
 
-			if( key_size == strlen( "occupancyList" ) && strncmp( key_string, "occupancyList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "occupancyList" ) ) {
 				uint64_t length;
 				(*thing).occupancyList = (float*) MMTF_parser_fetch_array( value, &length );
 
 //printf( "occupancyList : %p\n\n", (*thing).occupancyList );
 			}
 
-			if( key_size == strlen( "chainIdList" ) && strncmp( key_string, "chainIdList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "chainIdList" ) ) {
 				(*thing).chainIdList = (char**) MMTF_parser_fetch_array( value, &(thing->chainIdListCount) );
 
 //printf( "chainIdList : %p\n\n", (*thing).chainIdList );
 			}
 
-			if( key_size == strlen( "chainNameList" ) && strncmp( key_string, "chainNameList", key_size ) == 0 ) {
+			if( MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), "chainNameList" ) ) {
 				(*thing).chainNameList = (char**) MMTF_parser_fetch_array( value, &(thing->chainNameListCount) );
 
 //printf( "chainNameList : %p\n\n", (*thing).chainNameList );
@@ -1385,15 +1824,14 @@ void MMTF_parser_MMTF_container_from_file(char *name, MMTF_container* thing)
 
 //*** Open file
 	file = fopen(name, "rb");
-	if (!file)
-	{
-		fprintf(stderr, "Unable to open file %s.\n", name);
+	if (!file) {
+		fprintf(stderr, "Error in %s: unable to open file %s.\n", __FUNCTION__, name);
 		return;
 	}
 
 //*** Get file length
 	fseek(file, 0, SEEK_END);
-	fileLen=ftell(file);
+	fileLen = ftell(file);
 	fseek(file, 0, SEEK_SET);
 
 //printf("File length = %lu\n", fileLen);
@@ -1402,7 +1840,7 @@ void MMTF_parser_MMTF_container_from_file(char *name, MMTF_container* thing)
 	buffer=(char *)malloc(fileLen+1);
 	if (!buffer)
 	{
-		fprintf(stderr, "Memory error!");
+		fprintf(stderr, "Error in %s: couldn't allocate memory.\n", __FUNCTION__);
         fclose(file);
 		return;
 	}
