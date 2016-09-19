@@ -20,22 +20,17 @@ int main(int argc, char** argv)
 {
 	MMTF_container* example = MMTF_parser_MMTF_container_new();
 	MMTF_parser_MMTF_container_from_file(argv[1], example);
-
-
-//*** The following two lines are an example of re-using a MMTF_container and can be removed.
+    //*** The following two lines are an example of re-using a MMTF_container and can be removed.
 	MMTF_parser_MMTF_container_empty( example );
 	MMTF_parser_MMTF_container_from_file(argv[1], example);
-
-
-
 	// Now iterate over this data structure
-//	# initialize index counters
-int modelIndex = 0;
-int chainIndex = 0;
-int groupIndex = 0;
-int atomIndex = 0;
-//# traverse models
-int i;
+    //	# initialize index counters
+    int modelIndex = 0;
+    int chainIndex = 0;
+    int groupIndex = 0;
+    int atomIndex = 0;
+    //# traverse models
+    int i;
 for(i=0;  i<example->numModels; i++){
     int modelChainCount = example->chainsPerModel[i];
     printf("modelIndex: %d",modelIndex);
