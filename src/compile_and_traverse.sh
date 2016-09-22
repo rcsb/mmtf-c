@@ -5,6 +5,6 @@ gcc -c traverse.c &&
 
 gcc -o a.run mmtf_parser.o traverse.o -lmsgpackc &&
 
-rm *.o &&
+rm *.o
 
-./a.run $1
+#./a.run $1

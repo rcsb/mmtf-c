@@ -331,6 +331,7 @@ MMTF_container* MMTF_parser_MMTF_container_destroy_inside( MMTF_container* thing
 	else {
 		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
 	}
+	return thing;
 }
 MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_destroy_inside( MMTF_BioAssembly* bio_assembly ) {
 	if( bio_assembly != NULL ) {
@@ -348,6 +349,7 @@ MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_destroy_inside( MMTF_BioAssembly*
 	else {
 		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
 	}
+	return bio_assembly;
 }
 MMTF_Transform* MMTF_parser_MMTF_Transform_destroy_inside( MMTF_Transform* transform ) {
 	if( transform != NULL ) {
@@ -357,6 +359,7 @@ MMTF_Transform* MMTF_parser_MMTF_Transform_destroy_inside( MMTF_Transform* trans
 	else {
 		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
 	}
+	return transform;
 }
 MMTF_Entity* MMTF_parser_MMTF_Entity_destroy_inside( MMTF_Entity* entity ) {
 	if( entity != NULL ) {
@@ -372,6 +375,7 @@ MMTF_Entity* MMTF_parser_MMTF_Entity_destroy_inside( MMTF_Entity* entity ) {
 	else {
 		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
 	}
+	return entity;
 }
 MMTF_GroupType* MMTF_parser_MMTF_GroupType_destroy_inside( MMTF_GroupType* group_type ) {
 	if( group_type != NULL ) {
@@ -406,6 +410,7 @@ MMTF_GroupType* MMTF_parser_MMTF_GroupType_destroy_inside( MMTF_GroupType* group
 	else {
 		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
 	}
+	return group_type;
 }
 
 
@@ -1847,7 +1852,6 @@ void MMTF_parser_MMTF_container_from_file(char *name, MMTF_container* thing)
 
 //*** Read file contents into buffer
 	fread(buffer, fileLen, 1, file);
-	buffer[fileLen] = '\0';
 	fclose(file);
 
 	MMTF_parser_parse_msgpack(buffer, fileLen, thing);
