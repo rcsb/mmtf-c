@@ -20,6 +20,8 @@ int main(int argc, char** argv)
 {
 	MMTF_container* example = MMTF_parser_MMTF_container_new();
 	MMTF_parser_MMTF_container_from_file(argv[1], example);
+	MMTF_parser_MMTF_container_empty( example );
+	MMTF_parser_MMTF_container_from_file(argv[2], example);
 	MMTF_parser_MMTF_container_destroy( example );
 }
 

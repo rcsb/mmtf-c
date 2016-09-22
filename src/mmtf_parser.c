@@ -1847,6 +1847,7 @@ void MMTF_parser_MMTF_container_from_file(char *name, MMTF_container* thing)
 
 //*** Read file contents into buffer
 	fread(buffer, fileLen, 1, file);
+	buffer[fileLen] = '\0';
 	fclose(file);
 
 	MMTF_parser_parse_msgpack(buffer, fileLen, thing);
