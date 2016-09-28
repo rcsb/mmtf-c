@@ -9,5 +9,4 @@ compiler:
   - gcc
 install:  ./src/install-deps.sh
 script:
-  - cd src
-  - make test
+  - cd src && make test
