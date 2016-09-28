@@ -24,7 +24,6 @@ void read_file(char* input_path){
         printf("%s read\n", input_path);
 }
 
-
 int main(int argc, char** argv)
 {
     read_file("data/173D.mmtf");
