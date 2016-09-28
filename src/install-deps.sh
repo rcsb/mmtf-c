@@ -1,1 +1,1 @@
-apt-get install libmsgpack-dev
+sudo apt-get install libmsgpack-dev
