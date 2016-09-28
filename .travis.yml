@@ -1,0 +1,12 @@
+# Language selection
+language:
+  - c
+  - cpp
+# Compiler selection
+compiler:
+  - clang
+  - gcc
+install:  ./src/install-deps.sh
+script:
+  - cd src
+  - make test
