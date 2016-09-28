@@ -1,4 +1,5 @@
 # Language selection
+sudo: true
 language:
   - c
   - cpp
