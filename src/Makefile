@@ -12,4 +12,4 @@ demo.o: demo.c
 	gcc -c demo.c
 
 a.run: mmtf_parser.o demo.o
-	gcc -o a.run mmtf_parser.o demo.o -lmsgpackc
+	gcc -o a.run mmtf_parser.o demo.o
