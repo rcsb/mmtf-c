@@ -1,3 +1,4 @@
+
 clean:
 	rm *.o a.run
 
