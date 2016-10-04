@@ -331,7 +331,10 @@ MMTF_container* MMTF_parser_MMTF_container_destroy_inside( MMTF_container* thing
 	else {
 		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
 	}
+<<<<<<< HEAD
+=======
 	return thing;
+>>>>>>> 9564f6a46bd836c45028fa3aadff8ef2f5ada269
 }
 MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_destroy_inside( MMTF_BioAssembly* bio_assembly ) {
 	if( bio_assembly != NULL ) {
@@ -349,7 +352,10 @@ MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_destroy_inside( MMTF_BioAssembly*
 	else {
 		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
 	}
+<<<<<<< HEAD
+=======
 	return bio_assembly;
+>>>>>>> 9564f6a46bd836c45028fa3aadff8ef2f5ada269
 }
 MMTF_Transform* MMTF_parser_MMTF_Transform_destroy_inside( MMTF_Transform* transform ) {
 	if( transform != NULL ) {
@@ -359,7 +365,10 @@ MMTF_Transform* MMTF_parser_MMTF_Transform_destroy_inside( MMTF_Transform* trans
 	else {
 		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
 	}
+<<<<<<< HEAD
+=======
 	return transform;
+>>>>>>> 9564f6a46bd836c45028fa3aadff8ef2f5ada269
 }
 MMTF_Entity* MMTF_parser_MMTF_Entity_destroy_inside( MMTF_Entity* entity ) {
 	if( entity != NULL ) {
@@ -375,7 +384,10 @@ MMTF_Entity* MMTF_parser_MMTF_Entity_destroy_inside( MMTF_Entity* entity ) {
 	else {
 		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
 	}
+<<<<<<< HEAD
+=======
 	return entity;
+>>>>>>> 9564f6a46bd836c45028fa3aadff8ef2f5ada269
 }
 MMTF_GroupType* MMTF_parser_MMTF_GroupType_destroy_inside( MMTF_GroupType* group_type ) {
 	if( group_type != NULL ) {
@@ -410,7 +422,10 @@ MMTF_GroupType* MMTF_parser_MMTF_GroupType_destroy_inside( MMTF_GroupType* group
 	else {
 		fprintf( stderr, "Error in %s: the argument you put is NULL, it is not a valid pointer.\n", __FUNCTION__ );
 	}
+<<<<<<< HEAD
+=======
 	return group_type;
+>>>>>>> 9564f6a46bd836c45028fa3aadff8ef2f5ada269
 }
 
 
@@ -1512,7 +1527,11 @@ void MMTF_parser_put_transform( msgpack_object* object, MMTF_Transform* transfor
 				}
 
 				if( length != 16 ) {
+<<<<<<< HEAD
 					fprintf( stderr, "Error in %s: the length of the matrix entry is %lu, it should have a length of 16.\n", __FUNCTION__, length );
+=======
+					fprintf( stderr, "Error in %s: the length of the matrix entry is %llu, it should have a length of 16.\n", __FUNCTION__, length );
+>>>>>>> 9564f6a46bd836c45028fa3aadff8ef2f5ada269
 					return;
 				}
 
@@ -1852,6 +1871,7 @@ void MMTF_parser_MMTF_container_from_file(char *name, MMTF_container* thing)
 
 //*** Read file contents into buffer
 	fread(buffer, fileLen, 1, file);
+	buffer[fileLen] = '\0';
 	fclose(file);
 
 	MMTF_parser_parse_msgpack(buffer, fileLen, thing);
