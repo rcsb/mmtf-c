@@ -49,5 +49,6 @@ int main(int argc, char** argv)
     read_file("data/4Y60.mmtf");
     read_file("data/5EMG.mmtf");
     read_file("data/5ESW.mmtf");
+    return 0;
 }
 
