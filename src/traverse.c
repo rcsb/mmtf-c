@@ -63,7 +63,7 @@ for(i=0;  i<example->numModels; i++){
                 printf("Atom id Two: %d\n",(atomOffset + group.bondAtomList[ l * 2 + 1 ])); //  # atomIndex2
                 printf("Bond order: %d\n", group.bondOrderList[ l ]);
             }
-           int groupAtomCount = sizeof(group.atomNameList)/sizeof(group.atomNameList[0]);
+           int groupAtomCount = group.atomNameListCount;
            for(l=0; l<groupAtomCount;l++){
                 printf("atomIndex: %d\n", atomIndex);
                 printf("x coord: %f\n", example->xCoordList[ atomIndex ]);
@@ -73,9 +73,9 @@ for(i=0;  i<example->numModels; i++){
                 printf("atom id: %d\n", example->atomIdList[ atomIndex ]);
                 printf("altLocList: %c\n", example->altLocList[ atomIndex ]);
                 printf("occupancy: %f\n", example->occupancyList[ atomIndex ]);
-                printf("charge: %d\n", group.formalChargeList[ i ]);
-                printf("atom name: %s\n", group.atomNameList[ i ]);
-                printf("element: %s\n", group.elementList[ i ]);
+                printf("charge: %d\n", group.formalChargeList[ l ]);
+                printf("atom name: %s\n", group.atomNameList[ l ]);
+                printf("element: %s\n", group.elementList[ l ]);
                 atomIndex++;
            }
             groupIndex++;
@@ -84,7 +84,7 @@ for(i=0;  i<example->numModels; i++){
         }
    modelIndex++;
    }
-printf("Number of inter group bonds: %d\n",example->bondOrderListCount);
+printf("Number of inter group bonds: %d\n", (int)example->bondOrderListCount);
 for (i=0; i<example->bondOrderListCount;i++){
 //*** Issue here - seems too few (two entries for 4HHB).
     printf("Atom One: %d\n",example->bondAtomList[i*2]);
@@ -93,5 +93,6 @@ for (i=0; i<example->bondOrderListCount;i++){
 }
 	
 	MMTF_parser_MMTF_container_destroy( example );
+	return 0;
 }
 

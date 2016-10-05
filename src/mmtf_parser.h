@@ -30,6 +30,18 @@
 #include <stdint.h>
 #include <stdio.h>
 
+//*** MMTF type codes
+enum {
+    MMTF_TYPE_ANY = 0,
+    MMTF_TYPE_INT,
+    MMTF_TYPE_INT8,
+    MMTF_TYPE_INT16,
+    MMTF_TYPE_INT32,
+    MMTF_TYPE_LU,
+    MMTF_TYPE_FLOAT,
+    MMTF_TYPE_STRING,
+    MMTF_TYPE_STRINGS
+};
 
 //*** The MMTF structure
 typedef struct {
@@ -219,16 +231,12 @@ int32_t* MMTF_parser_recursive_indexing_decode_from_8( int8_t*, uint32_t, uint32
 float* MMTF_parser_integer_decode_from_16( int16_t*, uint32_t, int32_t, uint32_t* );
 float* MMTF_parser_integer_decode_from_32( int32_t*, uint32_t, int32_t, uint32_t* );
 
-
-//*** Applying a decoding strategy for getting an array
-void* MMTF_parser_decode_apply_strategy( const char*, uint32_t, uint32_t*, int, int32_t );
-
-
 //*** Unpacking from MsgPack and applying strategy
 char* MMTF_parser_fetch_string( msgpack_object* );
 uint64_t MMTF_parser_fetch_int( msgpack_object* );
 float MMTF_parser_fetch_float( msgpack_object* );
 void* MMTF_parser_fetch_array( msgpack_object*, uint64_t* );
+void* MMTF_parser_fetch_array_generic( msgpack_object* object, uint64_t* length, int typenum);
 
 size_t* MMTF_parser_fetch_clear_lu_array( msgpack_object*, uint64_t* );
 int* MMTF_parser_fetch_clear_int_array( msgpack_object*, uint64_t* );
@@ -240,15 +248,11 @@ char** MMTF_parser_fetch_clear_string_array( msgpack_object*, uint64_t* );
 bool MMTF_parser_compare_msgpack_string_char_array( const msgpack_object_str*, const char* );
 
 MMTF_Entity* MMTF_parser_fetch_entityList( msgpack_object*, uint64_t* );
-void MMTF_parser_put_entity( msgpack_object*, MMTF_Entity* );
 
-MMTF_GroupType* MMTF_parser_fetch_groupList( msgpack_object*, uint64_t* );
-void MMTF_parser_put_groupType( msgpack_object*, MMTF_GroupType* );
+MMTF_GroupType* MMTF_parser_fetch_groupTypeList( msgpack_object*, uint64_t* );
 
 MMTF_BioAssembly* MMTF_parser_fetch_bioAssemblyList( msgpack_object*, uint64_t* );
-void MMTF_parser_put_bioAssembly( msgpack_object*, MMTF_BioAssembly* );
 MMTF_Transform* MMTF_parser_fetch_transformList( msgpack_object*, uint64_t* );
-void MMTF_parser_put_transform( msgpack_object*, MMTF_Transform* );
 
 
 //*** MMTF and MsgPack
