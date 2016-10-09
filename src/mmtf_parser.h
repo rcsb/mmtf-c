@@ -30,30 +30,21 @@
 #include <stdint.h>
 #include <stdio.h>
 
-//*** MMTF type codes
-enum {
-    MMTF_TYPE_ANY = 0,
-    MMTF_TYPE_INT,
-    MMTF_TYPE_INT8,
-    MMTF_TYPE_INT16,
-    MMTF_TYPE_INT32,
-    MMTF_TYPE_LU,
-    MMTF_TYPE_FLOAT,
-    MMTF_TYPE_STRING,
-    MMTF_TYPE_STRINGS
-};
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //*** The MMTF structure
 typedef struct {
-    int *				formalChargeList;    // List of formal charges as Integers
+    int32_t *				formalChargeList;    // List of formal charges as Integers
 	uint64_t			atomNameListCount;
     char **				atomNameList;        // List of atom names, 0 to 5 character Strings
 	uint64_t			elementListCount;
     char **				elementList;         // List of elements, 0 to 3 character Strings
 	uint64_t			bondAtomListCount;
-    int *				bondAtomList;        // List of bonded atom indices, Integers
+    int32_t *				bondAtomList;        // List of bonded atom indices, Integers
 	uint64_t			bondOrderListCount;
-    char *				bondOrderList;       // List of bond orders as Integers between 1 and 4
+    int8_t *				bondOrderList;       // List of bond orders as Integers between 1 and 4
     char *				groupName;           // The name of the group, 0 to 5 characters
     char				singleLetterCode;    // The single letter code, 1 character
     char *				chemCompType;         // The chemical component type
@@ -128,7 +119,7 @@ typedef struct {
     float *				yCoordList;
     float *				zCoordList;
     float *				bFactorList;
-    signed int *		atomIdList;
+    int32_t *		atomIdList;
     char *				altLocList;
     float *				occupancyList;
     int32_t *			groupIdList;
@@ -143,7 +134,6 @@ typedef struct {
     int32_t *			groupsPerChain;
     int32_t *			chainsPerModel;
 } MMTF_container;
-
 
 //*** Create a struct
 MMTF_container* MMTF_parser_MMTF_container_new( void );
@@ -233,17 +223,8 @@ float* MMTF_parser_integer_decode_from_32( int32_t*, uint32_t, int32_t, uint32_t
 
 //*** Unpacking from MsgPack and applying strategy
 char* MMTF_parser_fetch_string( msgpack_object* );
-uint64_t MMTF_parser_fetch_int( msgpack_object* );
+int64_t MMTF_parser_fetch_int( msgpack_object* );
 float MMTF_parser_fetch_float( msgpack_object* );
-void* MMTF_parser_fetch_array( msgpack_object*, uint64_t* );
-void* MMTF_parser_fetch_array_generic( msgpack_object* object, uint64_t* length, int typenum);
-
-size_t* MMTF_parser_fetch_clear_lu_array( msgpack_object*, uint64_t* );
-int* MMTF_parser_fetch_clear_int_array( msgpack_object*, uint64_t* );
-int32_t* MMTF_parser_fetch_clear_int32_array( msgpack_object*, uint64_t* );
-char* MMTF_parser_fetch_clear_int8_array( msgpack_object*, uint64_t* );
-float* MMTF_parser_fetch_clear_float_array( msgpack_object*, uint64_t* );
-char** MMTF_parser_fetch_clear_string_array( msgpack_object*, uint64_t* );
 
 bool MMTF_parser_compare_msgpack_string_char_array( const msgpack_object_str*, const char* );
 
@@ -257,10 +238,13 @@ MMTF_Transform* MMTF_parser_fetch_transformList( msgpack_object*, uint64_t* );
 
 //*** MMTF and MsgPack
 void MMTF_parser_msgpack_object_to_MMTF_container( msgpack_object*, MMTF_container* );
-void MMTF_parser_parse_msgpack( char*, int, MMTF_container* );
+void MMTF_parser_parse_msgpack(const char*, int, MMTF_container* );
 
 
 //*** Decode a MMTF container from a file
-void MMTF_parser_MMTF_container_from_file( char*, MMTF_container* );
+void MMTF_parser_MMTF_container_from_file(const char*, MMTF_container* );
 
+#ifdef __cplusplus
+}
+#endif
 #endif

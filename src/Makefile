@@ -1,15 +1,19 @@
+LD = $(CC)
+LDFLAGS += -lmsgpackc
+EXE_EXT ?= .exe
+TEST_PROGRAMS = $(addsuffix $(EXE_EXT), multi demo traverse)
+
+all: $(TEST_PROGRAMS)
 
 clean:
-	rm *.o a.run
+	$(RM) *.o $(TEST_PROGRAMS)
 
-test: a.run
-	./a.run data/1MSH.mmtf
+test: run.demo
 
-mmtf_parser.o: mmtf_parser.c
-	gcc -c mmtf_parser.c
+run.%: %$(EXE_EXT)
+	./$< data/1MSH.mmtf
 
-demo.o: demo.c
-	gcc -c demo.c
+%$(EXE_EXT): mmtf_parser.o %.o
+	$(LD) -o $@ $^ $(LDFLAGS)
 
-a.run: mmtf_parser.o demo.o
-	gcc -o a.run mmtf_parser.o demo.o -lmsgpackc
+.PHONY: test
