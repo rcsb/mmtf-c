@@ -81,8 +81,8 @@ enum {
     msgpack_object_kv* current_key_value = object->via.map.ptr; \
     msgpack_object_kv* last_key_value = current_key_value + object->via.map.size; \
     for (; current_key_value != last_key_value; ++current_key_value ) { \
-        msgpack_object* key = &(current_key_value->key); \
-        msgpack_object* value = &(current_key_value->val); \
+        const msgpack_object* key = &(current_key_value->key); \
+        const msgpack_object* value = &(current_key_value->val); \
         if (key->type != MSGPACK_OBJECT_STR) \
                 continue;
 
@@ -181,9 +181,9 @@ enum {
             fprintf(stderr, "Error in %s: the entry encoded in the MMTF is not an array.\n", __FUNCTION__); \
             return NULL; \
         } \
-        msgpack_object* iter = object->via.array.ptr; \
+        const msgpack_object* iter = object->via.array.ptr; \
         (*length) = (uint64_t) object->via.array.size; \
-        msgpack_object* iter_end = iter + (*length); \
+        const msgpack_object* iter_end = iter + (*length); \
         type_ * result = MALLOC_ARRAY(type_, *length); \
         IF_NULL_ALLOCERROR_RETURN_NULL(result); \
         int i = 0; \
@@ -194,7 +194,8 @@ enum {
     }
 
 #define CODEGEN_MMTF_parser_fetch_array(type_, RESULT_I_ASSIGN) \
-    static TYPEALIAS_ ## type_ * MMTF_parser_fetch_ ## type_ ## _array(msgpack_object* object, uint64_t* length) { \
+    static TYPEALIAS_ ## type_ * MMTF_parser_fetch_ ## type_ ## _array( \
+            const msgpack_object* object, uint64_t* length) { \
         if (object->type == MSGPACK_OBJECT_BIN) { \
             return (TYPEALIAS_ ## type_*) \
             MMTF_parser_fetch_typed_array(object, length, MMTF_TYPE_ ## type_); \
@@ -203,7 +204,8 @@ enum {
     }
 
 #define CODEGEN_MMTF_parser_fetch_List(type_, suffix) \
-    type_ * MMTF_parser_fetch_ ## suffix ## List(msgpack_object* object, uint64_t* length) { \
+    type_ * MMTF_parser_fetch_ ## suffix ## List( \
+            const msgpack_object* object, uint64_t* length) { \
         CODEGEN_BODY_fetch_OBJECT_ARRAY(type_, { \
             MMTF_parser_put_ ## suffix(iter, result + i); \
         }) \
@@ -448,7 +450,7 @@ char** MMTF_parser_strings_from_bytes( const char* input, uint32_t input_length,
 
 //*** Array decoders
 // Run-length decode
-int32_t* MMTF_parser_run_length_decode( int32_t* input, uint32_t input_length, uint32_t* output_length ) {
+int32_t* MMTF_parser_run_length_decode(const int32_t* input, uint32_t input_length, uint32_t* output_length ) {
 	(*output_length) = 0;
 
 	IF_NOT_MULTIPLE_ERROR_RETURN(input_length, 2, NULL);
@@ -480,7 +482,7 @@ int32_t* MMTF_parser_run_length_decode( int32_t* input, uint32_t input_length, u
 }
 
 // Delta decode
-int32_t* MMTF_parser_delta_decode( int32_t* input, uint32_t input_length, uint32_t* output_length ) {
+int32_t* MMTF_parser_delta_decode(const int32_t* input, uint32_t input_length, uint32_t* output_length ) {
 	(*output_length) = input_length;
 	int32_t* output = MALLOC_ARRAY(int32_t, (*output_length)); // The output needs to be freed by the calling process
     IF_NULL_ALLOCERROR_RETURN_NULL(output);
@@ -495,7 +497,7 @@ int32_t* MMTF_parser_delta_decode( int32_t* input, uint32_t input_length, uint32
 }
 
 // Recursive indexing decode
-int32_t* MMTF_parser_recursive_indexing_decode_from_16( int16_t* input, uint32_t input_length, uint32_t* output_length ) {
+int32_t* MMTF_parser_recursive_indexing_decode_from_16(const int16_t* input, uint32_t input_length, uint32_t* output_length ) {
 	(*output_length) = 0;
 	uint32_t i;
 	for( i = 0; i < input_length; ++i ) {
@@ -523,7 +525,7 @@ int32_t* MMTF_parser_recursive_indexing_decode_from_16( int16_t* input, uint32_t
 	return output;
 }
 
-int32_t* MMTF_parser_recursive_indexing_decode_from_8( int8_t* input, uint32_t input_length, uint32_t* output_length ) {
+int32_t* MMTF_parser_recursive_indexing_decode_from_8(const int8_t* input, uint32_t input_length, uint32_t* output_length ) {
 	(*output_length) = 0;
 	uint32_t i;
 	for( i = 0; i < input_length; ++i ) {
@@ -551,7 +553,7 @@ int32_t* MMTF_parser_recursive_indexing_decode_from_8( int8_t* input, uint32_t i
 }
 
 // Integer decoding
-float* MMTF_parser_integer_decode_from_16( int16_t* input, uint32_t input_length, int32_t parameter, uint32_t* output_length ) {
+float* MMTF_parser_integer_decode_from_16(const int16_t* input, uint32_t input_length, int32_t parameter, uint32_t* output_length ) {
 	(*output_length) = input_length;
 	float* output = (float*) MALLOC_ARRAY(float, (*output_length) );
     IF_NULL_ALLOCERROR_RETURN_NULL(output);
@@ -565,7 +567,7 @@ float* MMTF_parser_integer_decode_from_16( int16_t* input, uint32_t input_length
 	return output;
 }
 
-float* MMTF_parser_integer_decode_from_32( int32_t* input, uint32_t input_length, int32_t parameter, uint32_t* output_length ) {
+float* MMTF_parser_integer_decode_from_32(const int32_t* input, uint32_t input_length, int32_t parameter, uint32_t* output_length ) {
 	(*output_length) = input_length;
 	float* output = (float*) MALLOC_ARRAY(float, (*output_length) );
     IF_NULL_ALLOCERROR_RETURN_NULL(output);
@@ -742,7 +744,7 @@ void* MMTF_parser_decode_apply_strategy( const char* input,
  * Copy string from 'object' to 'out'
  */
 static
-void MMTF_parser_put_string(msgpack_object* object, char** out) {
+void MMTF_parser_put_string(const msgpack_object* object, char** out) {
     size_t string_size = object->via.str.size;
     char * result = (*out) = MALLOC_ARRAY(char, (string_size + 1));
     IF_NULL_ALLOCERROR_RETURN(result,);
@@ -751,7 +753,7 @@ void MMTF_parser_put_string(msgpack_object* object, char** out) {
 }
 
 //*** Unpacking from MsgPack and applying strategy
-char* MMTF_parser_fetch_string( msgpack_object* object ) {
+char* MMTF_parser_fetch_string( const msgpack_object* object ) {
 	if( object->type != MSGPACK_OBJECT_STR ) {
 		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not a string.\n", __FUNCTION__ );
 		return NULL;
@@ -762,7 +764,7 @@ char* MMTF_parser_fetch_string( msgpack_object* object ) {
 	return result;
 }
 
-char MMTF_parser_fetch_char( msgpack_object* object ) {
+char MMTF_parser_fetch_char( const msgpack_object* object ) {
 	if( object->type != MSGPACK_OBJECT_STR) {
 		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not a string.\n", __FUNCTION__ );
 		return '\0';
@@ -771,7 +773,7 @@ char MMTF_parser_fetch_char( msgpack_object* object ) {
 	return *(object->via.str.ptr);
 }
 
-int64_t MMTF_parser_fetch_int( msgpack_object* object ) {
+int64_t MMTF_parser_fetch_int( const msgpack_object* object ) {
 	int64_t result;
 
     if(object->type == MSGPACK_OBJECT_POSITIVE_INTEGER) {
@@ -788,7 +790,7 @@ int64_t MMTF_parser_fetch_int( msgpack_object* object ) {
 	return result;
 }
 
-float MMTF_parser_fetch_float( msgpack_object* object ) {
+float MMTF_parser_fetch_float( const msgpack_object* object ) {
 	if( object->type != MSGPACK_OBJECT_FLOAT ) {
 		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not a float.\n", __FUNCTION__ );
 		return NAN;
@@ -801,7 +803,7 @@ float MMTF_parser_fetch_float( msgpack_object* object ) {
  * Fetch a compressed typed array
  */
 static
-void* MMTF_parser_fetch_typed_array( msgpack_object* object, uint64_t* length, int typecode) {
+void* MMTF_parser_fetch_typed_array( const msgpack_object* object, uint64_t* length, int typecode) {
 	if( object->type != MSGPACK_OBJECT_BIN ) {
 		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not binary data.\n", __FUNCTION__ );
 		return NULL;
@@ -851,7 +853,7 @@ bool MMTF_parser_compare_msgpack_string_char_array( const msgpack_object_str* m_
 }
 
 static
-void MMTF_parser_put_entity( msgpack_object* object, MMTF_Entity* entity ) {
+void MMTF_parser_put_entity( const msgpack_object* object, MMTF_Entity* entity ) {
     MAP_ITERATE_BEGIN(object);
     FETCH_AND_ASSIGN(entity, string, description);
     FETCH_AND_ASSIGN(entity, string, type);
@@ -861,7 +863,7 @@ void MMTF_parser_put_entity( msgpack_object* object, MMTF_Entity* entity ) {
 }
 
 static
-void MMTF_parser_put_group( msgpack_object* object, MMTF_GroupType* group_type ) {
+void MMTF_parser_put_group( const msgpack_object* object, MMTF_GroupType* group_type ) {
     MAP_ITERATE_BEGIN(object);
     FETCH_AND_ASSIGN_DUMMYCOUNT(group_type, int32_array, formalChargeList);
     FETCH_AND_ASSIGN_WITHCOUNT(group_type, string_array, atomNameList);
@@ -875,7 +877,7 @@ void MMTF_parser_put_group( msgpack_object* object, MMTF_GroupType* group_type )
 }
 
 static
-void MMTF_parser_put_bioAssembly( msgpack_object* object, MMTF_BioAssembly* bio_assembly ) {
+void MMTF_parser_put_bioAssembly( const msgpack_object* object, MMTF_BioAssembly* bio_assembly ) {
     MAP_ITERATE_BEGIN(object);
     FETCH_AND_ASSIGN(bio_assembly, string, name);
     FETCH_AND_ASSIGN_WITHCOUNT(bio_assembly, transformList, transformList);
@@ -883,7 +885,7 @@ void MMTF_parser_put_bioAssembly( msgpack_object* object, MMTF_BioAssembly* bio_
 }
 
 static
-void MMTF_parser_put_transform( msgpack_object* object, MMTF_Transform* transform ) {
+void MMTF_parser_put_transform( const msgpack_object* object, MMTF_Transform* transform ) {
     MAP_ITERATE_BEGIN(object);
     FETCH_AND_ASSIGN_DUMMYCOUNT(transform, lu_array, chainIndexList);
     FETCH_AND_ASSIGN_ARRAY(transform, float, matrix);
@@ -895,7 +897,7 @@ CODEGEN_MMTF_parser_fetch_List(MMTF_GroupType, group);
 CODEGEN_MMTF_parser_fetch_List(MMTF_BioAssembly, bioAssembly);
 CODEGEN_MMTF_parser_fetch_List(MMTF_Transform, transform);
 
-void MMTF_parser_msgpack_object_to_MMTF_container(msgpack_object* object, MMTF_container* thing) {
+void MMTF_parser_msgpack_object_to_MMTF_container(const msgpack_object* object, MMTF_container* thing) {
     MAP_ITERATE_BEGIN(object);
     FETCH_AND_ASSIGN(thing, string, mmtfVersion);
     FETCH_AND_ASSIGN(thing, string, mmtfProducer);
