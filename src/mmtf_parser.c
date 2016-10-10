@@ -105,7 +105,7 @@ enum {
 
 #define FETCH_AND_ASSIGN_DUMMYCOUNT(this_, type, name) \
     if (MMTF_parser_compare_msgpack_string_char_array(&(key->via.str), #name)) { \
-        uint64_t _length; \
+        size_t _length; \
         this_->name = MMTF_parser_fetch_ ## type(value, &_length); \
         continue; \
     }
@@ -118,7 +118,7 @@ enum {
 
 #define FETCH_AND_ASSIGN_ARRAY(this_, type, name) \
     if (MMTF_parser_compare_msgpack_string_char_array( &(key->via.str), #name )) { \
-        uint64_t _length; \
+        size_t _length; \
         type * array = MMTF_parser_fetch_ ## type ## _array(value, &_length); \
         if (array != NULL) { \
             int i; \
@@ -187,7 +187,7 @@ enum {
             return NULL; \
         } \
         const msgpack_object* iter = object->via.array.ptr; \
-        (*length) = (uint64_t) object->via.array.size; \
+        (*length) = object->via.array.size; \
         const msgpack_object* iter_end = iter + (*length); \
         type_ * result = MALLOC_ARRAY(type_, *length); \
         IF_NULL_ALLOCERROR_RETURN_NULL(result); \
@@ -200,7 +200,7 @@ enum {
 
 #define CODEGEN_MMTF_parser_fetch_array(type_, RESULT_I_ASSIGN) \
     static TYPEALIAS_ ## type_ * MMTF_parser_fetch_ ## type_ ## _array( \
-            const msgpack_object* object, uint64_t* length) { \
+            const msgpack_object* object, size_t* length) { \
         if (object->type == MSGPACK_OBJECT_BIN) { \
             return (TYPEALIAS_ ## type_*) \
             MMTF_parser_fetch_typed_array(object, length, MMTF_TYPE_ ## type_); \
@@ -210,7 +210,7 @@ enum {
 
 #define CODEGEN_MMTF_parser_fetch_List(type_, suffix) \
     type_ * MMTF_parser_fetch_ ## suffix ## List( \
-            const msgpack_object* object, uint64_t* length) { \
+            const msgpack_object* object, size_t* length) { \
         CODEGEN_BODY_fetch_OBJECT_ARRAY(type_, { \
             MMTF_parser_put_ ## suffix(iter, result + i); \
         }) \
@@ -227,7 +227,7 @@ CODEGEN_MMTF_parser_TYPE(MMTF_GroupType);
 
 //*** Destroy the innner of a struct
 MMTF_container* MMTF_parser_MMTF_container_destroy_inside( MMTF_container* thing ) {
-    uint64_t i;
+    size_t i;
     IF_NULL_PTRERROR_RETURN_NULL(thing);
 
     FREE_LIST(MMTF_BioAssembly, thing->bioAssemblyList);
@@ -264,7 +264,7 @@ MMTF_container* MMTF_parser_MMTF_container_destroy_inside( MMTF_container* thing
     return thing;
 }
 MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_destroy_inside( MMTF_BioAssembly* bio_assembly ) {
-    uint64_t i;
+    size_t i;
     IF_NULL_PTRERROR_RETURN_NULL(bio_assembly);
     FREE_LIST(MMTF_Transform, bio_assembly->transformList);
     free( bio_assembly->name );
@@ -284,7 +284,7 @@ MMTF_Entity* MMTF_parser_MMTF_Entity_destroy_inside( MMTF_Entity* entity ) {
     return entity;
 }
 MMTF_GroupType* MMTF_parser_MMTF_GroupType_destroy_inside( MMTF_GroupType* group_type ) {
-    uint64_t i;
+    size_t i;
     IF_NULL_PTRERROR_RETURN_NULL(group_type);
     FREE_LIST(generic, group_type->atomNameList);
     FREE_LIST(generic, group_type->elementList);
@@ -768,7 +768,7 @@ float MMTF_parser_fetch_float( const msgpack_object* object ) {
  * Fetch a compressed typed array
  */
 static
-void* MMTF_parser_fetch_typed_array( const msgpack_object* object, uint64_t* length, int typecode) {
+void* MMTF_parser_fetch_typed_array( const msgpack_object* object, size_t* length, int typecode) {
 	if( object->type != MSGPACK_OBJECT_BIN ) {
 		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not binary data.\n", __FUNCTION__ );
 		return NULL;
@@ -821,7 +821,7 @@ void MMTF_parser_put_entity( const msgpack_object* object, MMTF_Entity* entity )
     MAP_ITERATE_BEGIN(object);
     FETCH_AND_ASSIGN(entity, string, description);
     FETCH_AND_ASSIGN(entity, string, type);
-    FETCH_AND_ASSIGN_DUMMYCOUNT(entity, int32_array, chainIndexList);
+    FETCH_AND_ASSIGN_WITHCOUNT(entity, int32_array, chainIndexList);
     FETCH_AND_ASSIGN(entity, string, sequence);
     MAP_ITERATE_END();
 }
@@ -851,7 +851,7 @@ void MMTF_parser_put_bioAssembly( const msgpack_object* object, MMTF_BioAssembly
 static
 void MMTF_parser_put_transform( const msgpack_object* object, MMTF_Transform* transform ) {
     MAP_ITERATE_BEGIN(object);
-    FETCH_AND_ASSIGN_DUMMYCOUNT(transform, int32_array, chainIndexList);
+    FETCH_AND_ASSIGN_WITHCOUNT(transform, int32_array, chainIndexList);
     FETCH_AND_ASSIGN_ARRAY(transform, float, matrix);
     MAP_ITERATE_END();
 }

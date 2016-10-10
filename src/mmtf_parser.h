@@ -34,37 +34,34 @@
 extern "C" {
 #endif
 
+#define WITHCOUNT(name) name; size_t name ## Count
+
 //*** The MMTF structure
 typedef struct {
     int32_t *				formalChargeList;    // List of formal charges as Integers
-	uint64_t			atomNameListCount;
-    char **				atomNameList;        // List of atom names, 0 to 5 character Strings
-	uint64_t			elementListCount;
-    char **				elementList;         // List of elements, 0 to 3 character Strings
-	uint64_t			bondAtomListCount;
-    int32_t *				bondAtomList;        // List of bonded atom indices, Integers
-	uint64_t			bondOrderListCount;
-    int8_t *				bondOrderList;       // List of bond orders as Integers between 1 and 4
+    char **				WITHCOUNT(atomNameList);        // List of atom names, 0 to 5 character Strings
+    char **				WITHCOUNT(elementList);         // List of elements, 0 to 3 character Strings
+    int32_t *			WITHCOUNT(bondAtomList);        // List of bonded atom indices, Integers
+    int8_t *			WITHCOUNT(bondOrderList);       // List of bond orders as Integers between 1 and 4
     char *				groupName;           // The name of the group, 0 to 5 characters
     char				singleLetterCode;    // The single letter code, 1 character
     char *				chemCompType;         // The chemical component type
 } MMTF_GroupType;
 
 typedef struct {
-    int32_t *			chainIndexList;   // Indices of fields in chainIdList and chainNameList fields
+    int32_t *			WITHCOUNT(chainIndexList);   // Indices of fields in chainIdList and chainNameList fields
     char *				description;      // Description of the entity
     char *				type;             // Name of the entity type
     char *				sequence;          // Sequence of the full construct in one-letter-code
 } MMTF_Entity;
 
 typedef struct {
-	int32_t *				chainIndexList;
+	int32_t *			WITHCOUNT(chainIndexList);
 	float				matrix[16];
 } MMTF_Transform;
 
 typedef struct {
-	uint64_t			transformListCount;
-	MMTF_Transform*		transformList;
+	MMTF_Transform*		WITHCOUNT(transformList);
 	char*				name;
 } MMTF_BioAssembly;
 
@@ -77,10 +74,8 @@ typedef struct {
     char *				title;
     char *				depositionDate;
     char *				releaseDate;
-	uint64_t			bioAssemblyListCount;
-	MMTF_BioAssembly*	bioAssemblyList;
-	uint64_t			entityListCount;
-    MMTF_Entity *		entityList;
+	MMTF_BioAssembly*	WITHCOUNT(bioAssemblyList);
+    MMTF_Entity *		WITHCOUNT(entityList);
     /* experimentalMethods this is a character array of unknown length so we
      * need to specify the number of elements. String must be one of the
      * following
@@ -98,8 +93,7 @@ typedef struct {
         THEORETICAL MODEL
         X-RAY DIFFRACTION
      */
-	uint64_t			experimentalMethodsCount;
-    char **				experimentalMethods;
+    char **				WITHCOUNT(experimentalMethods);
     size_t				numberOfExperimentalMethods;
     float				resolution;
     float				rFree;
@@ -109,12 +103,9 @@ typedef struct {
     int32_t				numGroups;
     int32_t				numChains;
     int32_t				numModels;
-	uint64_t			groupListCount;
-    MMTF_GroupType *	groupList;
-	uint64_t			bondAtomListCount;
-    int32_t *			bondAtomList;
-	uint64_t			bondOrderListCount;
-    int8_t *			bondOrderList; // 8 bit signed interger
+    MMTF_GroupType *	WITHCOUNT(groupList);
+    int32_t *			WITHCOUNT(bondAtomList);
+    int8_t *			WITHCOUNT(bondOrderList); // 8 bit signed interger
     float *				xCoordList;
     float *				yCoordList;
     float *				zCoordList;
@@ -127,10 +118,8 @@ typedef struct {
     int8_t *			secStructList; // 8 bit signed interger
     char *				insCodeList;
     int32_t *			sequenceIndexList;
-	uint64_t			chainIdListCount;
-    char **				chainIdList;    // Array of 4-char strings
-	uint64_t			chainNameListCount;
-    char **				chainNameList; // Array of 4-char strings
+    char **				WITHCOUNT(chainIdList);    // Array of 4-char strings
+    char **				WITHCOUNT(chainNameList); // Array of 4-char strings
     int32_t *			groupsPerChain;
     int32_t *			chainsPerModel;
 } MMTF_container;
@@ -228,12 +217,12 @@ float MMTF_parser_fetch_float( const msgpack_object* );
 
 bool MMTF_parser_compare_msgpack_string_char_array( const msgpack_object_str*, const char* );
 
-MMTF_Entity* MMTF_parser_fetch_entityList( const msgpack_object*, uint64_t* );
+MMTF_Entity* MMTF_parser_fetch_entityList( const msgpack_object*, size_t* );
 
-MMTF_GroupType* MMTF_parser_fetch_groupTypeList( const msgpack_object*, uint64_t* );
+MMTF_GroupType* MMTF_parser_fetch_groupTypeList( const msgpack_object*, size_t* );
 
-MMTF_BioAssembly* MMTF_parser_fetch_bioAssemblyList( const msgpack_object*, uint64_t* );
-MMTF_Transform* MMTF_parser_fetch_transformList( const msgpack_object*, uint64_t* );
+MMTF_BioAssembly* MMTF_parser_fetch_bioAssemblyList( const msgpack_object*, size_t* );
+MMTF_Transform* MMTF_parser_fetch_transformList( const msgpack_object*, size_t* );
 
 
 //*** MMTF and MsgPack
@@ -243,6 +232,8 @@ void MMTF_parser_parse_msgpack(const char*, int, MMTF_container* );
 
 //*** Decode a MMTF container from a file
 void MMTF_parser_MMTF_container_from_file(const char*, MMTF_container* );
+
+#undef WITHCOUNT
 
 #ifdef __cplusplus
 }
