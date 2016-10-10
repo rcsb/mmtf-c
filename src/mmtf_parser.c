@@ -219,11 +219,11 @@ enum {
 /*
  * Generate "initialize", "new", "empty" and "destroy" functions for MMTF struct types.
  */
-CODEGEN_MMTF_parser_TYPE(MMTF_container);
-CODEGEN_MMTF_parser_TYPE(MMTF_BioAssembly);
-CODEGEN_MMTF_parser_TYPE(MMTF_Transform);
-CODEGEN_MMTF_parser_TYPE(MMTF_Entity);
-CODEGEN_MMTF_parser_TYPE(MMTF_GroupType);
+CODEGEN_MMTF_parser_TYPE(MMTF_container)
+CODEGEN_MMTF_parser_TYPE(MMTF_BioAssembly)
+CODEGEN_MMTF_parser_TYPE(MMTF_Transform)
+CODEGEN_MMTF_parser_TYPE(MMTF_Entity)
+CODEGEN_MMTF_parser_TYPE(MMTF_GroupType)
 
 //*** Destroy the innner of a struct
 MMTF_container* MMTF_parser_MMTF_container_destroy_inside( MMTF_container* thing ) {
@@ -313,7 +313,7 @@ static
 void array_copy_bigendian_4(void * dst, const char * src, size_t n) {
     size_t i;
     for (i = 0; i < n; i += 4) {
-        assign_bigendian_4(dst + i, src + i);
+        assign_bigendian_4(((char*)dst) + i, src + i);
     }
 }
 
@@ -321,7 +321,7 @@ static
 void array_copy_bigendian_2(void * dst, const char * src, size_t n) {
     size_t i;
     for (i = 0; i < n; i += 2) {
-        assign_bigendian_2(dst + i, src + i);
+        assign_bigendian_2(((char*)dst) + i, src + i);
     }
 }
 
@@ -401,7 +401,7 @@ char** MMTF_parser_strings_from_bytes( const char* input, uint32_t input_length,
 	char** output = MALLOC_ARRAY(char*, (*output_length) );
     IF_NULL_ALLOCERROR_RETURN_NULL(output);
 
-	uint32_t i,j;
+	uint32_t i;
 	for( i = 0; i < *output_length; ++i ) {
 		output[i] = MALLOC_ARRAY(char, parameter + 1);
         IF_NULL_ALLOCERROR_RETURN_NULL(output[i]);
@@ -806,11 +806,11 @@ void* MMTF_parser_fetch_typed_array( const msgpack_object* object, size_t* lengt
 /*
  * Fetch a typed array.
  */
-CODEGEN_MMTF_parser_fetch_array(char,   result[i] = iter->via.u64);
-CODEGEN_MMTF_parser_fetch_array(int8,   result[i] = iter->via.u64);
-CODEGEN_MMTF_parser_fetch_array(int32,  result[i] = iter->via.u64);
-CODEGEN_MMTF_parser_fetch_array(float,  result[i] = iter->via.f64);
-CODEGEN_MMTF_parser_fetch_array(string, MMTF_parser_put_string(iter, result + i));
+CODEGEN_MMTF_parser_fetch_array(char,   result[i] = iter->via.u64)
+CODEGEN_MMTF_parser_fetch_array(int8,   result[i] = iter->via.u64)
+CODEGEN_MMTF_parser_fetch_array(int32,  result[i] = iter->via.u64)
+CODEGEN_MMTF_parser_fetch_array(float,  result[i] = iter->via.f64)
+CODEGEN_MMTF_parser_fetch_array(string, MMTF_parser_put_string(iter, result + i))
 
 bool MMTF_parser_compare_msgpack_string_char_array( const msgpack_object_str* m_string, const char* string ) {
 	return (m_string->size == strlen( string ) && strncmp( m_string->ptr, string, m_string->size ) == 0);
@@ -856,10 +856,10 @@ void MMTF_parser_put_transform( const msgpack_object* object, MMTF_Transform* tr
     MAP_ITERATE_END();
 }
 
-CODEGEN_MMTF_parser_fetch_List(MMTF_Entity, entity);
-CODEGEN_MMTF_parser_fetch_List(MMTF_GroupType, group);
-CODEGEN_MMTF_parser_fetch_List(MMTF_BioAssembly, bioAssembly);
-CODEGEN_MMTF_parser_fetch_List(MMTF_Transform, transform);
+CODEGEN_MMTF_parser_fetch_List(MMTF_Entity, entity)
+CODEGEN_MMTF_parser_fetch_List(MMTF_GroupType, group)
+CODEGEN_MMTF_parser_fetch_List(MMTF_BioAssembly, bioAssembly)
+CODEGEN_MMTF_parser_fetch_List(MMTF_Transform, transform)
 
 void MMTF_parser_msgpack_object_to_MMTF_container(const msgpack_object* object, MMTF_container* thing) {
     MAP_ITERATE_BEGIN(object);
