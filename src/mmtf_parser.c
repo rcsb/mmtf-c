@@ -25,18 +25,15 @@
 #define TYPEALIAS_char      char
 #define TYPEALIAS_int8      int8_t
 #define TYPEALIAS_int32     int32_t
-#define TYPEALIAS_lu        size_t
 #define TYPEALIAS_float     float
 #define TYPEALIAS_string    char*
 #define TYPEALIAS_int       int
 
 enum {
-    MMTF_TYPE_ANY = 0,
     MMTF_TYPE_char,
     MMTF_TYPE_int8 = MMTF_TYPE_char,
     MMTF_TYPE_int16,
     MMTF_TYPE_int32,
-    MMTF_TYPE_lu,
     MMTF_TYPE_float,
     MMTF_TYPE_string
 };
@@ -823,7 +820,7 @@ void* MMTF_parser_fetch_typed_array( const msgpack_object* object, uint64_t* len
             object->via.bin.size - 12, &out_length, strategy, parameter,
             &typecheck);
 
-    if (typecode != MMTF_TYPE_ANY && typecode != typecheck) {
+    if (typecode != typecheck) {
         fprintf(stderr, "Error in %s: typecode mismatch %d %d\n",
                 __FUNCTION__, typecode, typecheck);
         return NULL;
@@ -844,7 +841,6 @@ void* MMTF_parser_fetch_typed_array( const msgpack_object* object, uint64_t* len
 CODEGEN_MMTF_parser_fetch_array(char,   result[i] = iter->via.u64);
 CODEGEN_MMTF_parser_fetch_array(int8,   result[i] = iter->via.u64);
 CODEGEN_MMTF_parser_fetch_array(int32,  result[i] = iter->via.u64);
-CODEGEN_MMTF_parser_fetch_array(lu,     result[i] = iter->via.u64);
 CODEGEN_MMTF_parser_fetch_array(float,  result[i] = iter->via.f64);
 CODEGEN_MMTF_parser_fetch_array(string, MMTF_parser_put_string(iter, result + i));
 
@@ -857,7 +853,7 @@ void MMTF_parser_put_entity( const msgpack_object* object, MMTF_Entity* entity )
     MAP_ITERATE_BEGIN(object);
     FETCH_AND_ASSIGN(entity, string, description);
     FETCH_AND_ASSIGN(entity, string, type);
-    FETCH_AND_ASSIGN_DUMMYCOUNT(entity, lu_array, chainIndexList);
+    FETCH_AND_ASSIGN_DUMMYCOUNT(entity, int32_array, chainIndexList);
     FETCH_AND_ASSIGN(entity, string, sequence);
     MAP_ITERATE_END();
 }
@@ -887,7 +883,7 @@ void MMTF_parser_put_bioAssembly( const msgpack_object* object, MMTF_BioAssembly
 static
 void MMTF_parser_put_transform( const msgpack_object* object, MMTF_Transform* transform ) {
     MAP_ITERATE_BEGIN(object);
-    FETCH_AND_ASSIGN_DUMMYCOUNT(transform, lu_array, chainIndexList);
+    FETCH_AND_ASSIGN_DUMMYCOUNT(transform, int32_array, chainIndexList);
     FETCH_AND_ASSIGN_ARRAY(transform, float, matrix);
     MAP_ITERATE_END();
 }

@@ -51,14 +51,14 @@ typedef struct {
 } MMTF_GroupType;
 
 typedef struct {
-    size_t *			chainIndexList;   // Indices of fields in chainIdList and chainNameList fields
+    int32_t *			chainIndexList;   // Indices of fields in chainIdList and chainNameList fields
     char *				description;      // Description of the entity
     char *				type;             // Name of the entity type
     char *				sequence;          // Sequence of the full construct in one-letter-code
 } MMTF_Entity;
 
 typedef struct {
-	size_t*				chainIndexList;
+	int32_t *				chainIndexList;
 	float				matrix[16];
 } MMTF_Transform;
 
