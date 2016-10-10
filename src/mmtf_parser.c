@@ -16,6 +16,14 @@
 
 #include "mmtf_parser.h"
 
+// byteorder functions ("ntohl" etc.)
+#ifdef WIN32
+#include <Winsock2.h>
+#else
+#include <arpa/inet.h>
+#endif
+
+// typed array memory allocation
 #define MALLOC_ARRAY(type, size) (type*) malloc((size) * sizeof(type))
 
 /*
@@ -291,6 +299,32 @@ MMTF_GroupType* MMTF_parser_MMTF_GroupType_destroy_inside( MMTF_GroupType* group
 //*** Array converters
 // From bytes[] to float32[], int8[], int16[], int32[] and string
 
+static inline
+void assign_bigendian_4(void * dst, const char * src) {
+    *((uint32_t*)dst) = ntohl(*((uint32_t*)src));
+}
+
+static inline
+void assign_bigendian_2(void * dst, const char * src) {
+    *((uint16_t*)dst) = ntohs(*((uint16_t*)src));
+}
+
+static
+void array_copy_bigendian_4(void * dst, const char * src, size_t n) {
+    size_t i;
+    for (i = 0; i < n; i += 4) {
+        assign_bigendian_4(dst + i, src + i);
+    }
+}
+
+static
+void array_copy_bigendian_2(void * dst, const char * src, size_t n) {
+    size_t i;
+    for (i = 0; i < n; i += 2) {
+        assign_bigendian_2(dst + i, src + i);
+    }
+}
+
 float* MMTF_parser_float_from_bytes( const char* input, uint32_t input_length, uint32_t* output_length ) {
 	IF_NOT_MULTIPLE_ERROR_RETURN(input_length, 4, NULL);
 
@@ -299,16 +333,7 @@ float* MMTF_parser_float_from_bytes( const char* input, uint32_t input_length, u
 	float* output = MALLOC_ARRAY(float, *output_length);
     IF_NULL_ALLOCERROR_RETURN_NULL(output);
 
-	MMTF_parser_four_bytes_as_float u;
-	uint32_t i;
-	for( i = 0; i < input_length; i = i + 4 ) {
-		u.c[0] = input[i+3];
-		u.c[1] = input[i+2];
-		u.c[2] = input[i+1];
-		u.c[3] = input[i];
-
-		output[i/4] = u.f;
-	}
+	array_copy_bigendian_4(output, input, input_length);
 
 	return output;
 }
@@ -319,13 +344,7 @@ int8_t* MMTF_parser_int8_from_bytes( const char* input, uint32_t input_length, u
 	int8_t* output = MALLOC_ARRAY(int8_t, *output_length);
     IF_NULL_ALLOCERROR_RETURN_NULL(output);
 
-	MMTF_parser_one_byte_as_int8 u;
-	uint32_t i;
-	for( i = 0; i < input_length; ++i ) {
-		u.c = input[i];
-
-		output[i] = u.i;
-	}
+	memcpy(output, input, input_length);
 
 	return output;
 }
@@ -338,48 +357,26 @@ int16_t* MMTF_parser_int16_from_bytes( const char* input, uint32_t input_length,
 	int16_t* output = MALLOC_ARRAY(int16_t, (*output_length) );
     IF_NULL_ALLOCERROR_RETURN_NULL(output);
 
-	MMTF_parser_two_bytes_as_int16 u;
-	uint32_t i;
-	for( i = 0; i < input_length; i = i + 2 ) {
-		u.c[0] = input[i+1];
-		u.c[1] = input[i];
-
-		output[i/2] = u.i;
-	}
+	array_copy_bigendian_2(output, input, input_length);
 
 	return output;
 }
 
 int MMTF_parser_get_strategy(const char * bytes) {
 	MMTF_parser_four_bytes_as_int32 ct;
-
-	ct.c[0] = bytes[3];
-	ct.c[1] = bytes[2];
-	ct.c[2] = bytes[1];
-	ct.c[3] = bytes[0];
-
+	assign_bigendian_4(&ct.i, bytes);
 	return ct.i;
 }
 
 int MMTF_parser_get_len(const char * bytes){
 	MMTF_parser_four_bytes_as_int32 ct;
-
-	ct.c[0] = bytes[7];
-	ct.c[1] = bytes[6];
-	ct.c[2] = bytes[5];
-	ct.c[3] = bytes[4];
-
+	assign_bigendian_4(&ct.i, bytes + 4);
 	return ct.i;
 }
 
 int  MMTF_parser_get_param(const char * bytes) {
 	MMTF_parser_four_bytes_as_int32 ct;
-
-	ct.c[0] = bytes[11];
-	ct.c[1] = bytes[10];
-	ct.c[2] = bytes[9];
-	ct.c[3] = bytes[8];
-
+	assign_bigendian_4(&ct.i, bytes + 8);
 	return ct.i;
 }
 
@@ -391,36 +388,7 @@ int32_t* MMTF_parser_int32_from_bytes( const char* input, const uint32_t input_l
 	int32_t* output = MALLOC_ARRAY(int32_t, (*output_length) );
     IF_NULL_ALLOCERROR_RETURN_NULL(output);
 
-	MMTF_parser_four_bytes_as_int32 u;
-	uint32_t i;
-	for( i = 0; i < input_length; i = i + 4 ) {
-		u.c[0] = input[i+3];
-		u.c[1] = input[i+2];
-		u.c[2] = input[i+1];
-		u.c[3] = input[i];
-
-		output[i/4] = u.i;
-	}
-
-	return output;
-}
-
-char* MMTF_parser_string_from_int32( const int32_t* input, const uint32_t input_length, uint32_t* output_length ) {
-	(*output_length) = input_length * 4;
-
-	char* output = MALLOC_ARRAY( char , (*output_length) );
-    IF_NULL_ALLOCERROR_RETURN_NULL(output);
-
-	MMTF_parser_four_bytes_as_int32 u;
-	uint32_t i;
-	for( i = 0; i < input_length; ++i ) {
-		u.i = input[i];
-
-		output[4*i+0] = u.c[0];
-		output[4*i+1] = u.c[1];
-		output[4*i+2] = u.c[2];
-		output[4*i+3] = u.c[3];
-	}
+	array_copy_bigendian_4(output, input, input_length);
 
 	return output;
 }
