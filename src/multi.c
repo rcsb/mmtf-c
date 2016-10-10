@@ -17,7 +17,7 @@
 #include "demo.h"
 
 
-void read_file(char* input_path){
+void read_file(const char* input_path){
         MMTF_container* example = MMTF_parser_MMTF_container_new();
         MMTF_parser_MMTF_container_from_file(input_path, example);
         MMTF_parser_MMTF_container_destroy( example );
