@@ -1,0 +1,10 @@
+# Language selection
+sudo: true
+language: c
+# Compiler selection
+compiler:
+  - clang
+  - gcc
+install:  ./src/install-deps.sh
+script:
+  - cd src && make test

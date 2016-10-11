@@ -17,13 +17,12 @@
 #include "demo.h"
 
 
-void read_file(char* input_path){
+void read_file(const char* input_path){
         MMTF_container* example = MMTF_parser_MMTF_container_new();
         MMTF_parser_MMTF_container_from_file(input_path, example);
         MMTF_parser_MMTF_container_destroy( example );
         printf("%s read\n", input_path);
 }
-
 
 int main(int argc, char** argv)
 {
@@ -50,5 +49,6 @@ int main(int argc, char** argv)
     read_file("data/4Y60.mmtf");
     read_file("data/5EMG.mmtf");
     read_file("data/5ESW.mmtf");
+    return 0;
 }
 

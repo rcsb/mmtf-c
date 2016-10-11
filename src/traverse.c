@@ -14,7 +14,12 @@
 //******
 //*******************************************************************************
 
-#include "demo.h"
+#include "traverse.h"
+
+static
+char safechar(char c) {
+  return (c < ' ') ? '.' : c;
+}
 
 int main(int argc, char** argv)
 {
@@ -38,7 +43,7 @@ int main(int argc, char** argv)
     int i;
 for(i=0;  i<example->numModels; i++){
     int modelChainCount = example->chainsPerModel[i];
-    printf("modelIndex: %d",modelIndex);
+    printf("modelIndex: %d\n",modelIndex);
 //    # traverse chains
 	int j;
     for(j=0; j< modelChainCount; j++){
@@ -51,8 +56,8 @@ for(i=0;  i<example->numModels; i++){
         for(k=0; k<chainGroupCount;k++){
             printf("groupIndex: %d\n",groupIndex);
             printf("groupId: %d\n", example->groupIdList[ groupIndex ]);
-            printf("insCodeList: %c\n",example->insCodeList[ groupIndex ]);
-            printf("secStruc: %c\n",example->secStructList[ groupIndex ]);
+            printf("insCodeList: %c\n", safechar(example->insCodeList[ groupIndex ]));
+            printf("secStruc: %d\n",example->secStructList[ groupIndex ]);
             printf("seqIndex: %i\n",example->sequenceIndexList[ groupIndex ]);
             printf("groupType: %d\n",example->groupTypeList[ groupIndex ]);
             MMTF_GroupType group = example->groupList[ example->groupTypeList[ groupIndex ] ];
@@ -68,7 +73,7 @@ for(i=0;  i<example->numModels; i++){
                 printf("Atom id Two: %d\n",(atomOffset + group.bondAtomList[ l * 2 + 1 ])); //  # atomIndex2
                 printf("Bond order: %d\n", group.bondOrderList[ l ]);
             }
-           int groupAtomCount = sizeof(group.atomNameList)/sizeof(group.atomNameList[0]);
+           int groupAtomCount = group.atomNameListCount;
            for(l=0; l<groupAtomCount;l++){
                 printf("atomIndex: %d\n", atomIndex);
                 printf("x coord: %f\n", example->xCoordList[ atomIndex ]);
@@ -76,11 +81,11 @@ for(i=0;  i<example->numModels; i++){
                 printf("z coord: %f\n", example->zCoordList[ atomIndex ]);
                 printf("b factor: %f\n", example->bFactorList[ atomIndex ]);
                 printf("atom id: %d\n", example->atomIdList[ atomIndex ]);
-                printf("altLocList: %c\n", example->altLocList[ atomIndex ]);
+                printf("altLocList: %c\n", safechar(example->altLocList[ atomIndex ]));
                 printf("occupancy: %f\n", example->occupancyList[ atomIndex ]);
-                printf("charge: %d\n", group.formalChargeList[ i ]);
-                printf("atom name: %s\n", group.atomNameList[ i ]);
-                printf("element: %s\n", group.elementList[ i ]);
+                printf("charge: %d\n", group.formalChargeList[ l ]);
+                printf("atom name: %s\n", group.atomNameList[ l ]);
+                printf("element: %s\n", group.elementList[ l ]);
                 atomIndex++;
            }
             groupIndex++;
@@ -89,7 +94,7 @@ for(i=0;  i<example->numModels; i++){
         }
    modelIndex++;
    }
-printf("Number of inter group bonds: %d\n",example->bondOrderListCount);
+printf("Number of inter group bonds: %d\n", (int)example->bondOrderListCount);
 for (i=0; i<example->bondOrderListCount;i++){
 //*** Issue here - seems too few (two entries for 4HHB).
     printf("Atom One: %d\n",example->bondAtomList[i*2]);
@@ -98,5 +103,6 @@ for (i=0; i<example->bondOrderListCount;i++){
 }
 	
 	MMTF_parser_MMTF_container_destroy( example );
+	return 0;
 }
 
