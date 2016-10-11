@@ -18,7 +18,7 @@
 //******	for the C language.
 //******	
 //******	The authors of this code are Julien Ferté (http://www.julienferte.com/),
-//******	Anthony Bradie, Alexandr and Yana Valasatava.
+//******	Anthony Bradley, Alexandr and Yana Valasatava.
 //******	
 //************************************************************************************************
 
