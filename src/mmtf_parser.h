@@ -1,18 +1,26 @@
-//*******************************************************************************
-//******	This code is published under the .... license
-//******
-//******
-//******	This file is the header file for the MMTF parser for the C language.
-//******
-//******	The authors of this code are: Julien Ferté, ...
-//******
-//******
-//******
-//******
-//******
-//******
-//******
-//*******************************************************************************
+//***************************************************************************************************
+//******	Copyright [2016] [RCSB]
+//******	
+//******	Licensed under the Apache License, Version 2.0 (the "License");
+//******	you may not use this file except in compliance with the License.
+//******	You may obtain a copy of the License at
+//******	
+//******	    http://www.apache.org/licenses/LICENSE-2.0
+//******	
+//******	Unless required by applicable law or agreed to in writing, software
+//******	distributed under the License is distributed on an "AS IS" BASIS,
+//******	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//******	See the License for the specific language governing permissions and
+//******	limitations under the License.
+//******	
+//******	
+//******	This file is mmtf_parser.h, the header file of the MMTF parser
+//******	for the C language.
+//******	
+//******	The authors of this code are Julien Ferté (http://www.julienferte.com/),
+//******	Anthony Bradley, Alexandr and Yana Valasatava.
+//******	
+//************************************************************************************************
 
 
 #ifndef MMTF_PARSER_H
