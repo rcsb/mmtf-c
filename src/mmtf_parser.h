@@ -171,36 +171,9 @@ void MMTF_parser_MMTF_GroupType_destroy( MMTF_GroupType* );
 
 
 //*** Array converters
-typedef union {
-	char c[4];
-	float f;
-} MMTF_parser_four_bytes_as_float;
-
 float* MMTF_parser_float_from_bytes( const char*, uint32_t, uint32_t* );
-
-typedef union {
-	char c;
-	int8_t i;
-} MMTF_parser_one_byte_as_int8;
-
 int8_t* MMTF_parser_int8_from_bytes( const char*, uint32_t, uint32_t* );
-
-typedef union {
-	char c[2];
-	int16_t i;
-} MMTF_parser_two_bytes_as_int16;
-
 int16_t* MMTF_parser_int16_from_bytes( const char*, uint32_t, uint32_t* );
-
-typedef union {
-	char c[4];
-	int32_t i;
-} MMTF_parser_four_bytes_as_int32;
-
-int MMTF_parser_get_strategy(const char *);
-int MMTF_parser_get_len(const char *);
-int MMTF_parser_get_param(const char *);
-
 int32_t* MMTF_parser_int32_from_bytes( const char*, const uint32_t, uint32_t* );
 char** MMTF_parser_strings_from_bytes( const char*, uint32_t, uint32_t, uint32_t* );
 

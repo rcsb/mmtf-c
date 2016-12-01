@@ -372,24 +372,6 @@ int16_t* MMTF_parser_int16_from_bytes( const char* input, uint32_t input_length,
 	return output;
 }
 
-int MMTF_parser_get_strategy(const char * bytes) {
-	MMTF_parser_four_bytes_as_int32 ct;
-	assign_bigendian_4(&ct.i, bytes);
-	return ct.i;
-}
-
-int MMTF_parser_get_len(const char * bytes){
-	MMTF_parser_four_bytes_as_int32 ct;
-	assign_bigendian_4(&ct.i, bytes + 4);
-	return ct.i;
-}
-
-int  MMTF_parser_get_param(const char * bytes) {
-	MMTF_parser_four_bytes_as_int32 ct;
-	assign_bigendian_4(&ct.i, bytes + 8);
-	return ct.i;
-}
-
 int32_t* MMTF_parser_int32_from_bytes( const char* input, const uint32_t input_length, uint32_t* output_length ) {
 	IF_NOT_MULTIPLE_ERROR_RETURN(input_length, 4, NULL);
 
@@ -786,9 +768,12 @@ void* MMTF_parser_fetch_typed_array( const msgpack_object* object, size_t* lengt
 
 	const char* bytes = object->via.bin.ptr;
 
-	int parameter = MMTF_parser_get_param(bytes);
-	int strategy = MMTF_parser_get_strategy(bytes);
-	(*length) = MMTF_parser_get_len(bytes);
+	int32_t strategy, len_int32, parameter;
+	assign_bigendian_4(&strategy,   bytes);
+	assign_bigendian_4(&len_int32,  bytes + 4);
+	assign_bigendian_4(&parameter,  bytes + 8);
+
+	*length = len_int32;
 
 //printf( "Applying the strategy %i with parameter %i for decoding a byte array of length %i into an int32 array of length %lu.\n", strategy, parameter, object->via.bin.size - 12, *length );
 
