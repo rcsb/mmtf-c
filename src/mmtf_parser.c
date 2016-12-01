@@ -25,6 +25,13 @@
 //************************************************************************************************
 
 #include "mmtf_parser.h"
+#include "mmtf_parser_private.h"
+
+//*** For the constant NAN
+#include <math.h>
+
+//*** Standard libs
+#include <stdio.h>
 
 // byteorder functions ("ntohl" etc.)
 #ifdef WIN32

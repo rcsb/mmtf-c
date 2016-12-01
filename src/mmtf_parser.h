@@ -28,17 +28,9 @@
 #ifndef MMTF_PARSER_H
 #define MMTF_PARSER_H
 
-//*** For the constant NAN
-#include <math.h>
-
-//*** MsgPack lib
-#include <msgpack.h>
-
 //*** Standard libs
-#include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <stdio.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -169,47 +161,7 @@ void MMTF_parser_MMTF_Transform_destroy( MMTF_Transform* );
 void MMTF_parser_MMTF_Entity_destroy( MMTF_Entity* );
 void MMTF_parser_MMTF_GroupType_destroy( MMTF_GroupType* );
 
-
-//*** Array converters
-float* MMTF_parser_float_from_bytes( const char*, uint32_t, uint32_t* );
-int8_t* MMTF_parser_int8_from_bytes( const char*, uint32_t, uint32_t* );
-int16_t* MMTF_parser_int16_from_bytes( const char*, uint32_t, uint32_t* );
-int32_t* MMTF_parser_int32_from_bytes( const char*, const uint32_t, uint32_t* );
-char** MMTF_parser_strings_from_bytes( const char*, uint32_t, uint32_t, uint32_t* );
-
-
-//*** Array decoders
-// Run-length decode
-int32_t* MMTF_parser_run_length_decode(const int32_t*, uint32_t, uint32_t*);
-
-// Delta decode
-int32_t* MMTF_parser_delta_decode(const int32_t*, uint32_t, uint32_t* );
-
-// Recursive indexing decode
-int32_t* MMTF_parser_recursive_indexing_decode_from_16(const int16_t*, uint32_t, uint32_t*);
-int32_t* MMTF_parser_recursive_indexing_decode_from_8(const int8_t*, uint32_t, uint32_t* );
-
-// Integer decoding
-float* MMTF_parser_integer_decode_from_16(const int16_t*, uint32_t, int32_t, uint32_t* );
-float* MMTF_parser_integer_decode_from_32(const int32_t*, uint32_t, int32_t, uint32_t* );
-
-//*** Unpacking from MsgPack and applying strategy
-char* MMTF_parser_fetch_string( const msgpack_object* );
-int64_t MMTF_parser_fetch_int( const msgpack_object* );
-float MMTF_parser_fetch_float( const msgpack_object* );
-
-bool MMTF_parser_compare_msgpack_string_char_array( const msgpack_object_str*, const char* );
-
-MMTF_Entity* MMTF_parser_fetch_entityList( const msgpack_object*, size_t* );
-
-MMTF_GroupType* MMTF_parser_fetch_groupTypeList( const msgpack_object*, size_t* );
-
-MMTF_BioAssembly* MMTF_parser_fetch_bioAssemblyList( const msgpack_object*, size_t* );
-MMTF_Transform* MMTF_parser_fetch_transformList( const msgpack_object*, size_t* );
-
-
 //*** MMTF and MsgPack
-void MMTF_parser_msgpack_object_to_MMTF_container( const msgpack_object*, MMTF_container* );
 void MMTF_parser_parse_msgpack(const char*, int, MMTF_container* );
 
 
