@@ -14,8 +14,9 @@
 //******
 //*******************************************************************************
 
-#include "demo.h"
+#include "mmtf_parser.h"
 
+#include <stdio.h>
 
 void read_file(const char* input_path){
         MMTF_container* example = MMTF_parser_MMTF_container_new();

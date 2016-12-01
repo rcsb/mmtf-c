@@ -14,7 +14,9 @@
 //******
 //*******************************************************************************
 
-#include "traverse.h"
+#include "mmtf_parser.h"
+
+#include <stdio.h>
 
 static
 char safechar(char c) {
