@@ -6,5 +6,5 @@ for mmtf in $FILES
 
 do
     echo "Reading file $mmtf"
-    ./demo.exe $mmtf
+    ./traverse.exe $mmtf
 done
