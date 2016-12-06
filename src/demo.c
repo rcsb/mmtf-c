@@ -18,9 +18,9 @@
 
 int main(int argc, char** argv)
 {
-    MMTF_container* example = MMTF_container_new();
-    MMTF_container_from_file(argv[1], example);
-    MMTF_container_free( example );
+	MMTF_container* example = MMTF_parser_MMTF_container_new();
+	MMTF_parser_MMTF_container_from_file(argv[1], example);
+	MMTF_parser_MMTF_container_destroy( example );
 	return 0;
 }
 

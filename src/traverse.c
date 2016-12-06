@@ -26,16 +26,16 @@ static void MMTF_traverse_main(MMTF_container*);
 
 int main(int argc, char** argv)
 {
-    MMTF_container* example = MMTF_container_new();
-    MMTF_container_from_file(argv[1], example);
+    MMTF_container* example = MMTF_parser_MMTF_container_new();
+    MMTF_parser_MMTF_container_from_file(argv[1], example);
     //*** The following two lines are an example of re-using a MMTF_container and can be removed.
-    MMTF_container_empty( example );
-    MMTF_container_from_file(argv[1], example);
+    MMTF_parser_MMTF_container_empty( example );
+    MMTF_parser_MMTF_container_from_file(argv[1], example);
 	// Now iterate over this data structure
 
     MMTF_traverse_main(example);
     MMTF_traverse_pdb_like( example );
-    MMTF_container_free( example );
+    MMTF_parser_MMTF_container_destroy( example );
 	return 0;
 }
 
@@ -127,7 +127,7 @@ void MMTF_traverse_pdb_like(MMTF_container* example)
 //        # traverse groups
             for(int k=0; k<example->groupsPerChain[ chainIndex ];k++, groupIndex++)
             {
-                MMTF_GroupType group = example->groupList[ example->groupTypeList[ groupIndex ] ];
+                MMTF_GroupType group = example->groupList[ example->groupTypeList[groupIndex] ];
                 int groupAtomCount = group.atomNameListCount;
 
                 for(int l=0; l<groupAtomCount;l++, atomIndex++)

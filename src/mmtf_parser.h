@@ -134,18 +134,114 @@ typedef struct {
     int32_t *			chainsPerModel;
 } MMTF_container;
 
-//*** Create a container
-MMTF_container* MMTF_container_new( void );
-//*** Free a container
-void MMTF_container_free( MMTF_container* );
-//*** Empty a container
-MMTF_container* MMTF_container_empty( MMTF_container* );
+//*** Create a struct
+MMTF_container* MMTF_parser_MMTF_container_new( void );
+MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_new( void );
+MMTF_Transform* MMTF_parser_MMTF_Transform_new( void );
+MMTF_Entity* MMTF_parser_MMTF_Entity_new( void );
+MMTF_GroupType* MMTF_parser_MMTF_GroupType_new( void );
 
-//*** Decode a MMTF container from a string
-void MMTF_container_from_string(const char*, int, MMTF_container* );
+//*** Initialize a struct
+MMTF_container* MMTF_parser_MMTF_container_initialize( MMTF_container* );
+MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_initialize( MMTF_BioAssembly* );
+MMTF_Transform* MMTF_parser_MMTF_Transform_initialize( MMTF_Transform* );
+MMTF_Entity* MMTF_parser_MMTF_Entity_initialize( MMTF_Entity* );
+MMTF_GroupType* MMTF_parser_MMTF_GroupType_initialize( MMTF_GroupType* );
+
+//*** Empty a struct
+MMTF_container* MMTF_parser_MMTF_container_empty( MMTF_container* );
+MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_empty( MMTF_BioAssembly* );
+MMTF_Transform* MMTF_parser_MMTF_Transform_empty( MMTF_Transform* );
+MMTF_Entity* MMTF_parser_MMTF_Entity_empty( MMTF_Entity* );
+MMTF_GroupType* MMTF_parser_MMTF_GroupType_empty( MMTF_GroupType* );
+
+//*** Destroy the innner of a struct
+MMTF_container* MMTF_parser_MMTF_container_destroy_inside( MMTF_container* );
+MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_destroy_inside( MMTF_BioAssembly* );
+MMTF_Transform* MMTF_parser_MMTF_Transform_destroy_inside( MMTF_Transform* );
+MMTF_Entity* MMTF_parser_MMTF_Entity_destroy_inside( MMTF_Entity* );
+MMTF_GroupType* MMTF_parser_MMTF_GroupType_destroy_inside( MMTF_GroupType* );
+
+//*** Destroy a struct
+void MMTF_parser_MMTF_container_destroy( MMTF_container* );
+void MMTF_parser_MMTF_BioAssembly_destroy( MMTF_BioAssembly* );
+void MMTF_parser_MMTF_Transform_destroy( MMTF_Transform* );
+void MMTF_parser_MMTF_Entity_destroy( MMTF_Entity* );
+void MMTF_parser_MMTF_GroupType_destroy( MMTF_GroupType* );
+
+
+//*** Array converters
+typedef union {
+	char c[4];
+	float f;
+} MMTF_parser_four_bytes_as_float;
+
+float* MMTF_parser_float_from_bytes( const char*, uint32_t, uint32_t* );
+
+typedef union {
+	char c;
+	int8_t i;
+} MMTF_parser_one_byte_as_int8;
+
+int8_t* MMTF_parser_int8_from_bytes( const char*, uint32_t, uint32_t* );
+
+typedef union {
+	char c[2];
+	int16_t i;
+} MMTF_parser_two_bytes_as_int16;
+
+int16_t* MMTF_parser_int16_from_bytes( const char*, uint32_t, uint32_t* );
+
+typedef union {
+	char c[4];
+	int32_t i;
+} MMTF_parser_four_bytes_as_int32;
+
+int MMTF_parser_get_strategy(const char *);
+int MMTF_parser_get_len(const char *);
+int MMTF_parser_get_param(const char *);
+
+int32_t* MMTF_parser_int32_from_bytes( const char*, const uint32_t, uint32_t* );
+char** MMTF_parser_strings_from_bytes( const char*, uint32_t, uint32_t, uint32_t* );
+
+
+//*** Array decoders
+// Run-length decode
+int32_t* MMTF_parser_run_length_decode(const int32_t*, uint32_t, uint32_t*);
+
+// Delta decode
+int32_t* MMTF_parser_delta_decode(const int32_t*, uint32_t, uint32_t* );
+
+// Recursive indexing decode
+int32_t* MMTF_parser_recursive_indexing_decode_from_16(const int16_t*, uint32_t, uint32_t*);
+int32_t* MMTF_parser_recursive_indexing_decode_from_8(const int8_t*, uint32_t, uint32_t* );
+
+// Integer decoding
+float* MMTF_parser_integer_decode_from_16(const int16_t*, uint32_t, int32_t, uint32_t* );
+float* MMTF_parser_integer_decode_from_32(const int32_t*, uint32_t, int32_t, uint32_t* );
+
+//*** Unpacking from MsgPack and applying strategy
+char* MMTF_parser_fetch_string( const msgpack_object* );
+int64_t MMTF_parser_fetch_int( const msgpack_object* );
+float MMTF_parser_fetch_float( const msgpack_object* );
+
+bool MMTF_parser_compare_msgpack_string_char_array( const msgpack_object_str*, const char* );
+
+MMTF_Entity* MMTF_parser_fetch_entityList( const msgpack_object*, size_t* );
+
+MMTF_GroupType* MMTF_parser_fetch_groupTypeList( const msgpack_object*, size_t* );
+
+MMTF_BioAssembly* MMTF_parser_fetch_bioAssemblyList( const msgpack_object*, size_t* );
+MMTF_Transform* MMTF_parser_fetch_transformList( const msgpack_object*, size_t* );
+
+
+//*** MMTF and MsgPack
+void MMTF_parser_msgpack_object_to_MMTF_container( const msgpack_object*, MMTF_container* );
+void MMTF_parser_parse_msgpack(const char*, int, MMTF_container* );
+
 
 //*** Decode a MMTF container from a file
-void MMTF_container_from_file(const char*, MMTF_container* );
+void MMTF_parser_MMTF_container_from_file(const char*, MMTF_container* );
 
 #undef WITHCOUNT
 
