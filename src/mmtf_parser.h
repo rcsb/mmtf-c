@@ -134,40 +134,45 @@ typedef struct {
     int32_t *			chainsPerModel;
 } MMTF_container;
 
+//*** Create a container
+MMTF_container* MMTF_container_new( void );
+//*** Free a container
+void MMTF_container_free( MMTF_container* );
+
 //*** Create a struct
-MMTF_container* MMTF_parser_MMTF_container_new( void );
-MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_new( void );
-MMTF_Transform* MMTF_parser_MMTF_Transform_new( void );
-MMTF_Entity* MMTF_parser_MMTF_Entity_new( void );
-MMTF_GroupType* MMTF_parser_MMTF_GroupType_new( void );
+MMTF_BioAssembly* MMTF_BioAssembly_new( void );
+MMTF_Transform* MMTF_Transform_new( void );
+MMTF_Entity* MMTF_Entity_new( void );
+MMTF_GroupType* MMTF_GroupType_new( void );
 
 //*** Initialize a struct
-MMTF_container* MMTF_parser_MMTF_container_initialize( MMTF_container* );
-MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_initialize( MMTF_BioAssembly* );
-MMTF_Transform* MMTF_parser_MMTF_Transform_initialize( MMTF_Transform* );
-MMTF_Entity* MMTF_parser_MMTF_Entity_initialize( MMTF_Entity* );
-MMTF_GroupType* MMTF_parser_MMTF_GroupType_initialize( MMTF_GroupType* );
+MMTF_container* MMTF_container_initialize( MMTF_container* );
+MMTF_BioAssembly* MMTF_BioAssembly_initialize( MMTF_BioAssembly* );
+MMTF_Transform* MMTF_Transform_initialize( MMTF_Transform* );
+MMTF_Entity* MMTF_Entity_initialize( MMTF_Entity* );
+MMTF_GroupType* MMTF_GroupType_initialize( MMTF_GroupType* );
 
 //*** Empty a struct
-MMTF_container* MMTF_parser_MMTF_container_empty( MMTF_container* );
-MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_empty( MMTF_BioAssembly* );
-MMTF_Transform* MMTF_parser_MMTF_Transform_empty( MMTF_Transform* );
-MMTF_Entity* MMTF_parser_MMTF_Entity_empty( MMTF_Entity* );
-MMTF_GroupType* MMTF_parser_MMTF_GroupType_empty( MMTF_GroupType* );
+MMTF_container* MMTF_container_empty( MMTF_container* );
+MMTF_BioAssembly* MMTF_BioAssembly_empty( MMTF_BioAssembly* );
+MMTF_Transform* MMTF_Transform_empty( MMTF_Transform* );
+MMTF_Entity* MMTF_Entity_empty( MMTF_Entity* );
+MMTF_GroupType* MMTF_GroupType_empty( MMTF_GroupType* );
 
 //*** Destroy the innner of a struct
-MMTF_container* MMTF_parser_MMTF_container_destroy_inside( MMTF_container* );
-MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_destroy_inside( MMTF_BioAssembly* );
-MMTF_Transform* MMTF_parser_MMTF_Transform_destroy_inside( MMTF_Transform* );
-MMTF_Entity* MMTF_parser_MMTF_Entity_destroy_inside( MMTF_Entity* );
-MMTF_GroupType* MMTF_parser_MMTF_GroupType_destroy_inside( MMTF_GroupType* );
+MMTF_container* MMTF_container_destroy( MMTF_container* );
+MMTF_BioAssembly* MMTF_BioAssembly_destroy( MMTF_BioAssembly* );
+MMTF_Transform* MMTF_Transform_destroy( MMTF_Transform* );
+MMTF_Entity* MMTF_Entity_destroy( MMTF_Entity* );
+MMTF_GroupType* MMTF_GroupType_destroy( MMTF_GroupType* );
 
-//*** Destroy a struct
-void MMTF_parser_MMTF_container_destroy( MMTF_container* );
-void MMTF_parser_MMTF_BioAssembly_destroy( MMTF_BioAssembly* );
-void MMTF_parser_MMTF_Transform_destroy( MMTF_Transform* );
-void MMTF_parser_MMTF_Entity_destroy( MMTF_Entity* );
-void MMTF_parser_MMTF_GroupType_destroy( MMTF_GroupType* );
+
+
+//*** Free a struct
+void MMTF_BioAssembly_free( MMTF_BioAssembly* );
+void MMTF_Transform_free( MMTF_Transform* );
+void MMTF_Entity_free( MMTF_Entity* );
+void MMTF_GroupType_free( MMTF_GroupType* );
 
 
 //*** Array converters
@@ -237,11 +242,11 @@ MMTF_Transform* MMTF_parser_fetch_transformList( const msgpack_object*, size_t* 
 
 //*** MMTF and MsgPack
 void MMTF_parser_msgpack_object_to_MMTF_container( const msgpack_object*, MMTF_container* );
-void MMTF_parser_parse_msgpack(const char*, int, MMTF_container* );
+void MMTF_container_from_string(const char*, int, MMTF_container* );
 
 
 //*** Decode a MMTF container from a file
-void MMTF_parser_MMTF_container_from_file(const char*, MMTF_container* );
+void MMTF_container_from_file(const char*, MMTF_container* );
 
 #undef WITHCOUNT
 

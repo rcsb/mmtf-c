@@ -141,47 +141,47 @@ enum {
  * Macros for generating generic initialization and destroying functions
  */
 
-#define CODEGEN_MMTF_parser_TYPE_initialize(type) \
-    type * MMTF_parser_ ## type ## _initialize(type * result) { \
+#define CODEGEN_TYPE_initialize(type) \
+    type * type ## _initialize(type * result) { \
         memset(result, 0, sizeof(type)); \
         return result; \
     }
 
-#define CODEGEN_MMTF_parser_TYPE_new(type) \
-    type * MMTF_parser_ ## type ## _new(void) { \
+#define CODEGEN_TYPE_new(type) \
+    type * type ## _new(void) { \
         type * result = (type*) malloc(sizeof(type)); \
         IF_NULL_ALLOCERROR_RETURN_NULL(result); \
-        return MMTF_parser_ ## type ## _initialize(result); \
+        return type ## _initialize(result); \
     }
 
-#define CODEGEN_MMTF_parser_TYPE_empty(type) \
-    type * MMTF_parser_ ## type ## _empty( type * result ) { \
+#define CODEGEN_TYPE_empty(type) \
+    type * type ## _empty( type * result ) { \
         IF_NULL_PTRERROR_RETURN_NULL(result); \
-        MMTF_parser_ ## type ## _destroy_inside( result ); \
-        MMTF_parser_ ## type ## _initialize( result ); \
+        type ## _destroy( result ); \
+        type ## _initialize( result ); \
         return result; \
     }
 
-#define CODEGEN_MMTF_parser_TYPE_destroy(type) \
-    void MMTF_parser_ ## type ## _destroy(type * thing) { \
+#define CODEGEN_TYPE_free(type) \
+    void type ## _free(type * thing) { \
         IF_NULL_PTRERROR_RETURN(thing,); \
-        MMTF_parser_ ## type ## _destroy_inside(thing); \
+        type ## _destroy(thing); \
         free(thing); \
     }
 
-#define CODEGEN_MMTF_parser_TYPE(type) \
-    CODEGEN_MMTF_parser_TYPE_initialize(type) \
-    CODEGEN_MMTF_parser_TYPE_new(type) \
-    CODEGEN_MMTF_parser_TYPE_empty(type) \
-    CODEGEN_MMTF_parser_TYPE_destroy(type)
+#define CODEGEN_TYPE(type) \
+    CODEGEN_TYPE_initialize(type) \
+    CODEGEN_TYPE_new(type) \
+    CODEGEN_TYPE_empty(type) \
+    CODEGEN_TYPE_free(type)
 
-#define MMTF_parser_generic_destroy_inside(ptr) \
+#define generic_destroy(ptr) \
     free(*(ptr))
 
 #define FREE_LIST(type_, name) \
     if (name != NULL) { \
         for (i = 0; i < name ## Count; ++i) { \
-            MMTF_parser_ ## type_ ## _destroy_inside(name + i); \
+            type_ ## _destroy(name + i); \
         } \
         free(name); \
     }
@@ -229,14 +229,14 @@ enum {
 /*
  * Generate "initialize", "new", "empty" and "destroy" functions for MMTF struct types.
  */
-CODEGEN_MMTF_parser_TYPE(MMTF_container)
-CODEGEN_MMTF_parser_TYPE(MMTF_BioAssembly)
-CODEGEN_MMTF_parser_TYPE(MMTF_Transform)
-CODEGEN_MMTF_parser_TYPE(MMTF_Entity)
-CODEGEN_MMTF_parser_TYPE(MMTF_GroupType)
+CODEGEN_TYPE(MMTF_container)
+CODEGEN_TYPE(MMTF_BioAssembly)
+CODEGEN_TYPE(MMTF_Transform)
+CODEGEN_TYPE(MMTF_Entity)
+CODEGEN_TYPE(MMTF_GroupType)
 
 //*** Destroy the innner of a struct
-MMTF_container* MMTF_parser_MMTF_container_destroy_inside( MMTF_container* thing ) {
+MMTF_container* MMTF_container_destroy( MMTF_container* thing ) {
     size_t i;
     IF_NULL_PTRERROR_RETURN_NULL(thing);
 
@@ -273,19 +273,19 @@ MMTF_container* MMTF_parser_MMTF_container_destroy_inside( MMTF_container* thing
 
     return thing;
 }
-MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_destroy_inside( MMTF_BioAssembly* bio_assembly ) {
+MMTF_BioAssembly* MMTF_BioAssembly_destroy( MMTF_BioAssembly* bio_assembly ) {
     size_t i;
     IF_NULL_PTRERROR_RETURN_NULL(bio_assembly);
     FREE_LIST(MMTF_Transform, bio_assembly->transformList);
     free( bio_assembly->name );
     return bio_assembly;
 }
-MMTF_Transform* MMTF_parser_MMTF_Transform_destroy_inside( MMTF_Transform* transform ) {
+MMTF_Transform* MMTF_Transform_destroy( MMTF_Transform* transform ) {
     IF_NULL_PTRERROR_RETURN_NULL(transform);
     free( transform->chainIndexList );
 	return transform;
 }
-MMTF_Entity* MMTF_parser_MMTF_Entity_destroy_inside( MMTF_Entity* entity ) {
+MMTF_Entity* MMTF_Entity_destroy( MMTF_Entity* entity ) {
     IF_NULL_PTRERROR_RETURN_NULL(entity);
     free( entity->chainIndexList );
     free( entity->description );
@@ -293,7 +293,7 @@ MMTF_Entity* MMTF_parser_MMTF_Entity_destroy_inside( MMTF_Entity* entity ) {
     free( entity->sequence );
     return entity;
 }
-MMTF_GroupType* MMTF_parser_MMTF_GroupType_destroy_inside( MMTF_GroupType* group_type ) {
+MMTF_GroupType* MMTF_GroupType_destroy( MMTF_GroupType* group_type ) {
     size_t i;
     IF_NULL_PTRERROR_RETURN_NULL(group_type);
     FREE_LIST(generic, group_type->atomNameList);
@@ -914,7 +914,7 @@ void MMTF_parser_msgpack_object_to_MMTF_container(const msgpack_object* object, 
     MAP_ITERATE_END();
 }
 
-void MMTF_parser_parse_msgpack(const char *buffer,int msgsize, MMTF_container* thing){
+void MMTF_container_from_string(const char *buffer,int msgsize, MMTF_container* thing){
     msgpack_zone mempool;
     msgpack_zone_init(&mempool, 2048);
     msgpack_object deserialized;
@@ -931,7 +931,7 @@ void MMTF_parser_parse_msgpack(const char *buffer,int msgsize, MMTF_container* t
 
 
 //*** Decode a MMTF container from a file
-void MMTF_parser_MMTF_container_from_file(const char *name, MMTF_container* thing)
+void MMTF_container_from_file(const char *name, MMTF_container* thing)
 {
 	FILE *file;
 	char *buffer;
@@ -964,7 +964,7 @@ void MMTF_parser_MMTF_container_from_file(const char *name, MMTF_container* thin
 	fread(buffer, fileLen, 1, file);
 	fclose(file);
 
-	MMTF_parser_parse_msgpack(buffer, fileLen, thing);
+    MMTF_container_from_string(buffer, fileLen, thing);
 
 	free(buffer);
 }
