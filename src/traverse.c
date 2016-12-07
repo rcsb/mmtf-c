@@ -21,14 +21,26 @@ char safechar(char c) {
   return (c < ' ') ? '.' : c;
 }
 
+static void MMTF_traverse_pbd_like(MMTF_container*);
+static void MMTF_traverse_main(MMTF_container*);
+
 int main(int argc, char** argv)
 {
-	MMTF_container* example = MMTF_parser_MMTF_container_new();
-	MMTF_parser_MMTF_container_from_file(argv[1], example);
+    MMTF_container* example = MMTF_parser_MMTF_container_new();
+    MMTF_parser_MMTF_container_from_file(argv[1], example);
     //*** The following two lines are an example of re-using a MMTF_container and can be removed.
-	MMTF_parser_MMTF_container_empty( example );
-	MMTF_parser_MMTF_container_from_file(argv[1], example);
+    MMTF_parser_MMTF_container_empty( example );
+    MMTF_parser_MMTF_container_from_file(argv[1], example);
 	// Now iterate over this data structure
+
+    MMTF_traverse_main(example);
+    MMTF_traverse_pdb_like( example );
+    MMTF_parser_MMTF_container_destroy( example );
+	return 0;
+}
+
+void MMTF_traverse_main(MMTF_container* example)
+{
     //	# initialize index counters
     int modelIndex = 0;
     int chainIndex = 0;
@@ -40,14 +52,14 @@ for(i=0;  i<example->numModels; i++){
     int modelChainCount = example->chainsPerModel[i];
     printf("modelIndex: %d\n",modelIndex);
 //    # traverse chains
-	int j;
+    int j;
     for(j=0; j< modelChainCount; j++){
         printf("chainIndex : %d\n",chainIndex);
         printf("Chain id: %s\n",example->chainIdList[chainIndex]);
         printf("Chain name: %s\n",example->chainNameList[chainIndex]);
         int chainGroupCount = example->groupsPerChain[ chainIndex ];
 //        # traverse groups
-		int k;
+        int k;
         for(k=0; k<chainGroupCount;k++){
             printf("groupIndex: %d\n",groupIndex);
             printf("groupId: %d\n", example->groupIdList[ groupIndex ]);
@@ -61,7 +73,7 @@ for(i=0;  i<example->numModels; i++){
             printf("Chem comp type: %s\n",group.chemCompType);
             int atomOffset = atomIndex;
 
-			int l;
+            int l;
             for(l=0; l<group.bondOrderListCount;l++){
             // ****** Issue here - > I get print outs of the same each time
                 printf("Atom id One: %d\n",(atomOffset + group.bondAtomList[ l * 2 ])); //  # atomIndex1
@@ -96,8 +108,62 @@ for (i=0; i<example->bondOrderListCount;i++){
     printf("Atom Two: %d\n",example->bondAtomList[i*2+1]);
     printf("Bond order: %d\n",example->bondOrderList[i]);
 }
-	
-	MMTF_parser_MMTF_container_destroy( example );
-	return 0;
+
 }
+
+void MMTF_traverse_pdb_like(MMTF_container* example)
+{
+    int modelIndex = 0;
+    int chainIndex = 0;
+    int groupIndex = 0;
+    int atomIndex=0;
+
+    //# traverse models
+    for(int i=0;  i<example->numModels; i++, modelIndex++)
+    {
+    //    # traverse chains
+        for(int j=0; j< example->chainsPerModel[modelIndex]; j++, chainIndex++)
+        {
+//        # traverse groups
+            for(int k=0; k<example->groupsPerChain[ chainIndex ];k++, groupIndex++)
+            {
+                MMTF_GroupType group = example->groupList[ example->groupTypeList[groupIndex] ];
+                int groupAtomCount = group.atomNameListCount;
+
+                for(int l=0; l<groupAtomCount;l++, atomIndex++)
+                {
+                    // Atom serial
+                    printf("%d ", example->atomIdList[atomIndex] );
+                    // Atom name
+                    printf("%s ", group.atomNameList[ l ]);
+                    // Alternate location
+                    printf("%c ", safechar(example->altLocList[ atomIndex ]));
+                    // Group name
+                    printf("%s ",group.groupName);
+                    // Chain
+                    printf("%s ",example->chainNameList[chainIndex]);
+                    // Group serial
+                    printf("%d ", example->groupIdList[ groupIndex ]);
+                    // Insertion code
+                    printf("%c ", safechar(example->insCodeList[ groupIndex ]));
+                    // x, y, z
+                    printf("%f ", example->xCoordList[ atomIndex ]);
+                    printf("%f ", example->yCoordList[ atomIndex ]);
+                    printf("%f ", example->zCoordList[ atomIndex ]);
+                    // B-factor
+                    printf("%f ", example->bFactorList[ atomIndex ]);
+                    // Occupancy
+                    printf("%f ", example->occupancyList[ atomIndex ]);
+                    // Element
+                    printf("%s ", group.elementList[ l ]);
+                    // Charge
+                    printf("%d \n", group.formalChargeList[ l ]);
+               }
+            }
+        }
+   }
+    printf("atomId element atomName altLoc groupId groupType "
+           "insCode ChainName x y z b-factor occupancy charge \n" );
+}
+
 
