@@ -126,47 +126,27 @@ typedef struct {
     int32_t *			chainsPerModel;
 } MMTF_container;
 
-//*** Create a struct
-MMTF_container* MMTF_parser_MMTF_container_new( void );
-MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_new( void );
-MMTF_Transform* MMTF_parser_MMTF_Transform_new( void );
-MMTF_Entity* MMTF_parser_MMTF_Entity_new( void );
-MMTF_GroupType* MMTF_parser_MMTF_GroupType_new( void );
+#define CODEGEN_MMTF_parser_TYPE(type) \
+    type * type ## _new(void); \
+    void   type ## _init(type *); \
+    void   type ## _destroy(type *); \
+    void   type ## _clear(type *); \
+    void   type ## _free(type *);
 
-//*** Initialize a struct
-MMTF_container* MMTF_parser_MMTF_container_initialize( MMTF_container* );
-MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_initialize( MMTF_BioAssembly* );
-MMTF_Transform* MMTF_parser_MMTF_Transform_initialize( MMTF_Transform* );
-MMTF_Entity* MMTF_parser_MMTF_Entity_initialize( MMTF_Entity* );
-MMTF_GroupType* MMTF_parser_MMTF_GroupType_initialize( MMTF_GroupType* );
+CODEGEN_MMTF_parser_TYPE(MMTF_container)
+CODEGEN_MMTF_parser_TYPE(MMTF_BioAssembly)
+CODEGEN_MMTF_parser_TYPE(MMTF_Transform)
+CODEGEN_MMTF_parser_TYPE(MMTF_Entity)
+CODEGEN_MMTF_parser_TYPE(MMTF_GroupType)
 
-//*** Empty a struct
-MMTF_container* MMTF_parser_MMTF_container_empty( MMTF_container* );
-MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_empty( MMTF_BioAssembly* );
-MMTF_Transform* MMTF_parser_MMTF_Transform_empty( MMTF_Transform* );
-MMTF_Entity* MMTF_parser_MMTF_Entity_empty( MMTF_Entity* );
-MMTF_GroupType* MMTF_parser_MMTF_GroupType_empty( MMTF_GroupType* );
-
-//*** Destroy the innner of a struct
-MMTF_container* MMTF_parser_MMTF_container_destroy_inside( MMTF_container* );
-MMTF_BioAssembly* MMTF_parser_MMTF_BioAssembly_destroy_inside( MMTF_BioAssembly* );
-MMTF_Transform* MMTF_parser_MMTF_Transform_destroy_inside( MMTF_Transform* );
-MMTF_Entity* MMTF_parser_MMTF_Entity_destroy_inside( MMTF_Entity* );
-MMTF_GroupType* MMTF_parser_MMTF_GroupType_destroy_inside( MMTF_GroupType* );
-
-//*** Destroy a struct
-void MMTF_parser_MMTF_container_destroy( MMTF_container* );
-void MMTF_parser_MMTF_BioAssembly_destroy( MMTF_BioAssembly* );
-void MMTF_parser_MMTF_Transform_destroy( MMTF_Transform* );
-void MMTF_parser_MMTF_Entity_destroy( MMTF_Entity* );
-void MMTF_parser_MMTF_GroupType_destroy( MMTF_GroupType* );
+#undef CODEGEN_MMTF_parser_TYPE
 
 //*** MMTF and MsgPack
-void MMTF_parser_parse_msgpack(const char*, int, MMTF_container* );
+void MMTF_unpack_from_string(const char*, size_t, MMTF_container* );
 
 
 //*** Decode a MMTF container from a file
-void MMTF_parser_MMTF_container_from_file(const char*, MMTF_container* );
+void MMTF_unpack_from_file(const char*, MMTF_container* );
 
 #undef WITHCOUNT
 

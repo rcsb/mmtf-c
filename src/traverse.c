@@ -25,11 +25,11 @@ char safechar(char c) {
 
 int main(int argc, char** argv)
 {
-	MMTF_container* example = MMTF_parser_MMTF_container_new();
-	MMTF_parser_MMTF_container_from_file(argv[1], example);
+	MMTF_container* example = MMTF_container_new();
+	MMTF_unpack_from_file(argv[1], example);
     //*** The following two lines are an example of re-using a MMTF_container and can be removed.
-	MMTF_parser_MMTF_container_empty( example );
-	MMTF_parser_MMTF_container_from_file(argv[1], example);
+	MMTF_container_clear(example);
+	MMTF_unpack_from_file(argv[1], example);
 	// Now iterate over this data structure
     //	# initialize index counters
     int modelIndex = 0;
@@ -99,7 +99,7 @@ for (i=0; i<example->bondOrderListCount;i++){
     printf("Bond order: %d\n",example->bondOrderList[i]);
 }
 	
-	MMTF_parser_MMTF_container_destroy( example );
+	MMTF_container_free(example);
 	return 0;
 }
 
