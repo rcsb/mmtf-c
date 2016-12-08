@@ -14,16 +14,16 @@
 //******
 //*******************************************************************************
 
-#include "traverse.h"
+#include "mmtf_parser.h"
+
+#include <stdio.h>
 
 static
 char safechar(char c) {
 	return (c < ' ') ? '.' : c;
 }
 
-static void MMTF_traverse_main(MMTF_container*);
-static void MMTF_traverse_pbd_like(MMTF_container*);
-
+static
 void MMTF_traverse_main(MMTF_container* example) {
 	//	# initialize index counters
 	int modelIndex = 0;
@@ -100,6 +100,7 @@ void MMTF_traverse_main(MMTF_container* example) {
 	}
 }
 
+static
 void MMTF_traverse_pdb_like(MMTF_container* example) {
 
 	printf("atomId element atomName altLoc groupId groupType "
@@ -154,12 +155,20 @@ void MMTF_traverse_pdb_like(MMTF_container* example) {
 }
 
 int main(int argc, char** argv) {
+	if (argc < 2) {
+	  puts("useage: traverse <mmtffile>");
+	  return 1;
+	}
 
-	MMTF_container* example = MMTF_parser_MMTF_container_new();
-	MMTF_parser_MMTF_container_from_file(argv[1], example);
+	MMTF_container* example = MMTF_container_new();
+	MMTF_unpack_from_file(argv[1], example);
 
-	//MMTF_traverse_main(example);
-	MMTF_traverse_pdb_like(example);
-	MMTF_parser_MMTF_container_destroy(example);
+	if (argc > 2) {
+	  MMTF_traverse_main(example);
+	} else {
+	  MMTF_traverse_pdb_like(example);
+	}
+
+	MMTF_container_free(example);
 	return 0;
 }

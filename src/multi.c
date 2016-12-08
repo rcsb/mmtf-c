@@ -14,13 +14,14 @@
 //******
 //*******************************************************************************
 
-#include "demo.h"
+#include "mmtf_parser.h"
 
+#include <stdio.h>
 
 void read_file(const char* input_path){
-        MMTF_container* example = MMTF_parser_MMTF_container_new();
-        MMTF_parser_MMTF_container_from_file(input_path, example);
-        MMTF_parser_MMTF_container_destroy( example );
+        MMTF_container* example = MMTF_container_new();
+        MMTF_unpack_from_file(input_path, example);
+        MMTF_container_free(example);
         printf("%s read\n", input_path);
 }
 

@@ -46,11 +46,11 @@ a) declare a C variable which will contain your MMTF fields:
 
 b) then parse your MMTF structure from a file:
 
-	MMTF_parser_MMTF_container_from_file("path/to/your/MMTF/file/sample.mmtf", example);
+	MMTF_unpack_from_file("path/to/your/MMTF/file/sample.mmtf", example);
 
 c) finally clean the memory from all the malloc'ed stuff:
 
-	MMTF_container_destroy( example );
+	MMTF_container_free(example);
 
 
 
@@ -76,32 +76,20 @@ Here is an example.
 In the same folder:
 
 	demo.c
-	demo.h
 	mmtf_parser.c
 	mmtf_parser.h
 
 The files mmtf_parser.c and mmtf_parser.h contain the C language MMTF parser.
 
-The file demo.h contains the following:
-
-	#ifndef DEMO_H
-	#define DEMO_H
-
-	#include "mmtf_parser.h"
-
-	int main( int, char** );
-
-	#endif
-
 The file demo.c contains the following:
 
-	#include "demo.h"
+	#include "mmtf_parser.h"
 
 	int main(int argc, char** argv)
 	{
 		MMTF_container* example = MMTF_container_new();
-		MMTF_parser_MMTF_container_from_file(argv[1], example);
-		MMTF_container_destroy( example );
+		MMTF_unpack_from_file(argv[1], example);
+		MMTF_container_free(example);
 	}
 
 It is compiled by executing the following command lines:
