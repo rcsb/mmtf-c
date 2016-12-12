@@ -18,11 +18,24 @@
 
 #include <stdio.h>
 
+/**
+ * @brief If any value from \link MMTF_container::insCodeList insCodeList \endlink or
+ * \link MMTF_container::altLocList altLocList \endlink is empty,
+ * it would would replace the character to a dot
+ * @param c character which needs to be checked
+ * @return The c character if it is not empty otherwise a dot
+ */
 static
 char safechar(char c) {
 	return (c < ' ') ? '.' : c;
 }
 
+/**
+ * @brief This is the main traversal function to read out all the contents of MMTF_container
+ * @param example Any existing MMTF_container which you want to read
+ * @return void
+ * @bug
+ */
 static
 void MMTF_traverse_main(MMTF_container* example) {
 	//	# initialize index counters
@@ -100,6 +113,11 @@ void MMTF_traverse_main(MMTF_container* example) {
 	}
 }
 
+/**
+ * @brief This function reads out the contents of MMTF_container in a PDB-like fashion
+ * @param example Any existing MMTF_container which you want to read
+ * @return void
+ */
 static
 void MMTF_traverse_pdb_like(MMTF_container* example) {
 
