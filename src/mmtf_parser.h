@@ -40,7 +40,7 @@ extern "C" {
 #define WITHCOUNT(name) name; size_t name ## Count
 
 //*** The MMTF structure
-    /** @brief The fields in this section hold group-related data     */
+    /** @brief Group (residue) level data store */
 typedef struct {
     int32_t *			formalChargeList;           /**< formalChargeList List of formal charges as Integers */
     char **				WITHCOUNT(atomNameList);    /**< List of atom names, 0 to 5 character Strings*/
@@ -52,7 +52,7 @@ typedef struct {
     char *				chemCompType;        /**< The chemical component type */
 } MMTF_GroupType;
 
-    /** @brief The fields in this section hold chain-related data */
+    /** @brief An Entity is defined as each of the distinct molecules present in a PDB structure. It can be of type polymer, non-polymer, macrolide or water */
 typedef struct {
     int32_t *			WITHCOUNT(chainIndexList);   /**< Indices of fields in chainIdList and chainNameList fields */
     char *				description;    /**< Description of the entity */
@@ -60,17 +60,19 @@ typedef struct {
     char *				sequence;       /**< Sequence of the full construct in one-letter-code */
 } MMTF_Entity;
 
+	/** @brief The transformation needed for generation of biological assemblies from the contents of a PDB/mmCIF file. It contains both the actual transformation (rotation+translation) and the chain identifier to which it should be applied */
 typedef struct {
     int32_t *			WITHCOUNT(chainIndexList);  /**< Indices of fields in chainIdList and chainNameList fields */
     float				matrix[16];                 /**< 4X4 Transformation matrix  */
 } MMTF_Transform;
 
+	/** @brief Data store for the biological assembly annotation as provided by the PDB. Contains all the information required to build the Biological Assembly from the asymmetric unit */
 typedef struct {
     MMTF_Transform*		WITHCOUNT(transformList);   /**< List of MMTF_transform objects */
     char*				name;                       /**< Name of the biological assembly */
 } MMTF_BioAssembly;
 
-    /** @brief MMTF container containing all data */
+    /** @brief MMTF container holds the MMTF data */
 
 typedef struct {
     char *				mmtfVersion;    /**< The version of MMTF */
