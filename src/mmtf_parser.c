@@ -20,7 +20,7 @@
 //******	The authors of this code are Julien Ferté (http://www.julienferte.com/),
 //******	Anthony Bradley, Thomas Holder.
 //******
-//******	Other contributors: Yana Valasatava, Alexander Rose.
+//******	Other contributors: Yana Valasatava, Gazal Kalyan, Alexander Rose.
 //******
 //************************************************************************************************
 
