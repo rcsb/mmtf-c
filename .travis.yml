@@ -1,10 +1,11 @@
-# Language selection
 sudo: true
 language: c
-# Compiler selection
 compiler:
-  - clang
-  - gcc
-install:  ./src/install-deps.sh
+- clang
+- gcc
+install: ./src/install-deps.sh
 script:
-  - cd src && make test
+- cd src && make test
+env:
+  matrix:
+    secure: H282EDEAkLy6Hf3zCNyS+Iug4lYrfs95AreLCpxifKIMKtnW3FS0tDw/aZoq9gm2keOHptZ634yosrjhY9Ndb3QQIHR58hXu9V2uLL9vCRjohJsDzf4lzjwCAer30a2kCFnDjlmWYXp33cr5Vq8uBjiae+72IArfv9WsepvYKla2pBoxnNyg7tFGdhT/6bV0mqxzOcOznCXj28mrjTWmutrK/OPRLkkc8bog69pI/v+d7rKHLbUal6Xc2j0v/v5tqKrERcTElVGaec+AeyWymXEykPTnJ4cK+prQ0B0v2Y6mLwhtQIiNFyWWmTzryrfB86OzVQzD60tFCIQOYmkrXlcwpjlMTiUjSxx/ccz56L/Pg502LRaT5rhMTuniyLuyHy4j2yS1YEKtM5uGGrnLxTlXdD39p580E50eguWqQ4M+Y31wJiZNCvAqlxPJ9RB1Zohs5vXjsM/0O+Z+q42XO9xYBBEt8AfeLmfCHJUFnFoo1zFNsgPFIZ9ZlkxmthtlHTNnhZpSGdzDSORlPNIRJs7pDDUNJ1hdc3x4hYQWNxSJ+1PBJXEBOF+YwTW3pHGNCyOheIRQatlqJ2XEXKDO09Kp0qyFupTvATowCTZ9eXqq/ER5qfEb7Lldqta4zx10fRXfqC/pNHtisQGiSTH+XbjpcJNO99hAYGRQvUwoCqE=
