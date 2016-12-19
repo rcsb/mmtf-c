@@ -105,16 +105,16 @@ typedef struct {
                              */
     size_t				numberOfExperimentalMethods; /**< The number of experimental methods for the structure */
     float				resolution; /**< Resolution of the structure */
-    float				rFree;      /**< Rfree of the structure */
-    float				rWork;      /**< Rwork of the structure */
+    float				rFree;      /**< Rfree of the structure. Used to assess possible overmodelling of the data */
+    float				rWork;      /**< Rwork of the structure. Used to assess the agreement between the crystallographic model and the experimental X-ray diffraction data */
     int32_t				numBonds;   /**< Total number of bonds in the structure */
     int32_t				numAtoms;   /**< Total number of atoms in the structure */
-    int32_t				numGroups;  /**< Total number of groups in the structure */
+    int32_t				numGroups;  /**< Total number of groups (residues) in the structure */
     int32_t				numChains;  /**< Total number of chains in the structure */
-    int32_t				numModels;  /**< Total number of models in the structrue */
+    int32_t				numModels;  /**< Total number of models in the structure */
     MMTF_GroupType *	WITHCOUNT(groupList);     /**< List of MMTF_GroupType objects */
     int32_t *			WITHCOUNT(bondAtomList);  /**< Pairs of values represent indices of covalently bonded atoms */
-    int8_t *			WITHCOUNT(bondOrderList); /**< 8 bit signed interger */
+    int8_t *			WITHCOUNT(bondOrderList); /**< 8 bit signed integer */
     float *				xCoordList;     /**< List of x coordinates */
     float *				yCoordList;     /**< List of y coordinates */
     float *				zCoordList;     /**< List of z coordinates */
@@ -122,9 +122,9 @@ typedef struct {
     int32_t *           atomIdList;     /**< List of atom serial numbers */
     char *				altLocList;     /**< List of alternate locations */
     float *				occupancyList;  /**< List of occupancies */
-    int32_t *			groupIdList;    /**< List of groups/residues */
+    int32_t *			groupIdList;    /**< List of groups (residues) */
     int32_t *			groupTypeList;
-    int8_t *			secStructList;  /**< 8 bit signed interger */
+    int8_t *			secStructList;  /**< List of of secondary structure assignments. See [specification](https://github.com/rcsb/mmtf/blob/v1.0/spec.md#secstructlis) */
     char *				insCodeList;    /**< List of insertion codes */
     int32_t *			sequenceIndexList;
     char **				WITHCOUNT(chainIdList);     /**< Array of 4-char strings */
