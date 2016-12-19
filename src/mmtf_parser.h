@@ -124,7 +124,7 @@ typedef struct {
     float *				occupancyList;  /**< List of occupancies */
     int32_t *			groupIdList;    /**< List of groups (residues) */
     int32_t *			groupTypeList;
-    int8_t *			secStructList;  /**< List of of secondary structure assignments. See [specification](https://github.com/rcsb/mmtf/blob/v1.0/spec.md#secstructlis) */
+    int8_t *			secStructList;  /**< List of of secondary structure assignments. See [specification](https://github.com/rcsb/mmtf/blob/v1.0/spec.md#secstructlist) */
     char *				insCodeList;    /**< List of insertion codes */
     int32_t *			sequenceIndexList;
     char **				WITHCOUNT(chainIdList);     /**< Array of 4-char strings */
