@@ -24,6 +24,8 @@
 //******
 //************************************************************************************************
 
+#define WIN32_LEAN_AND_MEAN
+
 #include "mmtf_parser.h"
 #include "mmtf_parser_private.h"
 
