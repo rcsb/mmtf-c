@@ -24,6 +24,8 @@
 //******
 //************************************************************************************************
 
+#define WIN32_LEAN_AND_MEAN
+
 #include "mmtf_parser.h"
 #include "mmtf_parser_private.h"
 
@@ -93,7 +95,7 @@ enum {
  */
 
 #define MAP_ITERATE_BEGIN(object) \
-    if (object->type != MSGPACK_OBJECT_MAP) { \
+    if (object->type != MMTF_MSGPACK_TYPE(MAP)) { \
         fprintf(stderr, "Error in %s: the entry encoded in the MMTF is not a map.\n", __FUNCTION__); \
         return; \
     } \
@@ -102,7 +104,7 @@ enum {
     for (; current_key_value != last_key_value; ++current_key_value ) { \
         const msgpack_object* key = &(current_key_value->key); \
         const msgpack_object* value = &(current_key_value->val); \
-        if (key->type != MSGPACK_OBJECT_STR) \
+        if (key->type != MMTF_MSGPACK_TYPE(STR)) \
                 continue;
 
 #define MAP_ITERATE_END() }
@@ -195,7 +197,7 @@ enum {
 
 #define CODEGEN_BODY_fetch_OBJECT_ARRAY(type_, RESULT_I_ASSIGN) \
     { \
-        if (object->type != MSGPACK_OBJECT_ARRAY) { \
+        if (object->type != MMTF_MSGPACK_TYPE(ARRAY)) { \
             fprintf(stderr, "Error in %s: the entry encoded in the MMTF is not an array.\n", __FUNCTION__); \
             return NULL; \
         } \
@@ -214,7 +216,7 @@ enum {
 #define CODEGEN_MMTF_parser_fetch_array(type_, RESULT_I_ASSIGN) \
     static TYPEALIAS_ ## type_ * MMTF_parser_fetch_ ## type_ ## _array( \
             const msgpack_object* object, size_t* length) { \
-        if (object->type == MSGPACK_OBJECT_BIN) { \
+        if (object->type == MMTF_MSGPACK_TYPE(BIN)) { \
             return (TYPEALIAS_ ## type_*) \
             MMTF_parser_fetch_typed_array(object, length, MMTF_TYPE_ ## type_); \
         } \
@@ -708,7 +710,7 @@ void MMTF_parser_put_string(const msgpack_object* object, char** out) {
 
 //*** Unpacking from MsgPack and applying strategy
 char* MMTF_parser_fetch_string( const msgpack_object* object ) {
-	if( object->type != MSGPACK_OBJECT_STR ) {
+	if( object->type != MMTF_MSGPACK_TYPE(STR) ) {
 		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not a string.\n", __FUNCTION__ );
 		return NULL;
 	}
@@ -719,7 +721,7 @@ char* MMTF_parser_fetch_string( const msgpack_object* object ) {
 }
 
 char MMTF_parser_fetch_char( const msgpack_object* object ) {
-	if( object->type != MSGPACK_OBJECT_STR) {
+	if( object->type != MMTF_MSGPACK_TYPE(STR)) {
 		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not a string.\n", __FUNCTION__ );
 		return '\0';
 	}
@@ -730,10 +732,10 @@ char MMTF_parser_fetch_char( const msgpack_object* object ) {
 int64_t MMTF_parser_fetch_int( const msgpack_object* object ) {
 	int64_t result;
 
-    if(object->type == MSGPACK_OBJECT_POSITIVE_INTEGER) {
+    if(object->type == MMTF_MSGPACK_TYPE(POSITIVE_INTEGER)) {
         result = object->via.u64;
     }
-    else if(object->type == MSGPACK_OBJECT_NEGATIVE_INTEGER) {
+    else if(object->type == MMTF_MSGPACK_TYPE(NEGATIVE_INTEGER)) {
         result = object->via.i64;
 	}
 	else {
@@ -745,7 +747,7 @@ int64_t MMTF_parser_fetch_int( const msgpack_object* object ) {
 }
 
 float MMTF_parser_fetch_float( const msgpack_object* object ) {
-	if( object->type != MSGPACK_OBJECT_FLOAT ) {
+	if( object->type != MMTF_MSGPACK_TYPE(FLOAT) ) {
 		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not a float.\n", __FUNCTION__ );
 		return NAN;
 	}
@@ -758,7 +760,7 @@ float MMTF_parser_fetch_float( const msgpack_object* object ) {
  */
 static
 void* MMTF_parser_fetch_typed_array( const msgpack_object* object, size_t* length, int typecode) {
-	if( object->type != MSGPACK_OBJECT_BIN ) {
+	if( object->type != MMTF_MSGPACK_TYPE(BIN) ) {
 		fprintf( stderr, "Error in %s: the entry encoded in the MMTF is not binary data.\n", __FUNCTION__ );
 		return NULL;
 	}
@@ -897,6 +899,14 @@ void MMTF_parser_msgpack_object_to_MMTF_container(const msgpack_object* object, 
 }
 
 void MMTF_unpack_from_string(const char *buffer, size_t msgsize, MMTF_container* thing){
+#ifdef MMTF_MSGPACK_USE_CPP11
+
+    msgpack::object_handle oh = msgpack::unpack(buffer, msgsize);
+
+    MMTF_parser_msgpack_object_to_MMTF_container(&oh.get(), thing);
+
+#else
+
     msgpack_zone mempool;
     msgpack_zone_init(&mempool, 2048);
     msgpack_object deserialized;
@@ -909,6 +919,8 @@ void MMTF_unpack_from_string(const char *buffer, size_t msgsize, MMTF_container*
 //printf( "MMTF structure decoded\n" );
 
     msgpack_zone_destroy(&mempool);
+
+#endif
 }
 
 

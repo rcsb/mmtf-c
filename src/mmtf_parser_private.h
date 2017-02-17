@@ -33,7 +33,16 @@
 #include <stdbool.h>
 
 //*** MsgPack lib
+#ifdef MMTF_MSGPACK_USE_CPP11
+#include <msgpack.hpp>
+#define msgpack_object msgpack::object
+#define msgpack_object_kv msgpack::object_kv
+#define msgpack_object_str msgpack::object_str
+#define MMTF_MSGPACK_TYPE(T) msgpack::type::T
+#else
 #include <msgpack.h>
+#define MMTF_MSGPACK_TYPE(T) MSGPACK_OBJECT_ ## T
+#endif
 
 #ifdef __cplusplus
 extern "C" {
