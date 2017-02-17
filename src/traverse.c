@@ -17,7 +17,7 @@
 #include "mmtf_parser.h"
 
 #include <stdio.h>
-
+#include <string.h>
 /**
  * @brief If any value from \link MMTF_container::insCodeList insCodeList \endlink or
  * \link MMTF_container::altLocList altLocList \endlink is empty,
@@ -113,16 +113,43 @@ void MMTF_traverse_main(MMTF_container* example) {
 	}
 }
 
+
+/**
+ * @brief This function tells if the group atoms belong to HETATM
+ * @param type The group of type \link MMTF_GroupType::chemCompType chemCompType \endlink
+ * that needs to be checked.
+ * @return 0 or 1
+ */
+static
+int is_hetatm(char* type) {
+    const char* hetatm_type[] = {
+        "D-SACCHARIDE",
+        "D-SACCHARIDE 1,4 AND 1,4 LINKING",
+        "D-SACCHARIDE 1,4 AND 1,6 LINKING",
+        "L-SACCHARIDE",
+        "L-SACCHARIDE 1,4 AND 1,4 LINKING",
+        "L-SACCHARIDE 1,4 AND 1,6 LINKING",
+        "SACCHARIDE",
+        "OTHER",
+        "NON-POLYMER",
+        0 };
+    for( int i=0; hetatm_type[i]; ++i) {
+        if (strcmp(type,hetatm_type[i])==0)
+            return 1;
+    }
+    return 0;
+}
+
 /**
  * @brief This function reads out the contents of MMTF_container in a PDB-like fashion
+ * Columns are in order : ATOM/HETATM AtomId Element AtomName AltLoc GroupId GroupType
+ * InsCode ChainName x y z B-factor Occupancy Charge
  * @param example Any existing MMTF_container which you want to read
  * @return void
  */
 static
 void MMTF_traverse_pdb_like(MMTF_container* example) {
 
-	printf("atomId element atomName altLoc groupId groupType "
-			"insCode ChainName x y z b-factor occupancy charge \n");
 
 	int modelIndex = 0;
 	int chainIndex = 0;
@@ -140,6 +167,11 @@ void MMTF_traverse_pdb_like(MMTF_container* example) {
 				int groupAtomCount = group.atomNameListCount;
 
 				for (int l = 0; l < groupAtomCount; l++, atomIndex++) {
+                    // ATOM or HETATM
+                    if (is_hetatm(group.chemCompType))
+                        printf("HETATM ");
+                    else
+                        printf("ATOM ");
 					// Atom serial
 					printf("%d ", example->atomIdList[atomIndex]);
 					// Atom name
