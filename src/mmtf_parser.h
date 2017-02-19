@@ -34,6 +34,12 @@
 extern "C" {
 #endif
 
+/**
+ * @brief MMTF spec version which this library implements
+ */
+#define MMTF_SPEC_VERSION_MAJOR 1
+#define MMTF_SPEC_VERSION_MINOR 0
+
 #define WITHCOUNT(name) \
     name; \
     size_t name##Count

@@ -101,15 +101,18 @@ enum {
         fprintf(stderr, "Error in %s: the entry encoded in the MMTF is not a map.\n", __FUNCTION__); \
         return; \
     } \
-    msgpack_object_kv* current_key_value = object->via.map.ptr; \
-    msgpack_object_kv* last_key_value = current_key_value + object->via.map.size; \
-    for (; current_key_value != last_key_value; ++current_key_value) { \
-        const msgpack_object* key = &(current_key_value->key); \
-        const msgpack_object* value = &(current_key_value->val); \
-        if (key->type != MMTF_MSGPACK_TYPE(STR)) \
-            continue;
+    { \
+        msgpack_object_kv* current_key_value = object->via.map.ptr; \
+        msgpack_object_kv* last_key_value = current_key_value + object->via.map.size; \
+        for (; current_key_value != last_key_value; ++current_key_value) { \
+            const msgpack_object* key = &(current_key_value->key); \
+            const msgpack_object* value = &(current_key_value->val); \
+            if (key->type != MMTF_MSGPACK_TYPE(STR)) \
+                continue;
 
-#define MAP_ITERATE_END() }
+#define MAP_ITERATE_END() \
+    } \
+    }
 
 /*
  * Macros for inside the map iteration
@@ -191,6 +194,7 @@ enum {
 
 #define FREE_LIST(type_, name) \
     if (name != NULL) { \
+        size_t i; \
         for (i = 0; i < name##Count; ++i) { \
             type_##_destroy(name + i); \
         } \
@@ -252,7 +256,6 @@ CODEGEN_MMTF_parser_TYPE(MMTF_GroupType)
 //*** Destroy the innner of a struct
 void MMTF_container_destroy(MMTF_container* thing) {
     // clang-format on
-    size_t i;
     IF_NULL_PTRERROR_RETURN(thing, );
 
     FREE_LIST(MMTF_BioAssembly, thing->bioAssemblyList);
@@ -287,7 +290,6 @@ void MMTF_container_destroy(MMTF_container* thing) {
     free(thing->chainsPerModel);
 }
 void MMTF_BioAssembly_destroy(MMTF_BioAssembly* bio_assembly) {
-    size_t i;
     IF_NULL_PTRERROR_RETURN(bio_assembly, );
     FREE_LIST(MMTF_Transform, bio_assembly->transformList);
     free(bio_assembly->name);
@@ -304,7 +306,6 @@ void MMTF_Entity_destroy(MMTF_Entity* entity) {
     free(entity->sequence);
 }
 void MMTF_GroupType_destroy(MMTF_GroupType* group_type) {
-    size_t i;
     IF_NULL_PTRERROR_RETURN(group_type, );
     FREE_LIST(generic, group_type->atomNameList);
     FREE_LIST(generic, group_type->elementList);
@@ -864,8 +865,21 @@ CODEGEN_MMTF_parser_fetch_List(MMTF_Transform, transform)
 
 void MMTF_parser_msgpack_object_to_MMTF_container(const msgpack_object* object, MMTF_container* thing) {
     // clang-format on
+    int version_major;
+
     MAP_ITERATE_BEGIN(object);
     FETCH_AND_ASSIGN(thing, string, mmtfVersion);
+    MAP_ITERATE_END();
+
+    // check for MMTF major version (semantic versioning)
+    if (thing->mmtfVersion &&
+            sscanf(thing->mmtfVersion, "%d", &version_major) == 1 &&
+            version_major > MMTF_SPEC_VERSION_MAJOR) {
+        fprintf(stderr, "Error: unsupported MMTF version '%s'.\n", thing->mmtfVersion);
+        return;
+    }
+
+    MAP_ITERATE_BEGIN(object);
     FETCH_AND_ASSIGN(thing, string, mmtfProducer);
     FETCH_AND_ASSIGN(thing, string, spaceGroup);
     FETCH_AND_ASSIGN(thing, string, structureId);
