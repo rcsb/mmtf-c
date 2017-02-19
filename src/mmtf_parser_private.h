@@ -41,7 +41,7 @@
 #define MMTF_MSGPACK_TYPE(T) msgpack::type::T
 #else
 #include <msgpack.h>
-#define MMTF_MSGPACK_TYPE(T) MSGPACK_OBJECT_ ## T
+#define MMTF_MSGPACK_TYPE(T) MSGPACK_OBJECT_##T
 #endif
 
 #ifdef __cplusplus
@@ -49,38 +49,40 @@ extern "C" {
 #endif
 
 //*** Array converters
-float* MMTF_parser_float_from_bytes( const char*, uint32_t, uint32_t* );
-int8_t* MMTF_parser_int8_from_bytes( const char*, uint32_t, uint32_t* );
-int16_t* MMTF_parser_int16_from_bytes( const char*, uint32_t, uint32_t* );
-int32_t* MMTF_parser_int32_from_bytes( const char*, const uint32_t, uint32_t* );
-char** MMTF_parser_strings_from_bytes( const char*, uint32_t, uint32_t, uint32_t* );
+float* MMTF_parser_float_from_bytes(const char*, uint32_t, uint32_t*);
+int8_t* MMTF_parser_int8_from_bytes(const char*, uint32_t, uint32_t*);
+int16_t* MMTF_parser_int16_from_bytes(const char*, uint32_t, uint32_t*);
+int32_t* MMTF_parser_int32_from_bytes(const char*, const uint32_t, uint32_t*);
+char** MMTF_parser_strings_from_bytes(const char*, uint32_t, uint32_t, uint32_t*);
 
 //*** Array decoders
 int32_t* MMTF_parser_run_length_decode(const int32_t*, uint32_t, uint32_t*);
-int32_t* MMTF_parser_delta_decode(const int32_t*, uint32_t, uint32_t* );
+int32_t* MMTF_parser_delta_decode(const int32_t*, uint32_t, uint32_t*);
 int32_t* MMTF_parser_recursive_indexing_decode_from_16(const int16_t*, uint32_t, uint32_t*);
-int32_t* MMTF_parser_recursive_indexing_decode_from_8(const int8_t*, uint32_t, uint32_t* );
-float* MMTF_parser_integer_decode_from_16(const int16_t*, uint32_t, int32_t, uint32_t* );
-float* MMTF_parser_integer_decode_from_32(const int32_t*, uint32_t, int32_t, uint32_t* );
+int32_t* MMTF_parser_recursive_indexing_decode_from_8(const int8_t*, uint32_t, uint32_t*);
+float* MMTF_parser_integer_decode_from_16(const int16_t*, uint32_t, int32_t, uint32_t*);
+float* MMTF_parser_integer_decode_from_32(const int32_t*, uint32_t, int32_t, uint32_t*);
 
 //*** Unpacking from MsgPack and applying strategy
-char* MMTF_parser_fetch_string( const msgpack_object* );
-int64_t MMTF_parser_fetch_int( const msgpack_object* );
-float MMTF_parser_fetch_float( const msgpack_object* );
+char* MMTF_parser_fetch_string(const msgpack_object*);
+int64_t MMTF_parser_fetch_int(const msgpack_object*);
+float MMTF_parser_fetch_float(const msgpack_object*);
 
-bool MMTF_parser_compare_msgpack_string_char_array( const msgpack_object_str*, const char* );
+bool MMTF_parser_compare_msgpack_string_char_array(const msgpack_object_str*, const char*);
 
-MMTF_Entity* MMTF_parser_fetch_entityList( const msgpack_object*, size_t* );
+MMTF_Entity* MMTF_parser_fetch_entityList(const msgpack_object*, size_t*);
 
-MMTF_GroupType* MMTF_parser_fetch_groupTypeList( const msgpack_object*, size_t* );
+MMTF_GroupType* MMTF_parser_fetch_groupTypeList(const msgpack_object*, size_t*);
 
-MMTF_BioAssembly* MMTF_parser_fetch_bioAssemblyList( const msgpack_object*, size_t* );
-MMTF_Transform* MMTF_parser_fetch_transformList( const msgpack_object*, size_t* );
+MMTF_BioAssembly* MMTF_parser_fetch_bioAssemblyList(const msgpack_object*, size_t*);
+MMTF_Transform* MMTF_parser_fetch_transformList(const msgpack_object*, size_t*);
 
 //*** MMTF and MsgPack
-void MMTF_parser_msgpack_object_to_MMTF_container( const msgpack_object*, MMTF_container* );
+void MMTF_parser_msgpack_object_to_MMTF_container(const msgpack_object*, MMTF_container*);
 
 #ifdef __cplusplus
 }
 #endif
 #endif
+
+// vi:sw=4:expandtab
