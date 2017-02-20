@@ -812,6 +812,7 @@ CODEGEN_MMTF_parser_fetch_array(int32,  result[i] = iter->via.u64)
 CODEGEN_MMTF_parser_fetch_array(float,  result[i] = iter->via.f64)
 CODEGEN_MMTF_parser_fetch_array(string, MMTF_parser_put_string(iter, result + i))
 
+static
 bool MMTF_parser_compare_msgpack_string_char_array(const msgpack_object_str* m_string, const char* string) {
     // clang-format on
     return (m_string->size == strlen(string) && strncmp(m_string->ptr, string, m_string->size) == 0);
@@ -863,6 +864,7 @@ CODEGEN_MMTF_parser_fetch_List(MMTF_GroupType, group)
 CODEGEN_MMTF_parser_fetch_List(MMTF_BioAssembly, bioAssembly)
 CODEGEN_MMTF_parser_fetch_List(MMTF_Transform, transform)
 
+static
 void MMTF_parser_msgpack_object_to_MMTF_container(const msgpack_object* object, MMTF_container* thing) {
     // clang-format on
     int version_major;

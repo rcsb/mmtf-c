@@ -69,17 +69,12 @@ char* MMTF_parser_fetch_string(const msgpack_object*);
 int64_t MMTF_parser_fetch_int(const msgpack_object*);
 float MMTF_parser_fetch_float(const msgpack_object*);
 
-bool MMTF_parser_compare_msgpack_string_char_array(const msgpack_object_str*, const char*);
-
 MMTF_Entity* MMTF_parser_fetch_entityList(const msgpack_object*, size_t*);
 
 MMTF_GroupType* MMTF_parser_fetch_groupTypeList(const msgpack_object*, size_t*);
 
 MMTF_BioAssembly* MMTF_parser_fetch_bioAssemblyList(const msgpack_object*, size_t*);
 MMTF_Transform* MMTF_parser_fetch_transformList(const msgpack_object*, size_t*);
-
-//*** MMTF and MsgPack
-void MMTF_parser_msgpack_object_to_MMTF_container(const msgpack_object*, MMTF_container*);
 
 #ifdef __cplusplus
 }
