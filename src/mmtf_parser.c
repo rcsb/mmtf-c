@@ -107,8 +107,10 @@ enum {
         for (; current_key_value != last_key_value; ++current_key_value) { \
             const msgpack_object* key = &(current_key_value->key); \
             const msgpack_object* value = &(current_key_value->val); \
-            if (key->type != MMTF_MSGPACK_TYPE(STR)) \
-                continue;
+            if (key->type != MMTF_MSGPACK_TYPE(STR)) { \
+                fprintf(stderr, "Warning: map key not of type str (type %d).\n", key->type); \
+                continue; \
+            }
 
 #define MAP_ITERATE_END() \
     } \
