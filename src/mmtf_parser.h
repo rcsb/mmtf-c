@@ -27,6 +27,7 @@
 #ifndef MMTF_PARSER_H
 #define MMTF_PARSER_H
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -181,16 +182,18 @@ CODEGEN_MMTF_parser_TYPE(MMTF_GroupType)
  * @param[in] buffer file contents
  * @param[in] size file size
  * @param[out] container initialized but empty MMTF container to populate with data
+ * @return true on success, false if an error occured
  */
-void MMTF_unpack_from_string(const char* buffer, size_t size, MMTF_container* container);
+bool MMTF_unpack_from_string(const char* buffer, size_t size, MMTF_container* container);
 // clang-format on
 
 /**
  * @brief Decode a MMTF_container from a file
  * @param[in] filename file path of an uncompressed .mmtf file
  * @param[out] container initialized but empty MMTF container to populate with data
+ * @return true on success, false if an error occured
  */
-void MMTF_unpack_from_file(const char* filename, MMTF_container* container);
+bool MMTF_unpack_from_file(const char* filename, MMTF_container* container);
 
 #undef WITHCOUNT
 

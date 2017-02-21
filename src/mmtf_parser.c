@@ -96,10 +96,10 @@ enum {
  * Macros for iterating over a msgpack map
  */
 
-#define MAP_ITERATE_BEGIN(object) \
+#define MAP_ITERATE_BEGIN_RV(object, returnvalue) \
     if (object->type != MMTF_MSGPACK_TYPE(MAP)) { \
         fprintf(stderr, "Error in %s: the entry encoded in the MMTF is not a map.\n", __FUNCTION__); \
-        return; \
+        return returnvalue; \
     } \
     { \
         msgpack_object_kv* current_key_value = object->via.map.ptr; \
@@ -111,6 +111,9 @@ enum {
                 fprintf(stderr, "Warning: map key not of type str (type %d).\n", key->type); \
                 continue; \
             }
+
+#define MAP_ITERATE_BEGIN(object) \
+    MAP_ITERATE_BEGIN_RV(object, )
 
 #define MAP_ITERATE_END() \
     } \
@@ -867,11 +870,11 @@ CODEGEN_MMTF_parser_fetch_List(MMTF_BioAssembly, bioAssembly)
 CODEGEN_MMTF_parser_fetch_List(MMTF_Transform, transform)
 
 static
-void MMTF_parser_msgpack_object_to_MMTF_container(const msgpack_object* object, MMTF_container* thing) {
+bool MMTF_unpack_from_msgpack_object(const msgpack_object* object, MMTF_container* thing) {
     // clang-format on
     int version_major;
 
-    MAP_ITERATE_BEGIN(object);
+    MAP_ITERATE_BEGIN_RV(object, false);
     FETCH_AND_ASSIGN(thing, string, mmtfVersion);
     MAP_ITERATE_END();
 
@@ -880,10 +883,10 @@ void MMTF_parser_msgpack_object_to_MMTF_container(const msgpack_object* object, 
             sscanf(thing->mmtfVersion, "%d", &version_major) == 1 &&
             version_major > MMTF_SPEC_VERSION_MAJOR) {
         fprintf(stderr, "Error: unsupported MMTF version '%s'.\n", thing->mmtfVersion);
-        return;
+        return false;
     }
 
-    MAP_ITERATE_BEGIN(object);
+    MAP_ITERATE_BEGIN_RV(object, false);
     FETCH_AND_ASSIGN(thing, string, mmtfProducer);
     FETCH_AND_ASSIGN(thing, string, spaceGroup);
     FETCH_AND_ASSIGN(thing, string, structureId);
@@ -922,17 +925,21 @@ void MMTF_parser_msgpack_object_to_MMTF_container(const msgpack_object* object, 
     FETCH_AND_ASSIGN_WITHCOUNT(thing, string_array, experimentalMethods);
     FETCH_AND_ASSIGN_ARRAY(thing, float, unitCell);
     MAP_ITERATE_END();
+
+    return true;
 }
 
 /*
  * Decode a MMTF_container from a string
  */
-void MMTF_unpack_from_string(const char* buffer, size_t msgsize, MMTF_container* thing) {
+bool MMTF_unpack_from_string(const char* buffer, size_t msgsize, MMTF_container* thing) {
+    bool status;
+
 #ifdef MMTF_MSGPACK_USE_CPP11
 
     msgpack::object_handle oh = msgpack::unpack(buffer, msgsize);
 
-    MMTF_parser_msgpack_object_to_MMTF_container(&oh.get(), thing);
+    status = MMTF_unpack_from_msgpack_object(&oh.get(), thing);
 
 #else
 
@@ -941,26 +948,29 @@ void MMTF_unpack_from_string(const char* buffer, size_t msgsize, MMTF_container*
     msgpack_object deserialized;
     msgpack_unpack(buffer, msgsize, NULL, &mempool, &deserialized);
 
-    MMTF_parser_msgpack_object_to_MMTF_container(&deserialized, thing);
+    status = MMTF_unpack_from_msgpack_object(&deserialized, thing);
 
     msgpack_zone_destroy(&mempool);
 
 #endif
+
+    return status;
 }
 
 /*
  * Decode a MMTF container from a file
  */
-void MMTF_unpack_from_file(const char* name, MMTF_container* thing) {
+bool MMTF_unpack_from_file(const char* name, MMTF_container* thing) {
     FILE* file;
     char* buffer;
     size_t fileLen;
+    bool status;
 
     //*** Open file
     file = fopen(name, "rb");
     if (!file) {
         fprintf(stderr, "Error in %s: unable to open file %s.\n", __FUNCTION__, name);
-        return;
+        return false;
     }
 
     //*** Get file length
@@ -973,16 +983,18 @@ void MMTF_unpack_from_file(const char* name, MMTF_container* thing) {
     if (!buffer) {
         fprintf(stderr, "Error in %s: couldn't allocate memory.\n", __FUNCTION__);
         fclose(file);
-        return;
+        return false;
     }
 
     //*** Read file contents into buffer
     fread(buffer, fileLen, 1, file);
     fclose(file);
 
-    MMTF_unpack_from_string(buffer, fileLen, thing);
+    status = MMTF_unpack_from_string(buffer, fileLen, thing);
 
     free(buffer);
+
+    return status;
 }
 
 // vi:sw=4:expandtab
