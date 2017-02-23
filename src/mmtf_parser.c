@@ -29,6 +29,10 @@
 #include "mmtf_parser.h"
 #include "mmtf_parser_private.h"
 
+#if MSGPACK_VERSION_MAJOR < 1
+#error "msgpack-c >= 1.0 required (https://github.com/msgpack/msgpack-c)"
+#else
+
 //*** For the constant NAN
 #include <math.h>
 
@@ -147,7 +151,7 @@ enum {
         size_t _length; \
         type* array = MMTF_parser_fetch_##type##_array(value, &_length); \
         if (array != NULL) { \
-            int i; \
+            size_t i; \
             for (i = 0; i < _length; ++i) { \
                 this_->name[i] = array[i]; \
             } \
@@ -481,7 +485,7 @@ int32_t* MMTF_parser_recursive_indexing_decode_from_16(const int16_t* input, uin
     int32_t* output = (int32_t*)MALLOC_ARRAY(int32_t, (*output_length)); // The output needs to be freed by the calling process
     IF_NULL_ALLOCERROR_RETURN_NULL(output);
 
-    int j = 0;
+    size_t j = 0;
     output[j] = 0;
 
     for (i = 0; i < input_length; ++i) {
@@ -508,7 +512,7 @@ int32_t* MMTF_parser_recursive_indexing_decode_from_8(const int8_t* input, uint3
     int32_t* output = MALLOC_ARRAY(int32_t, (*output_length)); // The output needs to be freed by the calling process
     IF_NULL_ALLOCERROR_RETURN_NULL(output);
 
-    int j = 0;
+    size_t j = 0;
     output[j] = 0;
 
     for (i = 0; i < input_length; ++i) {
@@ -584,7 +588,7 @@ void* MMTF_parser_decode_apply_strategy(const char* input,
         free(step1);
 
         if (strategy == 6) {
-            int i = 0;
+            uint32_t i = 0;
             char* char_output = MALLOC_ARRAY(char, (*output_length));
             IF_NULL_ALLOCERROR_RETURN_NULL(char_output);
             for (; i < *output_length; ++i) {
@@ -759,12 +763,14 @@ int64_t MMTF_parser_fetch_int(const msgpack_object* object) {
 }
 
 float MMTF_parser_fetch_float(const msgpack_object* object) {
-    if (object->type != MMTF_MSGPACK_TYPE(FLOAT)) {
+    switch (object->type) {
+    case /* FLOAT64 */ MMTF_MSGPACK_TYPE(FLOAT):
+    case /* FLOAT32 */ 0x0a: // msgpack-c >= 2.1
+        return (float)object->via.f64;
+    default:
         fprintf(stderr, "Error in %s: the entry encoded in the MMTF is not a float.\n", __FUNCTION__);
         return NAN;
     }
-
-    return (float)object->via.f64;
 }
 
 /*
@@ -937,7 +943,7 @@ bool MMTF_unpack_from_string(const char* buffer, size_t msgsize, MMTF_container*
 
 #ifdef MMTF_MSGPACK_USE_CPP11
 
-    msgpack::object_handle oh = msgpack::unpack(buffer, msgsize);
+    auto oh = msgpack::unpack(buffer, msgsize);
 
     status = MMTF_unpack_from_msgpack_object(&oh.get(), thing);
 
@@ -996,5 +1002,7 @@ bool MMTF_unpack_from_file(const char* name, MMTF_container* thing) {
 
     return status;
 }
+
+#endif // MSGPACK_VERSION_MAJOR check
 
 // vi:sw=4:expandtab
