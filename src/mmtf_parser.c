@@ -756,7 +756,7 @@ int64_t MMTF_parser_fetch_int(const msgpack_object* object) {
         result = object->via.i64;
     } else {
         fprintf(stderr, "Error in %s: the entry encoded in the MMTF is not an integer.\n", __FUNCTION__);
-        return NAN;
+        return 0;
     }
 
     return result;
