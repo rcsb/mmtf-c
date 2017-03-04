@@ -2,6 +2,13 @@
 
 version=$1
 
+git checkout gh-pages
+rm -r docs/api/$version/*
+git add .
+git commit -m "old documentation is removed for "$version
+git push
+git checkout master
+
 if [ ! -d "$docs" ]; then
 mkdir docs
 fi
