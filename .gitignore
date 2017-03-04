@@ -34,6 +34,3 @@
 
 # The build dir
 build/*
-
-# The documentation
-docs/*
