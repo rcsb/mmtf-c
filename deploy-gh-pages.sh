@@ -21,4 +21,3 @@ git commit -m "documentation is updated to "$version -- docs/api/$version
 git push origin gh-pages
 git checkout master
 
-rm -r docs
