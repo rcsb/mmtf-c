@@ -2,7 +2,14 @@
 
 version=$1
 
-cd docs
-if [ -d "api/"$version ]; then rm -Rf api/$version; fi
+if [ ! -d "$docs" ]; then
+mkdir docs
+fi
+
+if [ ! -d "$docs/api" ]; then
+mkdir docs/api
+fi
+
+if [ -d "docs/api/"$version ]; then rm -Rf docs/api/$version; fi
+
 doxygen Doxyfile
-cd ..
