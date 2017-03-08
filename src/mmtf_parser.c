@@ -25,6 +25,7 @@
 // *************************************************************************
 
 #define WIN32_LEAN_AND_MEAN
+#define __STDC_LIMIT_MACROS
 
 #include "mmtf_parser.h"
 #include "mmtf_parser_private.h"
