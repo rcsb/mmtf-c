@@ -18,6 +18,9 @@
 
 #include <stdio.h>
 #include <string.h>
+
+#define GET_ITEM_OPTIONAL(L, i, d) ((L) ? (L)[i] : (d))
+
 /**
  * @brief If any value from \link MMTF_container::insCodeList insCodeList \endlink or
  * \link MMTF_container::altLocList altLocList \endlink is empty,
@@ -53,7 +56,7 @@ void MMTF_traverse_main(MMTF_container* example) {
 		for (j = 0; j < modelChainCount; j++) {
 			printf("chainIndex : %d\n", chainIndex);
 			printf("Chain id: %s\n", example->chainIdList[chainIndex]);
-			printf("Chain name: %s\n", example->chainNameList[chainIndex]);
+			printf("Chain name: %s\n", GET_ITEM_OPTIONAL(example->chainNameList, chainIndex, ""));
 			int chainGroupCount = example->groupsPerChain[chainIndex];
 			//        # traverse groups
 			int k;
@@ -61,9 +64,9 @@ void MMTF_traverse_main(MMTF_container* example) {
 				printf("groupIndex: %d\n", groupIndex);
 				printf("groupId: %d\n", example->groupIdList[groupIndex]);
 				printf("insCodeList: %c\n",
-						safechar(example->insCodeList[groupIndex]));
-				printf("secStruc: %d\n", example->secStructList[groupIndex]);
-				printf("seqIndex: %i\n", example->sequenceIndexList[groupIndex]);
+						safechar(GET_ITEM_OPTIONAL(example->insCodeList, groupIndex, 0)));
+				printf("secStruc: %d\n", GET_ITEM_OPTIONAL(example->secStructList, groupIndex, -1));
+				printf("seqIndex: %i\n", GET_ITEM_OPTIONAL(example->sequenceIndexList, groupIndex, -1));
 				printf("groupType: %d\n", example->groupTypeList[groupIndex]);
 				MMTF_GroupType group =
 						example->groupList[example->groupTypeList[groupIndex]];
@@ -87,11 +90,11 @@ void MMTF_traverse_main(MMTF_container* example) {
 					printf("x coord: %f\n", example->xCoordList[atomIndex]);
 					printf("y coord: %f\n", example->yCoordList[atomIndex]);
 					printf("z coord: %f\n", example->zCoordList[atomIndex]);
-					printf("b factor: %f\n", example->bFactorList[atomIndex]);
-					printf("atom id: %d\n", example->atomIdList[atomIndex]);
+					printf("b factor: %f\n", GET_ITEM_OPTIONAL(example->bFactorList, atomIndex, 0.0f));
+					printf("atom id: %d\n", GET_ITEM_OPTIONAL(example->atomIdList, atomIndex, -1));
 					printf("altLocList: %c\n",
-							safechar(example->altLocList[atomIndex]));
-					printf("occupancy: %f\n", example->occupancyList[atomIndex]);
+							safechar(GET_ITEM_OPTIONAL(example->altLocList, atomIndex, 0)));
+					printf("occupancy: %f\n", GET_ITEM_OPTIONAL(example->occupancyList, atomIndex, 1.0f));
 					printf("charge: %d\n", group.formalChargeList[l]);
 					printf("atom name: %s\n", group.atomNameList[l]);
 					printf("element: %s\n", group.elementList[l]);
@@ -173,27 +176,27 @@ void MMTF_traverse_pdb_like(MMTF_container* example) {
                     else
                         printf("ATOM ");
 					// Atom serial
-					printf("%d ", example->atomIdList[atomIndex]);
+					printf("%d ", GET_ITEM_OPTIONAL(example->atomIdList, atomIndex, -1));
 					// Atom name
 					printf("%s ", group.atomNameList[l]);
 					// Alternate location
-					printf("%c ", safechar(example->altLocList[atomIndex]));
+					printf("%c ", safechar(GET_ITEM_OPTIONAL(example->altLocList, atomIndex, 0)));
 					// Group name
 					printf("%s ", group.groupName);
 					// Chain
-					printf("%s ", example->chainNameList[chainIndex]);
+					printf("%s ", GET_ITEM_OPTIONAL(example->chainNameList, chainIndex, ""));
 					// Group serial
 					printf("%d ", example->groupIdList[groupIndex]);
 					// Insertion code
-					printf("%c ", safechar(example->insCodeList[groupIndex]));
+					printf("%c ", safechar(GET_ITEM_OPTIONAL(example->insCodeList, groupIndex, 0)));
 					// x, y, z
 					printf("%f ", example->xCoordList[atomIndex]);
 					printf("%f ", example->yCoordList[atomIndex]);
 					printf("%f ", example->zCoordList[atomIndex]);
 					// B-factor
-					printf("%f ", example->bFactorList[atomIndex]);
+					printf("%f ", GET_ITEM_OPTIONAL(example->bFactorList, atomIndex, 0.0f));
 					// Occupancy
-					printf("%f ", example->occupancyList[atomIndex]);
+					printf("%f ", GET_ITEM_OPTIONAL(example->occupancyList, atomIndex, 1.0f));
 					// Element
 					printf("%s ", group.elementList[l]);
 					// Charge
