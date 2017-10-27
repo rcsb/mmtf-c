@@ -49,7 +49,7 @@
 
 // Accept msgpack bin type for strings (emits warnings).
 // Both types seem to have the same memory layout.
-#define MMTF_ACCEPT_MSGPACK_BIN_AS_STR
+// #define MMTF_ACCEPT_MSGPACK_BIN_AS_STR
 
 // clang-format off
 // typed array memory allocation
