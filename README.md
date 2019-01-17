@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.org/rcsb/mmtf-c.svg?branch=master)](https://travis-ci.org/rcsb/mmtf-c)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)](https://github.com/rcsb/mmtf-c/blob/master/LICENSE)
-[![Status](http://img.shields.io/badge/status-beta-red.svg?style=flat)](https://github.com/rcsb/mmtf-python/)
-[![Version](http://img.shields.io/badge/version-0.0.1-blue.svg?style=flat)](https://github.com/rcsb/mmtf-c/)
 
 # MMTF C API and decoder
 
