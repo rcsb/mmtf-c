@@ -869,6 +869,7 @@ bool MMTF_parser_compare_msgpack_string_char_array(const msgpack_object_str* m_s
 
 static
 void MMTF_parser_put_entity(const msgpack_object* object, MMTF_Entity* entity) {
+    MMTF_Entity_init(entity);
     MAP_ITERATE_BEGIN(object);
     FETCH_AND_ASSIGN(entity, string, description);
     FETCH_AND_ASSIGN(entity, string, type);
@@ -879,6 +880,7 @@ void MMTF_parser_put_entity(const msgpack_object* object, MMTF_Entity* entity) {
 
 static
 void MMTF_parser_put_group(const msgpack_object* object, MMTF_GroupType* group_type) {
+    MMTF_GroupType_init(group_type);
     MAP_ITERATE_BEGIN(object);
     FETCH_AND_ASSIGN_DUMMYCOUNT(group_type, int32_array, formalChargeList);
     FETCH_AND_ASSIGN_WITHCOUNT(group_type, string_array, atomNameList);
@@ -896,6 +898,7 @@ MMTF_Transform* MMTF_parser_fetch_transformList(const msgpack_object*, size_t*);
 
 static
 void MMTF_parser_put_bioAssembly(const msgpack_object* object, MMTF_BioAssembly* bio_assembly) {
+    MMTF_BioAssembly_init(bio_assembly);
     MAP_ITERATE_BEGIN(object);
     FETCH_AND_ASSIGN(bio_assembly, string, name);
     FETCH_AND_ASSIGN_WITHCOUNT(bio_assembly, transformList, transformList);
