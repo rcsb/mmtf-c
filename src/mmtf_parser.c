@@ -61,6 +61,10 @@
 #include <arpa/inet.h>
 #endif
 
+// Accept msgpack bin type for strings (emits warnings).
+// Both types seem to have the same memory layout.
+// #define MMTF_ACCEPT_MSGPACK_BIN_AS_STR
+
 // clang-format off
 // typed array memory allocation
 #define MALLOC_ARRAY(type, size) (type*) malloc((size) * sizeof(type))
@@ -126,7 +130,9 @@ enum {
         for (; current_key_value != last_key_value; ++current_key_value) { \
             const msgpack_object* key = &(current_key_value->key); \
             const msgpack_object* value = &(current_key_value->val); \
-            if (key->type != MMTF_MSGPACK_TYPE(STR)) { \
+            if (key->type == MMTF_MSGPACK_TYPE(BIN)) { \
+                fprintf(stderr, "Warning: map key of type BIN ('%.*s')\n", key->via.bin.size, key->via.bin.ptr); \
+            } else if (key->type != MMTF_MSGPACK_TYPE(STR)) { \
                 fprintf(stderr, "Warning: map key not of type str (type %d).\n", key->type); \
                 continue; \
             }
@@ -761,7 +767,15 @@ void MMTF_parser_put_string(const msgpack_object* object, char** out) {
 //*** Unpacking from MsgPack and applying strategy
 static
 char* MMTF_parser_fetch_string(const msgpack_object* object) {
-    if (object->type != MMTF_MSGPACK_TYPE(STR)) {
+    switch (object->type) {
+#ifdef MMTF_ACCEPT_MSGPACK_BIN_AS_STR
+    case MMTF_MSGPACK_TYPE(BIN):
+        fprintf(stderr, "Warning in %s: type BIN, expected STR ('%.*s')\n", __FUNCTION__,
+                object->via.bin.size, object->via.bin.ptr);
+#endif
+    case MMTF_MSGPACK_TYPE(STR):
+        break;
+    default:
         fprintf(stderr, "Error in %s: the entry encoded in the MMTF is not a string.\n", __FUNCTION__);
         return NULL;
     }
@@ -773,7 +787,15 @@ char* MMTF_parser_fetch_string(const msgpack_object* object) {
 
 static
 char MMTF_parser_fetch_char(const msgpack_object* object) {
-    if (object->type != MMTF_MSGPACK_TYPE(STR)) {
+    switch (object->type) {
+#ifdef MMTF_ACCEPT_MSGPACK_BIN_AS_STR
+    case MMTF_MSGPACK_TYPE(BIN):
+        fprintf(stderr, "Warning in %s: type BIN, expected STR ('%.*s')\n", __FUNCTION__,
+                object->via.bin.size, object->via.bin.ptr);
+#endif
+    case MMTF_MSGPACK_TYPE(STR):
+        break;
+    default:
         fprintf(stderr, "Error in %s: the entry encoded in the MMTF is not a string.\n", __FUNCTION__);
         return '\0';
     }
